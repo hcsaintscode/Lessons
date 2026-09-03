@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masterpiece Labs — Technology Curriculum 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #2d1b69;
+    --purple-light: #3d2b7a;
+    --purple-lighter: #f4f0ff;
+    --teal: #2bb5a0;
+    --teal-light: #e6f9f6;
+    --coral: #e8553d;
+    --coral-light: #fef0ed;
+    --sand: #f5f0e8;
+    --olive: #7a8450;
+    --text: #1a1a2e;
+    --text-light: #555;
+    --border: #e0e0e0;
+    --bg: #fafafa;
+    --white: #ffffff;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+    padding-top: 64px;
+  }
+
+  /* ─── NAV ─── */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; height: 64px;
+    background: var(--purple);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; z-index: 1000;
+    box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+  }
+  .nav-brand { font-weight: 300; font-size: 1.1rem; color: rgba(255,255,255,0.9); letter-spacing: 0.5px; }
+  .nav-brand strong { font-weight: 600; }
+  .nav-badge {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.95); font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; font-weight: 500; padding: 6px 14px; border-radius: 20px; letter-spacing: 0.5px;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    padding: 72px 32px 60px; text-align: center; color: white;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; letter-spacing: 2px;
+    text-transform: uppercase; opacity: 0.7; margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif; font-style: italic; font-size: 3rem;
+    font-weight: 400; margin-bottom: 16px;
+  }
+  .hero-sub { font-size: 1.1rem; opacity: 0.85; max-width: 620px; margin: 0 auto; }
+
+  /* ─── STAT STRIP ─── */
+  .stats {
+    max-width: 900px; margin: -30px auto 40px; padding: 20px 28px;
+    background: var(--white); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    position: relative; z-index: 10; display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-around;
+  }
+  .stat { text-align: center; }
+  .stat .num { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.8rem; color: var(--purple); }
+  .stat .lbl { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-light); }
+
+  /* ─── LAYOUT ─── */
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px 80px; }
+
+  .intro-card {
+    background: var(--white); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    padding: 28px 32px; margin-bottom: 28px;
+  }
+  .intro-card h2 { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--purple); margin-bottom: 12px; }
+  .intro-card p { font-size: 0.95rem; color: var(--text); margin-bottom: 8px; }
+  .intro-card a { color: var(--teal); }
+
+  /* ─── FILTER BAR ─── */
+  .filters {
+    position: sticky; top: 64px; z-index: 900;
+    background: var(--bg); padding: 16px 0; margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; flex-wrap: wrap; gap: 20px; align-items: center;
+  }
+  .filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .filter-group .flabel {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--text-light); margin-right: 2px;
+  }
+  .chip-btn {
+    font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 500;
+    border: 1.5px solid var(--border); background: var(--white); color: var(--text-light);
+    padding: 6px 14px; border-radius: 20px; cursor: pointer; transition: all 0.15s ease;
+  }
+  .chip-btn:hover { border-color: var(--teal); color: var(--purple); }
+  .chip-btn.active { background: var(--purple); border-color: var(--purple); color: white; }
+  .search-box {
+    flex: 1; min-width: 180px; font-family: 'Inter', sans-serif; font-size: 0.85rem;
+    border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 14px; outline: none;
+  }
+  .search-box:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-light); }
+
+  /* ─── UNIT SECTIONS ─── */
+  .unit { margin: 36px 0; }
+  .unit-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+  .unit-head h2 {
+    font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.7rem; color: var(--purple);
+  }
+  .unit-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase;
+    background: var(--purple-lighter); color: var(--purple); padding: 3px 10px; border-radius: 20px;
+  }
+  .unit-desc { font-size: 0.9rem; color: var(--text-light); margin-bottom: 18px; }
+  .unit-desc a { color: var(--teal); }
+
+  .week { margin-bottom: 24px; }
+  .week-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--coral); font-weight: 600; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid var(--coral-light);
+  }
+
+  .level-row { margin-bottom: 16px; }
+  .level-label {
+    display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 1px;
+    text-transform: uppercase; padding: 3px 10px; border-radius: 6px; margin-bottom: 10px;
+  }
+  .level-label.ms { background: var(--teal-light); color: var(--teal); }
+  .level-label.hs { background: var(--purple-lighter); color: var(--purple); }
+  .level-label.both { background: var(--coral-light); color: var(--coral); }
+
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+
+  .lesson-card {
+    display: flex; flex-direction: column; gap: 6px;
+    background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 18px; text-decoration: none; color: var(--text);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+  }
+  .lesson-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(45,27,105,0.12); border-color: var(--teal); }
+  .lesson-card .type {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase;
+    color: white; padding: 2px 8px; border-radius: 4px; align-self: flex-start;
+  }
+  .type.teacher { background: var(--purple); }
+  .type.slides { background: var(--coral); }
+  .type.worksheet { background: var(--teal); }
+  .type.selfstudy { background: var(--olive); }
+  .lesson-card .cardname { font-size: 0.95rem; font-weight: 600; color: var(--purple); }
+  .lesson-card .cardmeta { font-size: 0.78rem; color: var(--text-light); }
+  .lesson-card .arrow { align-self: flex-end; color: var(--teal); font-weight: 700; margin-top: -18px; }
+
+  .no-results { display: none; text-align: center; color: var(--text-light); padding: 40px; font-style: italic; }
+  .no-results.show { display: block; }
+
+  .footer { background: var(--purple); color: rgba(255,255,255,0.7); text-align: center; padding: 28px; font-size: 0.82rem; letter-spacing: 0.5px; }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 2.1rem; }
+    .nav { padding: 0 16px; }
+    .filters { position: static; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-brand">masterpiece <strong>labs</strong></span>
+  <span class="nav-badge">TECHNOLOGY CURRICULUM · 2027</span>
+</nav>
+
+<header class="hero">
+  <div class="hero-eyebrow">Course Home</div>
+  <h1>Technology Curriculum</h1>
+  <p class="hero-sub">Middle &amp; High School computer science — taught through problem solving, real building, and student ownership.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num">2</div><div class="lbl">Units</div></div>
+  <div class="stat"><div class="num">4</div><div class="lbl">Weeks</div></div>
+  <div class="stat"><div class="num">2</div><div class="lbl">Levels</div></div>
+  <div class="stat"><div class="num">1</div><div class="lbl">Capstone</div></div>
+</div>
+
+<div class="wrap">
+
+  <div class="intro-card">
+    <h2>How to Use This Site</h2>
+    <p>Each lesson opens in your browser — no install needed. Use the filters to jump to a <strong>unit</strong>, a <strong>level</strong> (Middle or High School), or a <strong>file type</strong> (teacher guide, slides, worksheet, self-study). Search by keyword too.</p>
+    <p><strong>File types:</strong> <em>Teacher Guide</em> = the scripted lesson plan · <em>Slides</em> = the smartboard deck · <em>Worksheet</em> = the printable student page · <em>Self-Study</em> = the independent-learner module.</p>
+  </div>
+
+  <!-- ─── FILTER BAR ─── -->
+  <div class="filters">
+    <div class="filter-group">
+      <span class="flabel">Unit</span>
+      <button class="chip-btn active" data-filter="unit" data-value="all">All</button>
+      <button class="chip-btn" data-filter="unit" data-value="psc">Problem Solving</button>
+      <button class="chip-btn" data-filter="unit" data-value="foti">Fabric of Internet</button>
+    </div>
+    <div class="filter-group">
+      <span class="flabel">Level</span>
+      <button class="chip-btn active" data-filter="level" data-value="all">All</button>
+      <button class="chip-btn" data-filter="level" data-value="ms">Middle</button>
+      <button class="chip-btn" data-filter="level" data-value="hs">High</button>
+    </div>
+    <div class="filter-group">
+      <span class="flabel">Type</span>
+      <button class="chip-btn active" data-filter="type" data-value="all">All</button>
+      <button class="chip-btn" data-filter="type" data-value="teacher">Teacher</button>
+      <button class="chip-btn" data-filter="type" data-value="slides">Slides</button>
+      <button class="chip-btn" data-filter="type" data-value="worksheet">Worksheet</button>
+      <button class="chip-btn" data-filter="type" data-value="selfstudy">Self-Study</button>
+    </div>
+    <input type="text" class="search-box" id="search" placeholder="Search lessons…">
+  </div>
+
+  <div class="no-results" id="noResults">No lessons match those filters. Try clearing one.</div>
+
+  <div id="catalog">
+
+    <!-- ══════════ UNIT: PROBLEM SOLVING & COMPUTING ══════════ -->
+    <section class="unit" data-unit="psc">
+      <div class="unit-head">
+        <h2>Problem Solving &amp; Computing</h2>
+        <span class="unit-tag">Foundation</span>
+      </div>
+      <p class="unit-desc">The problem-solving process (Define, Prepare, Try, Reflect) and the IOSP model — how computers work — leading to a real app build. <a href="Problem%20Solving%20%26%20Computing/00_Pacing_Calendar.md">Pacing calendar</a></p>
+
+      <!-- WEEK 01 -->
+      <div class="week">
+        <div class="week-title">Week 01 · The Problem Solving Process</div>
+        <div class="level-row">
+          <span class="level-label ms">Middle School</span>
+          <div class="card-grid">
+            <a class="lesson-card" data-unit="psc" data-level="ms" data-type="teacher" data-search="problem solving process teacher guide middle" href="Problem%20Solving%20%26%20Computing/Week%2001/Middle%20School/teacher-guide.html">
+              <span class="type teacher">Teacher Guide</span><span class="cardname">Teacher Guide</span><span class="cardmeta">The Problem Solving Process</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="ms" data-type="slides" data-search="problem solving process slides middle" href="Problem%20Solving%20%26%20Computing/Week%2001/Middle%20School/slides.html">
+              <span class="type slides">Slides</span><span class="cardname">Slides</span><span class="cardmeta">Smartboard deck</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="ms" data-type="worksheet" data-search="problem solving process worksheet middle" href="Problem%20Solving%20%26%20Computing/Week%2001/Middle%20School/student-worksheet.html">
+              <span class="type worksheet">Worksheet</span><span class="cardname">Student Worksheet</span><span class="cardmeta">Printable</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="ms" data-type="selfstudy" data-search="problem solving process self study middle" href="Problem%20Solving%20%26%20Computing/Week%2001/Middle%20School/self-study.html">
+              <span class="type selfstudy">Self-Study</span><span class="cardname">Self-Study</span><span class="cardmeta">Independent learner</span>
+            </a>
+          </div>
+        </div>
+        <div class="level-row">
+          <span class="level-label hs">High School</span>
+          <div class="card-grid">
+            <a class="lesson-card" data-unit="psc" data-level="hs" data-type="teacher" data-search="problem solving process teacher guide high" href="Problem%20Solving%20%26%20Computing/Week%2001/High%20School/teacher-guide.html">
+              <span class="type teacher">Teacher Guide</span><span class="cardname">Teacher Guide</span><span class="cardmeta">The Problem Solving Process</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="hs" data-type="slides" data-search="problem solving process slides high" href="Problem%20Solving%20%26%20Computing/Week%2001/High%20School/slides.html">
+              <span class="type slides">Slides</span><span class="cardname">Slides</span><span class="cardmeta">Smartboard deck</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="hs" data-type="worksheet" data-search="problem solving process worksheet high" href="Problem%20Solving%20%26%20Computing/Week%2001/High%20School/student-worksheet.html">
+              <span class="type worksheet">Worksheet</span><span class="cardname">Student Worksheet</span><span class="cardmeta">Printable</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="hs" data-type="selfstudy" data-search="problem solving process self study high" href="Problem%20Solving%20%26%20Computing/Week%2001/High%20School/self-study.html">
+              <span class="type selfstudy">Self-Study</span><span class="cardname">Self-Study</span><span class="cardmeta">Independent learner</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEEK 02 -->
+      <div class="week">
+        <div class="week-title">Week 02 · What Is a Computer? (IOSP)</div>
+        <div class="level-row">
+          <span class="level-label ms">Middle School</span>
+          <div class="card-grid">
+            <a class="lesson-card" data-unit="psc" data-level="ms" data-type="teacher" data-search="what is a computer iosp teacher guide middle" href="Problem%20Solving%20%26%20Computing/Week%2002/Middle%20School/teacher-guide.html">
+              <span class="type teacher">Teacher Guide</span><span class="cardname">Teacher Guide</span><span class="cardmeta">What Is a Computer? (IOSP)</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="ms" data-type="slides" data-search="what is a computer iosp slides middle" href="Problem%20Solving%20%26%20Computing/Week%2002/Middle%20School/slides.html">
+              <span class="type slides">Slides</span><span class="cardname">Slides</span><span class="cardmeta">Smartboard deck</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="ms" data-type="worksheet" data-search="what is a computer iosp worksheet middle" href="Problem%20Solving%20%26%20Computing/Week%2002/Middle%20School/student-worksheet.html">
+              <span class="type worksheet">Worksheet</span><span class="cardname">Student Worksheet</span><span class="cardmeta">Printable</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="ms" data-type="selfstudy" data-search="what is a computer iosp self study middle" href="Problem%20Solving%20%26%20Computing/Week%2002/Middle%20School/self-study.html">
+              <span class="type selfstudy">Self-Study</span><span class="cardname">Self-Study</span><span class="cardmeta">Independent learner</span>
+            </a>
+          </div>
+        </div>
+        <div class="level-row">
+          <span class="level-label hs">High School</span>
+          <div class="card-grid">
+            <a class="lesson-card" data-unit="psc" data-level="hs" data-type="teacher" data-search="what is a computer iosp teacher guide high stackblitz" href="Problem%20Solving%20%26%20Computing/Week%2002/High%20School/teacher-guide.html">
+              <span class="type teacher">Teacher Guide</span><span class="cardname">Teacher Guide</span><span class="cardmeta">What Is a Computer? (IOSP)</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="hs" data-type="slides" data-search="what is a computer iosp slides high" href="Problem%20Solving%20%26%20Computing/Week%2002/High%20School/slides.html">
+              <span class="type slides">Slides</span><span class="cardname">Slides</span><span class="cardmeta">Smartboard deck</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="hs" data-type="worksheet" data-search="what is a computer iosp worksheet high" href="Problem%20Solving%20%26%20Computing/Week%2002/High%20School/student-worksheet.html">
+              <span class="type worksheet">Worksheet</span><span class="cardname">Student Worksheet</span><span class="cardmeta">Printable</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="hs" data-type="selfstudy" data-search="what is a computer iosp self study high stackblitz" href="Problem%20Solving%20%26%20Computing/Week%2002/High%20School/self-study.html">
+              <span class="type selfstudy">Self-Study</span><span class="cardname">Self-Study</span><span class="cardmeta">Independent · live code editor</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- UNIT PROJECT -->
+      <div class="week">
+        <div class="week-title">Unit Project · Build an App with Lovable</div>
+        <p class="unit-desc" style="margin-bottom:12px;">Capstone: design and ship a real app with <a href="https://lovable.dev" target="_blank" rel="noopener">lovable.dev</a>. <a href="Problem%20Solving%20%26%20Computing/Unit%20Project%20-%20Build%20an%20App%20with%20Lovable/README.md">Project README</a></p>
+        <div class="level-row">
+          <span class="level-label ms">Middle School</span>
+          <div class="card-grid">
+            <a class="lesson-card" data-unit="psc" data-level="ms" data-type="teacher" data-search="lovable app project teacher guide middle capstone" href="Problem%20Solving%20%26%20Computing/Unit%20Project%20-%20Build%20an%20App%20with%20Lovable/Middle%20School/teacher-guide.html">
+              <span class="type teacher">Teacher Guide</span><span class="cardname">Teacher Guide</span><span class="cardmeta">Build an App with Lovable</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="ms" data-type="slides" data-search="lovable app project slides middle capstone" href="Problem%20Solving%20%26%20Computing/Unit%20Project%20-%20Build%20an%20App%20with%20Lovable/Middle%20School/slides.html">
+              <span class="type slides">Slides</span><span class="cardname">Slides</span><span class="cardmeta">Launch &amp; showcase deck</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="ms" data-type="worksheet" data-search="lovable app project student guide middle capstone" href="Problem%20Solving%20%26%20Computing/Unit%20Project%20-%20Build%20an%20App%20with%20Lovable/Middle%20School/student-project-guide.html">
+              <span class="type worksheet">Project Guide</span><span class="cardname">Student Project Guide</span><span class="cardmeta">Plan → build → reflect</span>
+            </a>
+          </div>
+        </div>
+        <div class="level-row">
+          <span class="level-label hs">High School</span>
+          <div class="card-grid">
+            <a class="lesson-card" data-unit="psc" data-level="hs" data-type="teacher" data-search="lovable app project teacher guide high capstone" href="Problem%20Solving%20%26%20Computing/Unit%20Project%20-%20Build%20an%20App%20with%20Lovable/High%20School/teacher-guide.html">
+              <span class="type teacher">Teacher Guide</span><span class="cardname">Teacher Guide</span><span class="cardmeta">Build an App with Lovable</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="hs" data-type="slides" data-search="lovable app project slides high capstone" href="Problem%20Solving%20%26%20Computing/Unit%20Project%20-%20Build%20an%20App%20with%20Lovable/High%20School/slides.html">
+              <span class="type slides">Slides</span><span class="cardname">Slides</span><span class="cardmeta">Launch &amp; showcase deck</span>
+            </a>
+            <a class="lesson-card" data-unit="psc" data-level="hs" data-type="worksheet" data-search="lovable app project student guide high capstone spec" href="Problem%20Solving%20%26%20Computing/Unit%20Project%20-%20Build%20an%20App%20with%20Lovable/High%20School/student-project-guide.html">
+              <span class="type worksheet">Project Guide</span><span class="cardname">Student Project Guide</span><span class="cardmeta">Spec → build → reflect</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════ UNIT: FABRIC OF THE INTERNET ══════════ -->
+    <section class="unit" data-unit="foti">
+      <div class="unit-head">
+        <h2>The Fabric of the Internet</h2>
+        <span class="unit-tag">Networking</span>
+      </div>
+      <p class="unit-desc">How the Internet moves data, finds websites, and who gets access — from routers and packets to DNS and digital equity. <a href="Fabric%20of%20the%20Internet/00_Pacing_Calendar.md">Pacing calendar</a></p>
+
+      <!-- WEEK 01 -->
+      <div class="week">
+        <div class="week-title">Week 01 · How the Internet Moves Data</div>
+        <div class="level-row">
+          <span class="level-label ms">Middle School</span>
+          <div class="card-grid">
+            <a class="lesson-card" data-unit="foti" data-level="ms" data-type="teacher" data-search="internet moves data routers packets teacher guide middle" href="Fabric%20of%20the%20Internet/Week%2001/Middle%20School/teacher-guide.html">
+              <span class="type teacher">Teacher Guide</span><span class="cardname">Teacher Guide</span><span class="cardmeta">How the Internet Moves Data</span>
+            </a>
+            <a class="lesson-card" data-unit="foti" data-level="ms" data-type="slides" data-search="internet moves data slides middle" href="Fabric%20of%20the%20Internet/Week%2001/Middle%20School/slides.html">
+              <span class="type slides">Slides</span><span class="cardname">Slides</span><span class="cardmeta">Smartboard deck</span>
+            </a>
+            <a class="lesson-card" data-unit="foti" data-level="ms" data-type="worksheet" data-search="internet moves data worksheet middle" href="Fabric%20of%20the%20Internet/Week%2001/Middle%20School/student-worksheet.html">
+              <span class="type worksheet">Worksheet</span><span class="cardname">Student Worksheet</span><span class="cardmeta">Printable</span>
+            </a>
+            <a class="lesson-card" data-unit="foti" data-level="ms" data-type="selfstudy" data-search="internet moves data self study middle" href="Fabric%20of%20the%20Internet/Week%2001/Middle%20School/self-study.html">
+              <span class="type selfstudy">Self-Study</span><span class="cardname">Self-Study</span><span class="cardmeta">Independent learner</span>
+            </a>
+          </div>
+        </div>
+        <div class="level-row">
+          <span class="level-label hs">High School</span>
+          <div class="card-grid">
+            <a class="lesson-card" data-unit="foti" data-level="hs" data-type="teacher" data-search="building reliable network teacher guide high tcp udp" href="Fabric%20of%20the%20Internet/Week%2001/High%20School/teacher-guide.html">
+              <span class="type teacher">Teacher Guide</span><span class="cardname">Teacher Guide</span><span class="cardmeta">Building a Reliable Network</span>
+            </a>
+            <a class="lesson-card" data-unit="foti" data-level="hs" data-type="slides" data-search="building reliable network slides high" href="Fabric%20of%20the%20Internet/Week%2001/High%20School/slides.html">
+              <span class="type slides">Slides</span><span class="cardname">Slides</span><span class="cardmeta">Smartboard deck</span>
+            </a>
+            <a class="lesson-card" data-unit="foti" data-level="hs" data-type="worksheet" data-search="building reliable network worksheet high routing" href="Fabric%20of%20the%20Internet/Week%2001/High%20School/student-worksheet.html">
+              <span class="type worksheet">Worksheet</span><span class="cardname">Student Worksheet</span><span class="cardmeta">Printable</span>
+            </a>
+            <a class="lesson-card" data-unit="foti" data-level="hs" data-type="selfstudy" data-search="building reliable network self study high packet reassembler stackblitz" href="Fabric%20of%20the%20Internet/Week%2001/High%20School/self-study.html">
+              <span class="type selfstudy">Self-Study</span><span class="cardname">Self-Study</span><span class="cardmeta">Independent · live code editor</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEEK 02 -->
+      <div class="week">
+        <div class="week-title">Week 02 · Finding Websites &amp; Who Gets Access</div>
+        <div class="level-row">
+          <span class="level-label ms">Middle School</span>
+          <div class="card-grid">
+            <a class="lesson-card" data-unit="foti" data-level="ms" data-type="teacher" data-search="dns http digital divide advocacy teacher guide middle" href="Fabric%20of%20the%20Internet/Week%2002/Middle%20School/teacher-guide.html">
+              <span class="type teacher">Teacher Guide</span><span class="cardname">Teacher Guide</span><span class="cardmeta">Finding Websites &amp; Access</span>
+            </a>
+            <a class="lesson-card" data-unit="foti" data-level="ms" data-type="slides" data-search="dns http digital divide slides middle" href="Fabric%20of%20the%20Internet/Week%2002/Middle%20School/slides.html">
+              <span class="type slides">Slides</span><span class="cardname">Slides</span><span class="cardmeta">Smartboard deck</span>
+            </a>
+            <a class="lesson-card" data-unit="foti" data-level="ms" data-type="worksheet" data-search="dns http digital divide worksheet middle" href="Fabric%20of%20the%20Internet/Week%2002/Middle%20School/student-worksheet.html">
+              <span class="type worksheet">Worksheet</span><span class="cardname">Student Worksheet</span><span class="cardmeta">Printable</span>
+            </a>
+            <a class="lesson-card" data-unit="foti" data-level="ms" data-type="selfstudy" data-search="dns http digital divide self study middle advocacy" href="Fabric%20of%20the%20Internet/Week%2002/Middle%20School/self-study.html">
+              <span class="type selfstudy">Self-Study</span><span class="cardname">Self-Study</span><span class="cardmeta">Independent learner</span>
+            </a>
+          </div>
+        </div>
+        <div class="level-row">
+          <span class="level-label hs">High School</span>
+          <div class="card-grid">
+            <a class="lesson-card" data-unit="foti" data-level="hs" data-type="teacher" data-search="web dilemmas dns http net neutrality teacher guide high" href="Fabric%20of%20the%20Internet/Week%2002/High%20School/teacher-guide.html">
+              <span class="type teacher">Teacher Guide</span><span class="cardname">Teacher Guide</span><span class="cardmeta">The Web &amp; the Dilemmas It Creates</span>
+            </a>
+            <a class="lesson-card" data-unit="foti" data-level="hs" data-type="slides" data-search="web dilemmas slides high" href="Fabric%20of%20the%20Internet/Week%2002/High%20School/slides.html">
+              <span class="type slides">Slides</span><span class="cardname">Slides</span><span class="cardmeta">Smartboard deck</span>
+            </a>
+            <a class="lesson-card" data-unit="foti" data-level="hs" data-type="worksheet" data-search="web dilemmas worksheet high position paper" href="Fabric%20of%20the%20Internet/Week%2002/High%20School/student-worksheet.html">
+              <span class="type worksheet">Worksheet</span><span class="cardname">Student Worksheet</span><span class="cardmeta">Printable</span>
+            </a>
+            <a class="lesson-card" data-unit="foti" data-level="hs" data-type="selfstudy" data-search="web dilemmas self study high dns resolver stackblitz" href="Fabric%20of%20the%20Internet/Week%2002/High%20School/self-study.html">
+              <span class="type selfstudy">Self-Study</span><span class="cardname">Self-Study</span><span class="cardmeta">Independent · live code editor</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+</div>
+
+<footer class="footer">
+  Masterpiece Labs · Technology Curriculum 2027 · built for the classroom
+</footer>
+
+<script>
+  // Filtering + search
+  var activeFilters = { unit: 'all', level: 'all', type: 'all' };
+  var searchTerm = '';
+
+  document.querySelectorAll('.chip-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var f = btn.getAttribute('data-filter');
+      var v = btn.getAttribute('data-value');
+      activeFilters[f] = v;
+      document.querySelectorAll('.chip-btn[data-filter="' + f + '"]').forEach(function (b) {
+        b.classList.toggle('active', b === btn);
+      });
+      applyFilters();
+    });
+  });
+
+  var searchEl = document.getElementById('search');
+  searchEl.addEventListener('input', function () {
+    searchTerm = searchEl.value.trim().toLowerCase();
+    applyFilters();
+  });
+
+  function applyFilters() {
+    var anyVisible = false;
+    document.querySelectorAll('.lesson-card').forEach(function (card) {
+      var okUnit = activeFilters.unit === 'all' || card.dataset.unit === activeFilters.unit;
+      var okLevel = activeFilters.level === 'all' || card.dataset.level === activeFilters.level || card.dataset.level === 'both';
+      var okType = activeFilters.type === 'all' || card.dataset.type === activeFilters.type;
+      var okSearch = !searchTerm || card.dataset.search.indexOf(searchTerm) !== -1;
+      var show = okUnit && okLevel && okType && okSearch;
+      card.style.display = show ? 'flex' : 'none';
+      if (show) anyVisible = true;
+    });
+    // Hide week/level/unit blocks that have no visible cards
+    document.querySelectorAll('.level-row').forEach(function (row) {
+      var vis = row.querySelectorAll('.lesson-card').length &&
+                Array.prototype.some.call(row.querySelectorAll('.lesson-card'), function (c) { return c.style.display !== 'none'; });
+      row.style.display = vis ? '' : 'none';
+    });
+    document.querySelectorAll('.week').forEach(function (wk) {
+      var vis = Array.prototype.some.call(wk.querySelectorAll('.lesson-card'), function (c) { return c.style.display !== 'none'; });
+      wk.style.display = vis ? '' : 'none';
+    });
+    document.querySelectorAll('.unit').forEach(function (u) {
+      var vis = Array.prototype.some.call(u.querySelectorAll('.lesson-card'), function (c) { return c.style.display !== 'none'; });
+      u.style.display = vis ? '' : 'none';
+    });
+    document.getElementById('noResults').classList.toggle('show', !anyVisible);
+  }
+</script>
+
+</body>
+</html>
