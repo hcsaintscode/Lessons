@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 1 Teacher Guide — The Fabric of the Internet (Middle School)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --purple: #2d1b69;
+            --purple-light: #3d2b7a;
+            --purple-lighter: #f4f0ff;
+            --teal: #2bb5a0;
+            --teal-light: #e6f9f6;
+            --coral: #e8553d;
+            --coral-light: #fef0ed;
+            --text: #1a1a2e;
+            --text-light: #555;
+            --border: #e0e0e0;
+            --bg: #fafafa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            padding-top: 64px;
+        }
+
+        /* ─── STICKY NAV ─── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--purple);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+        }
+
+        .nav-brand {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-badge {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.95);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            padding: 80px 32px 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ─── AT A GLANCE ─── */
+        .at-a-glance {
+            max-width: 900px;
+            margin: -30px auto 40px;
+            padding: 32px 40px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .at-a-glance h2 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 20px;
+        }
+
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .glance-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .glance-item:last-child,
+        .glance-item:nth-last-child(2) {
+            border-bottom: none;
+        }
+
+        .glance-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .glance-value {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        /* ─── TABS ─── */
+        .tabs-container {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 4px;
+            background: var(--white);
+            border-radius: 12px 12px 0 0;
+            padding: 8px 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: var(--purple-lighter);
+            color: var(--purple);
+        }
+
+        .tab-btn.active {
+            background: var(--purple);
+            color: white;
+            font-weight: 600;
+        }
+
+        .tab-btn .tab-duration {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 2px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tab-btn.active .tab-duration {
+            opacity: 0.85;
+        }
+
+        .tab-content {
+            background: var(--white);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ─── DAY HEADER ─── */
+        .day-header {
+            margin-bottom: 32px;
+        }
+
+        .day-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .day-header .day-subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ─── TIMING TABLE ─── */
+        .timing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0 36px;
+            font-size: 0.9rem;
+        }
+
+        .timing-table th {
+            background: var(--purple-lighter);
+            color: var(--purple);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--purple);
+        }
+
+        .timing-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .timing-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .timing-table .time-col {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--purple);
+            white-space: nowrap;
+            width: 100px;
+        }
+
+        /* ─── SECTION HEADERS ─── */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 36px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--purple-lighter);
+        }
+
+        /* ─── SAY BLOCKS ─── */
+        .say-block {
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .say-block::before {
+            content: 'SAY';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            background: rgba(45, 27, 105, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .say-block p {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        /* ─── TIP BLOCKS ─── */
+        .tip-block {
+            background: var(--teal-light);
+            border-left: 4px solid var(--teal);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .tip-block::before {
+            content: 'TIP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.12);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .tip-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── WARNING BLOCKS ─── */
+        .warning-block {
+            background: var(--coral-light);
+            border-left: 4px solid var(--coral);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .warning-block::before {
+            content: 'HEADS UP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--coral);
+            background: rgba(232, 85, 61, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .warning-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── CHECKPOINT ─── */
+        .checkpoint {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 36px 0;
+            color: white;
+        }
+
+        .checkpoint::before {
+            content: '✓ CHECKPOINT';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            opacity: 0.85;
+        }
+
+        .checkpoint p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        /* ─── CONTENT HELPERS ─── */
+        .facilitation-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .facilitation-list li {
+            padding: 8px 0 8px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .facilitation-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        .discussion-questions {
+            list-style: none;
+            counter-reset: question;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .discussion-questions li {
+            counter-increment: question;
+            padding: 10px 0 10px 36px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .discussion-questions li::before {
+            content: counter(question);
+            position: absolute;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--purple-lighter);
+            color: var(--purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            top: 10px;
+        }
+
+        .exit-ticket {
+            background: #f8f7ff;
+            border: 2px dashed var(--purple);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+
+        .exit-ticket::before {
+            content: 'EXIT TICKET';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .exit-ticket p {
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* ─── ADDITIONAL NOTES ─── */
+        .additional-notes {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .notes-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .notes-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 24px;
+        }
+
+        .notes-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .notes-card h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .notes-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notes-card ul li {
+            padding: 6px 0 6px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .notes-card ul li::before {
+            content: '•';
+            position: absolute;
+            left: 4px;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .dashboard-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.green { background: #4caf50; }
+        .legend-dot.yellow { background: #ff9800; }
+        .legend-dot.gray { background: #bdbdbd; }
+
+        /* ─── DPTR STEP LIST (reuses existing color vars) ─── */
+        .dptr-list, .iosp-list {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .dptr-list li, .iosp-list li {
+            padding: 14px 18px;
+            margin: 10px 0;
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .dptr-list li strong, .iosp-list li strong {
+            color: var(--purple);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── CONSTRAINT REFERENCE (two-column, reuses vars) ─── */
+        .constraint-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .constraint-card {
+            border-radius: 8px;
+            padding: 18px 20px;
+        }
+
+        .constraint-card.together {
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+        }
+
+        .constraint-card.apart {
+            background: var(--coral-light);
+            border: 1px solid rgba(232, 85, 61, 0.35);
+        }
+
+        .constraint-card h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .constraint-card.together h4 { color: var(--teal); }
+        .constraint-card.apart h4 { color: var(--coral); }
+
+        .constraint-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .constraint-card li {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            line-height: 1.5;
+        }
+
+        /* ─── TEACHER ANSWER KEY BLOCK (teal-tinted, reuses vars) ─── */
+        .answer-key {
+            background: var(--teal-light);
+            border: 2px solid var(--teal);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+
+        .answer-key::before {
+            content: 'TEACHER ANSWER KEY';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.15);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+
+        .answer-key .ak-table {
+            background: var(--white);
+            border: 1px solid rgba(43, 181, 160, 0.4);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+
+        .answer-key .ak-table h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .answer-key .ak-table p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .answer-key .ak-note {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        /* ─── RUBRIC TABLE (reuses existing color vars) ─── */
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 32px;
+            font-size: 0.82rem;
+        }
+
+        .rubric-table th {
+            background: var(--purple);
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .rubric-table th:first-child {
+            background: var(--purple-light);
+        }
+
+        .rubric-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.45;
+        }
+
+        .rubric-table td:first-child {
+            font-weight: 600;
+            color: var(--purple);
+            background: var(--purple-lighter);
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ─── RESOURCE LINK (optional enrichment, reuses vars) ─── */
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--teal);
+            text-decoration: none;
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin: 6px 0;
+        }
+
+        .resource-link::before {
+            content: '↗';
+            font-weight: 700;
+        }
+
+        .resource-link:hover {
+            background: rgba(43, 181, 160, 0.18);
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            background: var(--purple);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 32px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .nav { padding: 0 16px; }
+            .hero h1 { font-size: 2rem; }
+            .at-a-glance { margin: -20px 16px 30px; padding: 24px; }
+            .glance-grid { grid-template-columns: 1fr; }
+            .tabs-container { padding: 0 12px; }
+            .tab-content { padding: 24px; }
+            .tabs-nav { flex-direction: column; gap: 2px; }
+            .tab-btn { border-radius: 8px; }
+            .constraint-grid { grid-template-columns: 1fr; }
+            .rubric-table { font-size: 0.72rem; }
+            .rubric-table th, .rubric-table td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <span class="nav-brand">masterpiece labs</span>
+    <span class="nav-badge">FABRIC OF THE INTERNET · WEEK 01 · MIDDLE SCHOOL</span>
+</nav>
+
+<!-- ─── HERO ─── -->
+<header class="hero">
+    <div class="hero-eyebrow">Teacher Guide · Middle School</div>
+    <h1>How the Internet Moves Data</h1>
+    <p class="hero-sub">Week 1 — Infrastructure, bits, addresses, routing, and packets</p>
+</header>
+
+<!-- ─── AT A GLANCE ─── -->
+<section class="at-a-glance" aria-label="Week at a glance">
+    <h2>At a Glance</h2>
+    <div class="glance-grid">
+        <div class="glance-item">
+            <div class="glance-label">Driving Question</div>
+            <div class="glance-value">How does the Internet move data from one device to another across the world?</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Big Idea</div>
+            <div class="glance-value">The Internet is a global network of routers, switches, and servers that breaks data into bits and packets, addresses them, and routes them — with redundancy so it stays reliable.</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Schedule</div>
+            <div class="glance-value">Day 1 Learn (45 min) · Day 2 Explore (90 min) · Day 3 Create (90 min)</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Week Deliverable</div>
+            <div class="glance-value">A labeled map of the student's OWN network (home or school) + completed Unit Guide vocabulary</div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── LEARNING OBJECTIVES ─── -->
+<section class="at-a-glance" aria-label="Learning objectives" style="margin-top:0;">
+    <h2>Learning Objectives</h2>
+    <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:12px;">Students will be able to:</p>
+    <ul class="facilitation-list">
+        <li>Name the core infrastructure of the Internet (router, switch, server, Internet tower) and describe what each does</li>
+        <li>Explain how data is represented as bits (binary) and why binary is reliable</li>
+        <li>Explain why devices need IP addresses and how routers move data between them</li>
+        <li>Describe how redundancy and packets make delivery reliable on an unreliable network</li>
+    </ul>
+</section>
+
+<!-- ─── TABBED DAYS ─── -->
+<section class="tabs-container">
+    <div class="tabs-nav" role="tablist" aria-label="Daily lesson plans">
+        <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="day1" id="tab-day1" onclick="switchTab('day1')">
+            Day 1
+            <span class="tab-duration">45 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day2" id="tab-day2" onclick="switchTab('day2')">
+            Day 2
+            <span class="tab-duration">90 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day3" id="tab-day3" onclick="switchTab('day3')">
+            Day 3
+            <span class="tab-duration">90 min</span>
+        </button>
+    </div>
+
+    <div class="tab-content">
+
+        <!-- ═══════════ DAY 1 ═══════════ -->
+        <div class="tab-panel active" id="day1" role="tabpanel" aria-labelledby="tab-day1">
+            <div class="day-header">
+                <h2>Day 1 — Learn: What Is the Internet, Really?</h2>
+                <p class="day-subtitle">The physical stuff that connects the world</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 1 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–8 min</td>
+                        <td>Hook — "How would you connect two devices across the world?"</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">8–24 min</td>
+                        <td>Mini-lesson — infrastructure vocabulary + how a request travels</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">24–36 min</td>
+                        <td>Map YOUR OWN connection (personalized activity)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">36–42 min</td>
+                        <td>Optional enrichment note (Internet Simulator) + share-out</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">42–45 min</td>
+                        <td>Exit ticket</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Hook (8 min)</h3>
+
+            <div class="say-block">
+                <p>"Take out your phone — or picture it. When you send a message to someone across the world, that message physically travels there in a fraction of a second. How? What has to exist in the world for that to happen? Brainstorm every piece of equipment or connection you can think of."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Accept everything — WiFi, cell towers, satellites, cables. The goal is to surface that there's PHYSICAL infrastructure behind the magic. Then name the key pieces.</p>
+            </div>
+
+            <h3 class="section-title">Mini-lesson: Infrastructure Vocabulary (16 min)</h3>
+
+            <div class="say-block">
+                <p>"The Internet can feel like magic, but it's built from real machines you could actually touch. Let's name the four key pieces and give each one a plain-language job."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>ROUTER</strong> — a computer that forwards data across networks (like a mail-sorting hub that decides where a package goes next).</li>
+                <li><strong>SWITCH</strong> — sends data to the right place inside a LOCAL network (like a receptionist directing you to the right room in one building).</li>
+                <li><strong>SERVER</strong> — a powerful computer that stores and delivers websites, files, and messages when requested (like a library that hands you the book you ask for).</li>
+                <li><strong>INTERNET TOWER</strong> — infrastructure that sends and receives wireless signals.</li>
+            </ul>
+
+            <div class="say-block">
+                <p>"Let's follow a request. You tap a link on your phone. That request leaves your device, goes to your router, travels across the Internet through many more routers, reaches a server that holds the website, and the server sends the page back the same way — all in under a second."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Emphasize the Internet is not "the cloud" — it's real cables, routers, and towers you could touch. "The cloud" is just someone else's servers in a building somewhere.</p>
+            </div>
+
+            <h3 class="section-title">Make It Yours: Map Your Connection (12 min)</h3>
+
+            <div class="say-block">
+                <p>"Right now, YOUR device is connected to the Internet through real equipment. On your worksheet, sketch how your phone or laptop at home or school actually connects: your device → your WiFi router → your Internet provider → the wider Internet. Label the parts you just learned."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>This personalizes the abstract vocabulary — every student's map is a little different (some have WiFi, some hotspot off a phone, some share one router for a whole family). Invite students to note something specific about THEIR setup.</p>
+            </div>
+
+            <h3 class="section-title">Optional Enrichment + Share-Out (6 min)</h3>
+
+            <div class="tip-block">
+                <p>If your class has Code.org accounts, the Internet Simulator (Lesson 1) lets pairs send messages and watch them travel. It's optional — this unit works fully without it.</p>
+            </div>
+            <a class="resource-link" href="https://studio.code.org/courses/ai-foundations-year1-2026">Code.org · AI Foundations Year 1 (Internet Simulator)</a>
+
+            <div class="exit-ticket">
+                <p>"In your own words: what's the difference between a router, a switch, and a server? Give one real example of each from your own life if you can."</p>
+            </div>
+
+            <div class="checkpoint">
+                <p>Every student can name router/switch/server and has sketched their own connection.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 2 ═══════════ -->
+        <div class="tab-panel" id="day2" role="tabpanel" aria-labelledby="tab-day2">
+            <div class="day-header">
+                <h2>Day 2 — Explore: Bits, Addresses, and Getting There</h2>
+                <p class="day-subtitle">Acting out how data actually travels</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 2 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Warm-up — video "The Internet: Wires, Cables &amp; WiFi"</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–10 min</td>
+                        <td>Discuss binary</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">10–45 min</td>
+                        <td>Unplugged — Human Network + Binary Transmission</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">45–55 min</td>
+                        <td>Debrief bits &amp; TCP</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">55–80 min</td>
+                        <td>IP addresses — why devices need them + routing-table read</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">80–90 min</td>
+                        <td>Reflect + record vocab</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Warm-up: Video (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Watch this short video on how the Internet physically sends data. As you watch, notice how computers turn information into simple signals."</p>
+            </div>
+            <a class="resource-link" href="https://www.youtube.com/watch?v=ZhEf7e4kopM">Video · The Internet: Wires, Cables &amp; WiFi (stop ~2:53)</a>
+
+            <h3 class="section-title">Discuss Binary (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Why is binary — just 1s and 0s — such a reliable way to send information? Turn and talk with a partner, then we'll share."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>The insight: binary maps to simple physical states (on/off, light/dark) that are easy to detect even with a weak or noisy signal. Two states are hard to confuse; a hundred shades would be error-prone.</p>
+            </div>
+
+            <h3 class="section-title">Unplugged: Human Network + Binary Transmission (35 min)</h3>
+
+            <div class="say-block">
+                <p>"We're going to BECOME a network. In groups, you'll connect to each other with string (each string = a direct connection), then send a message in binary using hand signals — and discover why sending data reliably is harder than it looks."</p>
+            </div>
+
+            <ul class="facilitation-list">
+                <li>Groups of 5–7. Give string: a group of 5 needs 10 strings (4+3+2+1), a group of 6 needs 15, a group of 7 needs 21 (sum of all numbers below the group size) to fully connect everyone to everyone.</li>
+                <li>Have students physically connect every person to every other person with string — a "fully connected network."</li>
+                <li>Prompt: "Is this efficient? What happens as the group grows?" (This is the aha: full connection doesn't scale — real networks share routes.)</li>
+                <li>Assign roles (Sender, Receiver, and Network Monitors). The Sender transmits a short message like "HEY" in binary using hand signals (e.g., fist = 0, open hand = 1); the Receiver writes down the bits and decodes.</li>
+                <li>Network Monitors watch for dropped, flipped, or delayed bits.</li>
+            </ul>
+
+            <div class="warning-block">
+                <p>Bits WILL get dropped or flipped — that's the point. Don't fix it for them; let them feel the unreliability.</p>
+            </div>
+
+            <h3 class="section-title">Debrief: Bits &amp; TCP (10 min)</h3>
+
+            <div class="say-block">
+                <p>"What went wrong when you sent the message? Real networks have the same problems — delays, congestion, errors. They solve it with PROTOCOLS. One key protocol is TCP."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>TCP</strong> — Transmission Control Protocol — makes sure all parts of a message arrive and are put back in the right order.</li>
+            </ul>
+
+            <h3 class="section-title">IP Addresses (25 min)</h3>
+
+            <div class="say-block">
+                <p>"For a message to get to the right device, that device needs an ADDRESS — an IP address, like a home address for a computer."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>IP ADDRESS</strong> — a unique number that identifies a device on a network, so data knows where to go.</li>
+            </ul>
+
+            <div class="say-block">
+                <p>"On your worksheet, use the routing table — device → IP → next-hop router — to trace which path the data takes to reach its destination."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Analogy — an IP address is like your mailing address; the router is the post office deciding which road the letter takes next.</p>
+            </div>
+
+            <h3 class="section-title">Reflect + Vocab (10 min)</h3>
+
+            <div class="say-block">
+                <p>"Record today's vocabulary in your Unit Guide: bit, binary, TCP, IP address."</p>
+            </div>
+
+            <div class="checkpoint">
+                <p>Every group transmitted a binary message and can explain why networks need protocols + addresses.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 3 ═══════════ -->
+        <div class="tab-panel" id="day3" role="tabpanel" aria-labelledby="tab-day3">
+            <div class="day-header">
+                <h2>Day 3 — Create: Reliable Delivery: Routers, Redundancy &amp; Packets</h2>
+                <p class="day-subtitle">Designing a network that survives failure</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 3 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Recap</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–25 min</td>
+                        <td>Routers &amp; redundancy — what happens when a router fails?</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">25–45 min</td>
+                        <td>Packets — breaking a message into pieces (unplugged packet sim)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">45–65 min</td>
+                        <td>Design challenge — build a redundant network (personalized)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">65–80 min</td>
+                        <td>TCP vs UDP tradeoff discussion</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">80–90 min</td>
+                        <td>Finish the "map your network" deliverable + reflection</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Recap (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Quick recall: what does a router do? A switch? A server? What's a bit? What's an IP address for?"</p>
+            </div>
+
+            <h3 class="section-title">Routers &amp; Redundancy (20 min)</h3>
+
+            <div class="say-block">
+                <p>"The Internet is huge and things fail all the time — cables get cut, routers go down. Yet it keeps working. Why? REDUNDANCY: there's more than one path between any two points."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>REDUNDANCY</strong> — having more than one path or backup, so the network keeps working even when a part fails.</li>
+            </ul>
+
+            <div class="tip-block">
+                <p>Analogy — if one road is closed, you take another route to the same place. The Internet was DESIGNED this way.</p>
+            </div>
+
+            <h3 class="section-title">Packets (20 min)</h3>
+
+            <div class="say-block">
+                <p>"Big messages aren't sent all at once. They're broken into small PACKETS, each sent separately — maybe by different routes — and reassembled at the end."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>PACKET</strong> — a small piece of a larger message, sent separately and reassembled at the destination.</li>
+            </ul>
+
+            <div class="say-block">
+                <p>"Let's try it. Write a sentence on your worksheet. Cut/number it into 4 'packets.' Trade with a partner but hand them the packets OUT of order and 'lose' one. Can they reassemble it? What would they need to ask for?"</p>
+            </div>
+
+            <div class="tip-block">
+                <p>This shows why packets are numbered (to reorder) and why TCP asks for missing packets to be resent.</p>
+            </div>
+
+            <h3 class="section-title">Make It Yours: Design a Reliable Network (20 min)</h3>
+
+            <div class="say-block">
+                <p>"Now design a network for a place YOU care about — your home, your classroom, your dream gaming setup, your family's houses in different cities. Draw the devices and routers. Then make it REDUNDANT: add paths so that if any one router fails, everything stays connected. Mark the backup routes."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Let students pick a context that matters to them. Circulate and ask "what fails, and what's the backup path?"</p>
+            </div>
+
+            <h3 class="section-title">TCP vs UDP (15 min)</h3>
+
+            <div class="say-block">
+                <p>"Two ways to send packets: TCP guarantees everything arrives in order (email, web pages) but is a bit slower. UDP is fast but doesn't guarantee delivery (live video, gaming) — a dropped frame is better than a laggy one."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>UDP</strong> — User Datagram Protocol — sends packets fast without guaranteeing delivery or order; good when speed matters more than perfection.</li>
+            </ul>
+
+            <div class="say-block">
+                <p>"Discuss: for a video call vs. downloading a file — which would you use, and why?"</p>
+            </div>
+
+            <h3 class="section-title">Deliverable + Reflection (10 min)</h3>
+
+            <div class="say-block">
+                <p>"Finish your network map — either your real connection or your designed redundant network. Then answer the reflection: Now that you know how the Internet moves data, what's one thing you understand differently about something you use every day?"</p>
+            </div>
+
+            <h3 class="section-title">Week 1 Deliverable Rubric</h3>
+            <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:4px;">For the labeled network map + reflection. Use it to give quick, consistent feedback.</p>
+            <table class="rubric-table" aria-label="Week 1 deliverable rubric">
+                <thead>
+                    <tr>
+                        <th>Criteria</th>
+                        <th>Beginning</th>
+                        <th>Proficient</th>
+                        <th>Exemplary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Uses key vocabulary correctly (router, switch, server, IP, packet)</td>
+                        <td>Uses 1–2 terms, some mixed up</td>
+                        <td>Uses most terms correctly</td>
+                        <td>All terms used correctly and precisely</td>
+                    </tr>
+                    <tr>
+                        <td>Network map shows devices, routers, and connections clearly</td>
+                        <td>Missing key parts</td>
+                        <td>Shows devices and connections</td>
+                        <td>Clear, complete, easy to follow</td>
+                    </tr>
+                    <tr>
+                        <td>Shows redundancy / an alternate path</td>
+                        <td>Single path only</td>
+                        <td>One backup path shown</td>
+                        <td>Multiple paths; failure handled clearly</td>
+                    </tr>
+                    <tr>
+                        <td>Reflection connects the concept to the student's own life</td>
+                        <td>Little or no connection</td>
+                        <td>Names one personal connection</td>
+                        <td>Thoughtful, specific personal connection</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="checkpoint">
+                <p>Every student produced a labeled, redundant network map and completed their reflection.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ─── ADDITIONAL NOTES ─── -->
+<section class="additional-notes" aria-label="Additional notes for teachers">
+    <div class="notes-card">
+        <h2>Additional Notes for the Teacher</h2>
+
+        <h3>Differentiation</h3>
+        <ul>
+            <li><strong>Struggling:</strong> Provide a partly-labeled network diagram to complete; sentence starters for the reflection; run the binary activity with a 3-bit message</li>
+            <li><strong>Advanced:</strong> Have them research and diagram how their data actually reaches a specific favorite site/app; add a second point of failure to the redundancy challenge; explore what a real traceroute shows</li>
+        </ul>
+
+        <h3>Materials Needed</h3>
+        <ul>
+            <li>Ball of string / yarn (for the Human Network)</li>
+            <li>Scissors</li>
+            <li>Index cards or paper for binary signals &amp; packets</li>
+            <li>The student worksheet</li>
+            <li>Projector for the video</li>
+        </ul>
+
+        <h3>Extend Beyond the Classroom</h3>
+        <ul>
+            <li>At home, have students find their actual WiFi router and count how many devices connect to it</li>
+            <li>Ask a family member what their Internet provider is and how the house connects</li>
+        </ul>
+
+        <h3>Optional: Code.org Internet Simulator</h3>
+        <ul>
+            <li>If you have Code.org accounts, Lessons 1, 3, 4, 5 use the Internet Simulator for plugged versions of these activities. Entirely optional; the unit is complete without it. <a href="https://studio.code.org/courses/ai-foundations-year1-2026">studio.code.org/courses/ai-foundations-year1-2026</a></li>
+        </ul>
+
+        <h3>If you're running behind</h3>
+        <ul>
+            <li>The Human Network string activity is the priority on Day 2; the packet cut-up sim can be shortened</li>
+            <li>The network map can be finished as homework</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+    Masterpiece Labs · The Fabric of the Internet · Week 1 · Middle School
+</footer>
+
+<script>
+    function switchTab(dayId) {
+        // Deactivate all tabs and panels
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+
+        // Activate selected tab and panel
+        document.getElementById('tab-' + dayId).classList.add('active');
+        document.getElementById('tab-' + dayId).setAttribute('aria-selected', 'true');
+        document.getElementById(dayId).classList.add('active');
+    }
+
+    // Keyboard navigation for tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('keydown', (e) => {
+            const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+            const index = tabs.indexOf(e.target);
+            let newIndex;
+
+            if (e.key === 'ArrowRight') {
+                newIndex = (index + 1) % tabs.length;
+            } else if (e.key === 'ArrowLeft') {
+                newIndex = (index - 1 + tabs.length) % tabs.length;
+            } else {
+                return;
+            }
+
+            e.preventDefault();
+            tabs[newIndex].focus();
+            tabs[newIndex].click();
+        });
+    });
+</script>
+
+</body>
+</html>

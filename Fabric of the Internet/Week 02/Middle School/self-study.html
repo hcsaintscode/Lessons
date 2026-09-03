@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 2 Self-Study — Finding Websites &amp; Who Gets Access (Middle School)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --purple: #2d1b69;
+            --purple-light: #3d2b7a;
+            --purple-lighter: #f4f0ff;
+            --teal: #2bb5a0;
+            --teal-light: #e6f9f6;
+            --coral: #e8553d;
+            --coral-light: #fef0ed;
+            --sand: #f5f0e8;
+            --olive: #7a8450;
+            --olive-light: #f0f2e6;
+            --text: #1a1a2e;
+            --text-light: #555;
+            --border: #e0e0e0;
+            --bg: #fafafa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.65;
+            padding-top: 64px;
+        }
+
+        /* ─── STICKY NAV ─── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--purple);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+        }
+
+        .nav-brand {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-badge {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.95);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── PROGRESS BAR (sticky under nav) ─── */
+        .progress-wrap {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            padding: 10px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 10px;
+            background: var(--purple-lighter);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--teal) 0%, var(--purple) 100%);
+            border-radius: 20px;
+            transition: width 0.4s ease;
+        }
+
+        .progress-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--purple);
+            white-space: nowrap;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            padding: 80px 32px 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        /* ─── MAIN COLUMN ─── */
+        .wrap {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 36px 40px;
+            margin: 32px 0;
+        }
+
+        .card.lift {
+            margin-top: -30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        section h2 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.7rem;
+            font-weight: 400;
+            color: var(--purple);
+            margin-bottom: 6px;
+        }
+
+        .kicker {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 8px;
+        }
+
+        section p {
+            font-size: 0.98rem;
+            color: var(--text);
+            margin: 12px 0;
+        }
+
+        section p.muted {
+            color: var(--text-light);
+            font-size: 0.92rem;
+        }
+
+        .examples {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .examples li {
+            padding: 8px 0 8px 24px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .examples li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        /* ─── DPTR STEP BLOCKS (color-accented) ─── */
+        .step {
+            border-radius: 0 10px 10px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .step h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .step .step-tag {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 1.05rem;
+        }
+
+        .step ul {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0 0;
+        }
+
+        .step ul li {
+            font-size: 0.92rem;
+            padding: 4px 0 4px 18px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .step ul li::before {
+            content: '·';
+            position: absolute;
+            left: 4px;
+            font-weight: 700;
+        }
+
+        .step.define { background: var(--teal-light); border-left: 4px solid var(--teal); }
+        .step.define h3 { color: var(--teal); }
+        .step.define ul li::before { color: var(--teal); }
+
+        .step.prepare { background: var(--purple-lighter); border-left: 4px solid var(--purple); }
+        .step.prepare h3 { color: var(--purple); }
+        .step.prepare ul li::before { color: var(--purple); }
+
+        .step.try { background: var(--coral-light); border-left: 4px solid var(--coral); }
+        .step.try h3 { color: var(--coral); }
+        .step.try ul li::before { color: var(--coral); }
+
+        .step.reflect { background: var(--olive-light); border-left: 4px solid var(--olive); }
+        .step.reflect h3 { color: var(--olive); }
+        .step.reflect ul li::before { color: var(--olive); }
+
+        /* ─── CALLOUT ─── */
+        .callout {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 22px 26px;
+            margin: 24px 0;
+        }
+
+        .callout::before {
+            content: '↻ FOLLOW A REQUEST';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            opacity: 0.85;
+            margin-bottom: 8px;
+        }
+
+        .callout p {
+            color: white;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* ─── VIDEO BUTTON ─── */
+        .video-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--coral);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 16px 28px;
+            border-radius: 10px;
+            margin: 16px 0;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 4px 14px rgba(232, 85, 61, 0.3);
+        }
+
+        .video-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 85, 61, 0.4);
+        }
+
+        /* ─── REFLECTION WORKSPACE ─── */
+        .field {
+            margin: 18px 0;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .field label .field-hint {
+            display: block;
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: 2px;
+        }
+
+        textarea, input.text-line {
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            background: #fcfcfd;
+            resize: vertical;
+            transition: border-color 0.2s ease;
+        }
+
+        textarea {
+            min-height: 90px;
+            line-height: 1.6;
+        }
+
+        textarea:focus, input.text-line:focus {
+            outline: none;
+            border-color: var(--teal);
+            background: var(--white);
+        }
+
+        .field-tag {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .field-tag.define { background: var(--teal-light); color: var(--teal); }
+        .field-tag.prepare { background: var(--purple-lighter); color: var(--purple); }
+        .field-tag.try { background: var(--coral-light); color: var(--coral); }
+        .field-tag.reflect { background: var(--olive-light); color: var(--olive); }
+
+        /* ─── CHECKBOX STEP ─── */
+        .step-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: var(--sand);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 24px 0 8px;
+            cursor: pointer;
+            border: 1.5px solid transparent;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .step-check:hover {
+            border-color: var(--teal);
+        }
+
+        .step-check input {
+            width: 22px;
+            height: 22px;
+            margin-top: 1px;
+            accent-color: var(--teal);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .step-check span {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .step-check.done {
+            background: var(--teal-light);
+            border-color: var(--teal);
+        }
+
+        /* ─── PUZZLE CONSTRAINTS ─── */
+        .constraint-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 18px 0;
+        }
+
+        .constraint-card {
+            border-radius: 8px;
+            padding: 18px 20px;
+        }
+
+        .constraint-card.together {
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+        }
+
+        .constraint-card.apart {
+            background: var(--coral-light);
+            border: 1px solid rgba(232, 85, 61, 0.35);
+        }
+
+        .constraint-card h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .constraint-card.together h4 { color: var(--teal); }
+        .constraint-card.apart h4 { color: var(--coral); }
+
+        .constraint-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .constraint-card li {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            line-height: 1.5;
+        }
+
+        .guest-list {
+            background: var(--purple-lighter);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+
+        .guest-list strong {
+            color: var(--purple);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* ─── CHECK YOUR THINKING (details) ─── */
+        details.check {
+            background: var(--olive-light);
+            border: 2px solid var(--olive);
+            border-radius: 10px;
+            padding: 4px 4px;
+            margin: 24px 0;
+        }
+
+        details.check summary {
+            cursor: pointer;
+            list-style: none;
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--olive);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        details.check summary::-webkit-details-marker { display: none; }
+
+        details.check summary::before {
+            content: '▸';
+            transition: transform 0.2s ease;
+        }
+
+        details.check[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        details.check .reveal {
+            padding: 0 20px 20px;
+        }
+
+        details.check .reveal .sol-table {
+            background: var(--white);
+            border: 1px solid rgba(122, 132, 80, 0.4);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 10px 0;
+        }
+
+        details.check .reveal .sol-table h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 2px;
+        }
+
+        details.check .reveal .sol-table p {
+            font-size: 0.9rem;
+            margin: 0;
+            color: var(--text);
+        }
+
+        details.check .reveal > p {
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        /* ─── COMPLETION BANNER ─── */
+        .completion {
+            display: none;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--purple) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 32px 36px;
+            margin: 32px 0;
+            text-align: center;
+        }
+
+        .completion.show {
+            display: block;
+            animation: pop 0.5s ease;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.96); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .completion h2 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .completion p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+        }
+
+        /* ─── SAVED INDICATOR + RESET ─── */
+        .saved-indicator {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--teal);
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 10px 18px;
+            border-radius: 24px;
+            box-shadow: 0 4px 14px rgba(43, 181, 160, 0.4);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            z-index: 1001;
+        }
+
+        .saved-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reset-row {
+            text-align: center;
+            margin: 8px 0 48px;
+        }
+
+        .reset-btn {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--coral);
+            background: transparent;
+            border: 1.5px solid var(--coral);
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .reset-btn:hover {
+            background: var(--coral);
+            color: white;
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            background: var(--purple);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 32px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .nav { padding: 0 16px; }
+            .progress-wrap { padding: 10px 16px; }
+            .hero { padding: 60px 20px 48px; }
+            .hero h1 { font-size: 2rem; }
+            .card { padding: 24px 22px; }
+            .constraint-grid { grid-template-columns: 1fr; }
+            section h2 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <span class="nav-brand">masterpiece labs</span>
+    <span class="nav-badge">SELF-STUDY · WEEK 02</span>
+</nav>
+
+<!-- ─── PROGRESS BAR ─── -->
+<div class="progress-wrap" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <span class="progress-label" id="progressLabel">0 of 6 complete</span>
+</div>
+
+<!-- ─── HERO ─── -->
+<header class="hero">
+    <div class="hero-eyebrow">Self-Study · The Fabric of the Internet</div>
+    <h1>Finding Websites &amp; Who Gets Access</h1>
+    <p class="hero-sub">Learn how your browser finds any website — and why Internet access isn't equal for everyone.</p>
+</header>
+
+<div class="wrap">
+
+    <!-- ─── 2. HOW THIS WORKS ─── -->
+    <section class="card lift" aria-label="How this works">
+        <div class="kicker">Start Here</div>
+        <h2>How This Works</h2>
+        <p>This module is yours to move through at your own speed. Here's the rhythm:</p>
+        <ul class="examples">
+            <li><strong>Read</strong> each part slowly — every section builds on the one before it.</li>
+            <li><strong>Try the activities yourself</strong> in the writing spaces. Your answers save automatically.</li>
+            <li>Use the <strong>"Check your thinking"</strong> toggle to compare your idea with a sample answer — <em>after</em> you've had a real go.</li>
+        </ul>
+        <p class="muted">There's no coding this week. Instead, you'll learn <strong>how your browser finds a website</strong> using DNS and HTTP, and then <strong>build your own advocacy message</strong> about who gets left out when the Internet doesn't reach everyone. Check off each step as you finish it to fill your progress bar at the top.</p>
+
+        <label class="step-check" data-check="ready">
+            <input type="checkbox" id="chk-ready">
+            <span>I'm ready to start</span>
+        </label>
+    </section>
+
+    <!-- ─── 3. HOW YOUR BROWSER FINDS A WEBSITE ─── -->
+    <section class="card" aria-label="How your browser finds a website">
+        <div class="kicker">Lesson 1</div>
+        <h2>How Your Browser Finds a Website</h2>
+        <p>You type <strong>youtube.com</strong> and the page shows up in a heartbeat. But computers don't actually talk to each other using names like "youtube.com" — they use numbers called <strong>IP addresses</strong>. So how does a friendly name turn into the exact machine that has your video? Two clever systems work together.</p>
+
+        <div class="step define">
+            <h3>DNS <span class="step-tag">— the Internet's phone book</span></h3>
+            <ul>
+                <li>DNS (the Domain Name System) turns a name like <strong>youtube.com</strong> into its IP number — the address of the computer that holds the site.</li>
+                <li>Just like a phone book turns a person's name into their phone number, DNS turns a website's name into the number your computer actually dials.</li>
+            </ul>
+        </div>
+
+        <div class="step prepare">
+            <h3>HTTP <span class="step-tag">— the request-and-deliver rules</span></h3>
+            <ul>
+                <li>HTTP (HyperText Transfer Protocol) is the set of rules your browser and the server use to ask for a page and hand it back.</li>
+                <li>Your browser says "please send me this page," and the server replies with the words, pictures, and video that build the page you see.</li>
+            </ul>
+        </div>
+
+        <div class="callout">
+            <p>Type a name → ask DNS → get the number → HTTP fetches the page → it loads. That whole trip happens in a fraction of a second, every single time you open a website.</p>
+        </div>
+
+        <label class="step-check" data-check="dns">
+            <input type="checkbox" id="chk-dns">
+            <span>I can explain DNS and HTTP</span>
+        </label>
+    </section>
+
+    <!-- ─── 4. WATCH ─── -->
+    <section class="card" aria-label="See it in action">
+        <div class="kicker">Watch</div>
+        <h2>See It in Action</h2>
+        <p>This short video takes you on a tour of the real wires, cables, and WiFi signals that carry your data around the world. As you watch, keep in mind the trip a website name takes to become a page on your screen.</p>
+
+        <div>
+            <a class="video-btn" href="https://www.youtube.com/watch?v=ZhEf7e4kopM" target="_blank" rel="noopener">▶ How the Internet Works (Wires, Cables &amp; WiFi)</a>
+        </div>
+
+        <div class="field">
+            <label for="ta-video">Type a website you visit a lot. What NAME do you type, and what do you think its IP number does?
+                <span class="field-hint">Write it in your own words — there's no single right answer.</span>
+            </label>
+            <textarea id="ta-video" placeholder="Type your thinking here — it saves automatically."></textarea>
+        </div>
+
+        <label class="step-check" data-check="watched">
+            <input type="checkbox" id="chk-watched">
+            <span>I watched the video</span>
+        </label>
+    </section>
+
+    <!-- ─── 5. WHO GETS ACCESS? ─── -->
+    <section class="card" aria-label="Who gets access">
+        <div class="kicker">Lesson 2</div>
+        <h2>Who Gets Access?</h2>
+        <p>DNS and HTTP can find any website in the world — but only if you can get onto the Internet in the first place. And here's the thing: <strong>not everyone can, and not everyone gets there equally.</strong> Two ideas help explain why.</p>
+
+        <div class="step define">
+            <h3>The Digital Divide <span class="step-tag">— the access gap</span></h3>
+            <ul>
+                <li>The digital divide is the gap between people who have good, reliable Internet and the people who don't.</li>
+                <li>It can come from cost, where you live, or the devices you can afford. A student with fast home WiFi and a laptop has a very different experience than one who shares a phone or waits for the library to open.</li>
+            </ul>
+        </div>
+
+        <div class="step prepare">
+            <h3>Net Neutrality <span class="step-tag">— treat all sites equally</span></h3>
+            <ul>
+                <li>Net neutrality is the idea that Internet providers should treat all websites equally — not speed up some and slow down others.</li>
+                <li>Without it, a company could make its own videos load fast while a small creator's site crawls, changing what you actually get to see and use.</li>
+            </ul>
+        </div>
+
+        <details class="check">
+            <summary>Check your thinking</summary>
+            <div class="reveal">
+                <p><strong>Question:</strong> A student has no home Internet but has a library nearby with computers that close at 6pm. Name TWO ways this affects their schoolwork.</p>
+                <div class="sol-table">
+                    <h4>Impact 1: No research at night</h4>
+                    <p>They can't do research-heavy homework in the evening, because the only computers they can use are locked up after 6pm.</p>
+                </div>
+                <div class="sol-table">
+                    <h4>Impact 2: Late or missed submissions</h4>
+                    <p>Assignments due online at night can't be submitted on time, and there's limited time to type long assignments before the library closes.</p>
+                </div>
+                <div class="sol-table">
+                    <h4>Also fair</h4>
+                    <p>No evening video calls with teachers for extra help, and less time to practice online tools everyone else uses at home.</p>
+                </div>
+                <p><strong>The big idea:</strong> access isn't just "having Internet or not" — it's also <em>when</em>, <em>where</em>, and <em>how much</em> you get to use it.</p>
+            </div>
+        </details>
+
+        <div class="field">
+            <label for="ta-know-someone"><span class="field-tag reflect">Reflect</span> Do you know anyone — a friend, a relative, a neighbor — who has trouble getting good Internet? What's hard for them?
+                <span class="field-hint">If you're not sure, picture someone whose Internet is slow, shared, or only works in certain places.</span>
+            </label>
+            <textarea id="ta-know-someone" placeholder="Describe who they are and what's hard for them..."></textarea>
+        </div>
+
+        <label class="step-check" data-check="access">
+            <input type="checkbox" id="chk-access">
+            <span>I understand the digital divide</span>
+        </label>
+    </section>
+
+    <!-- ─── 6. BUILD: MAKE YOUR OWN ADVOCACY MESSAGE ─── -->
+    <section class="card" aria-label="Make your own advocacy message">
+        <div class="kicker">Build</div>
+        <h2>Make Your Own Advocacy Message</h2>
+        <p>Now it's your turn to <strong>speak up</strong>. Pick an Internet access issue you actually care about and draft a mini-campaign for it. This is <em>your</em> issue — choose the problem, the people, and the change you want to see.</p>
+        <ul class="examples">
+            <li><strong>Choose an issue</strong> that matters to you — maybe from your own life, someone you know, or your community.</li>
+            <li><strong>Back it up</strong> with a real example or a piece of evidence.</li>
+            <li><strong>Propose a solution</strong> and tell people exactly what you want them to do.</li>
+        </ul>
+
+        <div class="field">
+            <label for="ta-camp-problem"><span class="field-tag define">Problem</span> The access problem I care about:</label>
+            <input type="text" class="text-line" id="ta-camp-problem" placeholder="e.g. Kids on my block can't afford home WiFi">
+        </div>
+        <div class="field">
+            <label for="ta-camp-affects"><span class="field-tag prepare">Who</span> Who it affects:</label>
+            <input type="text" class="text-line" id="ta-camp-affects" placeholder="e.g. Students who need to do homework online">
+        </div>
+        <div class="field">
+            <label for="ta-camp-evidence"><span class="field-tag try">Evidence</span> One piece of evidence or a real example:
+                <span class="field-hint">A story, a number, or something you've seen yourself.</span>
+            </label>
+            <textarea id="ta-camp-evidence" placeholder="Share your example or evidence here..."></textarea>
+        </div>
+        <div class="field">
+            <label for="ta-camp-solution"><span class="field-tag reflect">Solution</span> My proposed solution:</label>
+            <textarea id="ta-camp-solution" placeholder="What could actually help fix this?"></textarea>
+        </div>
+        <div class="field">
+            <label for="ta-camp-cta"><span class="field-tag try">Call to Action</span> My call to action — what I want people to DO:</label>
+            <input type="text" class="text-line" id="ta-camp-cta" placeholder="e.g. Ask the city to add free WiFi to the park">
+        </div>
+
+        <p class="muted">Put these together into a <strong>poster, slides, or a short video script</strong> — something you can actually share with your class, family, or community.</p>
+
+        <label class="step-check" data-check="campaign">
+            <input type="checkbox" id="chk-campaign">
+            <span>I built my advocacy message</span>
+        </label>
+    </section>
+
+    <!-- ─── 7. REFLECT / WRAP STEP ─── -->
+    <section class="card" aria-label="Reflect">
+        <div class="kicker">Reflect</div>
+        <h2>Why This Matters to You</h2>
+        <p>You just learned how the Internet finds any website — and who gets left out along the way. Make it personal:</p>
+
+        <div class="field">
+            <label for="ta-reflect"><span class="field-tag reflect">Reflect</span> Why does the issue you chose matter to YOU? What's one thing you could personally do about Internet access in your life or community?</label>
+            <textarea id="ta-reflect" placeholder="In your own words..."></textarea>
+        </div>
+
+        <label class="step-check" data-check="done">
+            <input type="checkbox" id="chk-done">
+            <span>I finished Week 2</span>
+        </label>
+    </section>
+
+    <!-- ─── COMPLETION BANNER ─── -->
+    <div class="completion" id="completion" role="status">
+        <h2>You're an Internet advocate now! 🎉</h2>
+        <p>You now understand <strong>how the Internet works</strong> — DNS and HTTP finding any website — <strong>and who it leaves out</strong>. Best of all, you can speak up about it with an advocacy message that's truly your own.</p>
+    </div>
+
+    <!-- ─── WRAP-UP ─── -->
+    <section class="card" aria-label="Wrap up">
+        <div class="kicker">Wrap-Up</div>
+        <h2>The Big Idea</h2>
+        <p><strong>DNS + HTTP get you any website in a heartbeat — but not everyone has equal access, and understanding that lets you help change it.</strong> Once you can picture how a name becomes a page, and who gets left out along the way, you're ready to be part of the solution.</p>
+        <p class="muted">This wraps up <strong>The Fabric of the Internet</strong>. You've gone from how data moves, to how websites are found, to who gets to be online — and how to speak up for those who don't.</p>
+    </section>
+
+    <div class="reset-row">
+        <button class="reset-btn" id="resetBtn" type="button">Reset this lesson</button>
+    </div>
+
+</div>
+
+<!-- ─── SAVED INDICATOR ─── -->
+<div class="saved-indicator" id="savedIndicator">Saved ✓</div>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+    Masterpiece Labs · The Fabric of the Internet · Week 2 · Middle School · Self-Study
+</footer>
+
+<script>
+    (function () {
+        'use strict';
+
+        var STORAGE_PREFIX = 'foti-week2-selfstudy-mid:';
+
+        // All text/input fields to autosave (unique ids)
+        var TEXT_IDS = [
+            'ta-video',
+            'ta-know-someone',
+            'ta-camp-problem', 'ta-camp-affects', 'ta-camp-evidence', 'ta-camp-solution', 'ta-camp-cta',
+            'ta-reflect'
+        ];
+
+        // All checkbox ids (the lesson steps that fill the progress bar)
+        var CHECK_IDS = [
+            'chk-ready', 'chk-dns', 'chk-watched',
+            'chk-access', 'chk-campaign', 'chk-done'
+        ];
+        var TOTAL = CHECK_IDS.length;
+
+        var savedIndicator = document.getElementById('savedIndicator');
+        var savedTimer = null;
+
+        // ─── localStorage helpers (wrapped in try/catch) ───
+        function save(key, value) {
+            try {
+                localStorage.setItem(STORAGE_PREFIX + key, value);
+            } catch (e) { /* storage unavailable; fail silently */ }
+        }
+
+        function load(key) {
+            try {
+                return localStorage.getItem(STORAGE_PREFIX + key);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function remove(key) {
+            try {
+                localStorage.removeItem(STORAGE_PREFIX + key);
+            } catch (e) { /* ignore */ }
+        }
+
+        function flashSaved() {
+            if (!savedIndicator) return;
+            savedIndicator.classList.add('show');
+            if (savedTimer) clearTimeout(savedTimer);
+            savedTimer = setTimeout(function () {
+                savedIndicator.classList.remove('show');
+            }, 1200);
+        }
+
+        // ─── Progress bar ───
+        function updateProgress() {
+            var done = 0;
+            CHECK_IDS.forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el && el.checked) done++;
+            });
+
+            var pct = TOTAL > 0 ? Math.round((done / TOTAL) * 100) : 0;
+            var fill = document.getElementById('progressFill');
+            var label = document.getElementById('progressLabel');
+            var wrap = document.querySelector('.progress-wrap');
+
+            if (fill) fill.style.width = pct + '%';
+            if (label) label.textContent = done + ' of ' + TOTAL + ' complete';
+            if (wrap) wrap.setAttribute('aria-valuenow', String(pct));
+
+            // Completion banner when everything is checked
+            var completion = document.getElementById('completion');
+            if (completion) {
+                if (done === TOTAL && TOTAL > 0) {
+                    completion.classList.add('show');
+                } else {
+                    completion.classList.remove('show');
+                }
+            }
+        }
+
+        // ─── Wire up text fields ───
+        TEXT_IDS.forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+
+            var stored = load(id);
+            if (stored !== null) el.value = stored;
+
+            el.addEventListener('input', function () {
+                save(id, el.value);
+                flashSaved();
+            });
+        });
+
+        // ─── Wire up checkboxes ───
+        CHECK_IDS.forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+
+            var stored = load(id);
+            if (stored === 'true') el.checked = true;
+
+            // Reflect checked state on the wrapping label
+            var labelWrap = el.closest('.step-check');
+            function syncLabel() {
+                if (!labelWrap) return;
+                if (el.checked) labelWrap.classList.add('done');
+                else labelWrap.classList.remove('done');
+            }
+            syncLabel();
+
+            el.addEventListener('change', function () {
+                save(id, el.checked ? 'true' : 'false');
+                syncLabel();
+                updateProgress();
+                flashSaved();
+            });
+        });
+
+        // ─── Reset ───
+        var resetBtn = document.getElementById('resetBtn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function () {
+                var ok = window.confirm('Reset this lesson? This clears all your saved answers and checkmarks on this page. This cannot be undone.');
+                if (!ok) return;
+
+                TEXT_IDS.forEach(function (id) {
+                    remove(id);
+                    var el = document.getElementById(id);
+                    if (el) el.value = '';
+                });
+                CHECK_IDS.forEach(function (id) {
+                    remove(id);
+                    var el = document.getElementById(id);
+                    if (el) {
+                        el.checked = false;
+                        var labelWrap = el.closest('.step-check');
+                        if (labelWrap) labelWrap.classList.remove('done');
+                    }
+                });
+                updateProgress();
+                flashSaved();
+            });
+        }
+
+        // ─── Initial paint ───
+        updateProgress();
+    })();
+</script>
+
+</body>
+</html>

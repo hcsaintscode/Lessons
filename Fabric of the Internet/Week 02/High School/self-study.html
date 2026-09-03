@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 2 Self-Study — The Web &amp; the Dilemmas It Creates (High School)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #2d1b69;
+    --purple-light: #3d2b7a;
+    --purple-lighter: #f4f0ff;
+    --teal: #2bb5a0;
+    --teal-light: #e6f9f6;
+    --coral: #e8553d;
+    --coral-light: #fef0ed;
+    --sand: #f5f0e8;
+    --olive: #7a8450;
+    --olive-light: #f0f2e6;
+    --text: #1a1a2e;
+    --text-light: #555;
+    --border: #e0e0e0;
+    --bg: #fafafa;
+    --white: #ffffff;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+
+  /* ─── STICKY NAV ─── */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: var(--purple);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1000;
+    box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+  }
+  .nav-brand {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.5px;
+  }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.95);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .nav-progress-track {
+    width: 120px; height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px; overflow: hidden;
+  }
+  .nav-progress-fill {
+    height: 100%; width: 0%;
+    background: var(--teal);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+  }
+  .nav-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.85);
+    white-space: nowrap;
+  }
+
+  /* ─── SPLIT LAYOUT ─── */
+  .split {
+    display: flex;
+    height: 100vh;
+    padding-top: 60px;
+  }
+  .left-panel {
+    width: 46%;
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+    background: var(--bg);
+  }
+  .right-panel {
+    width: 54%;
+    height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    background: #16132b;
+    position: sticky;
+    top: 60px;
+  }
+  .right-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: #201a3d;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .right-header .rh-label {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  .right-header .rh-sub { font-size: 0.62rem; color: rgba(255,255,255,0.4); font-weight: 400; }
+  .right-body { flex: 1; position: relative; }
+  #editorFrame { width: 100%; height: 100%; border: 0; }
+  .editor-fallback {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.85rem;
+    padding: 24px;
+    text-align: center;
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+  }
+  .editor-fallback a { color: var(--teal); }
+
+  /* ─── LESSON CONTENT ─── */
+  .hero {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    padding: 40px 36px 34px;
+    color: white;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 2.1rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+  .hero-sub { font-size: 0.98rem; opacity: 0.85; }
+
+  .content { padding: 0 36px 60px; }
+
+  section.block {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section.block:last-of-type { border-bottom: none; }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+  section.block h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: var(--purple);
+    margin-bottom: 10px;
+  }
+  section.block p { font-size: 0.95rem; margin: 10px 0; }
+  section.block p.muted { color: var(--text-light); font-size: 0.9rem; }
+
+  .examples { list-style: none; padding: 0; margin: 12px 0; }
+  .examples li { padding: 6px 0 6px 22px; position: relative; font-size: 0.92rem; }
+  .examples li::before { content: '→'; position: absolute; left: 0; color: var(--teal); font-weight: 700; }
+
+  /* IOSP step blocks */
+  .step { border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 12px 0; }
+  .step h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 5px;
+  }
+  .step .tag {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 1rem;
+  }
+  .step p { font-size: 0.9rem; margin: 4px 0 0; }
+  .step.input   { background: var(--teal-light);   border-left: 4px solid var(--teal); }
+  .step.input h3 { color: var(--teal); }
+  .step.process { background: var(--purple-lighter); border-left: 4px solid var(--purple); }
+  .step.process h3 { color: var(--purple); }
+  .step.output  { background: var(--coral-light);  border-left: 4px solid var(--coral); }
+  .step.output h3 { color: var(--coral); }
+  .step.storage { background: var(--olive-light);  border-left: 4px solid var(--olive); }
+  .step.storage h3 { color: var(--olive); }
+
+  .callout {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    color: white; border-radius: 10px; padding: 18px 22px; margin: 18px 0;
+  }
+  .callout::before {
+    content: 'THE PATTERN';
+    display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; font-weight: 600; letter-spacing: 1.5px;
+    opacity: 0.85; margin-bottom: 6px;
+  }
+  .callout p { color: white; font-size: 0.92rem; margin: 0; }
+
+  /* code */
+  code.ci {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem; background: var(--purple-lighter);
+    border: 1px solid #ddd4f5; border-radius: 5px;
+    padding: 1px 6px; color: var(--purple);
+  }
+  pre.cb {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; line-height: 1.6;
+    background: #1f1a3a; color: #d7c9ff;
+    border-left: 3px solid var(--teal);
+    border-radius: 8px; padding: 14px 16px;
+    overflow-x: auto; white-space: pre; margin: 8px 0 6px;
+    tab-size: 2;
+  }
+  .code-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--teal); font-weight: 500; margin: 14px 0 3px;
+  }
+
+  /* video buttons */
+  .video-btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: var(--coral); color: white; text-decoration: none;
+    font-weight: 600; font-size: 0.92rem; padding: 12px 20px;
+    border-radius: 9px; margin: 6px 8px 6px 0;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 4px 12px rgba(232, 85, 61, 0.28);
+  }
+  .video-btn:hover { transform: translateY(-2px); }
+
+  /* fields */
+  .field { margin: 14px 0; }
+  .field label {
+    display: block; font-size: 0.88rem; font-weight: 600;
+    color: var(--purple); margin-bottom: 6px;
+  }
+  .field label .hint {
+    display: block; font-weight: 400; font-size: 0.82rem;
+    color: var(--text-light); font-style: italic; margin-top: 2px;
+  }
+  textarea, input.text-line {
+    width: 100%; font-family: 'Inter', sans-serif; font-size: 0.92rem;
+    color: var(--text); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 10px 12px; background: #fcfcfd;
+    resize: vertical; transition: border-color 0.2s ease;
+  }
+  textarea { min-height: 74px; line-height: 1.55; }
+  textarea:focus, input.text-line:focus { outline: none; border-color: var(--teal); background: var(--white); }
+
+  .tag-chip {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px;
+    margin-right: 8px; vertical-align: middle;
+  }
+  .tag-chip.input { background: var(--teal-light); color: var(--teal); }
+  .tag-chip.process { background: var(--purple-lighter); color: var(--purple); }
+  .tag-chip.output { background: var(--coral-light); color: var(--coral); }
+  .tag-chip.storage { background: var(--olive-light); color: var(--olive); }
+
+  /* checkbox step */
+  .step-check {
+    display: flex; align-items: flex-start; gap: 11px;
+    background: var(--sand); border-radius: 10px; padding: 14px 18px;
+    margin: 18px 0 6px; cursor: pointer; border: 1.5px solid transparent;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .step-check:hover { border-color: var(--teal); }
+  .step-check input { width: 21px; height: 21px; margin-top: 1px; accent-color: var(--teal); cursor: pointer; flex-shrink: 0; }
+  .step-check span { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+  .step-check.done { background: var(--teal-light); border-color: var(--teal); }
+
+  /* details */
+  details.check {
+    background: var(--olive-light); border: 2px solid var(--olive);
+    border-radius: 10px; padding: 2px; margin: 18px 0;
+  }
+  details.check summary {
+    cursor: pointer; list-style: none; padding: 14px 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.76rem;
+    font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--olive); display: flex; align-items: center; gap: 9px;
+  }
+  details.check summary::-webkit-details-marker { display: none; }
+  details.check summary::before { content: '▸'; transition: transform 0.2s ease; }
+  details.check[open] summary::before { transform: rotate(90deg); }
+  details.check .reveal { padding: 0 18px 18px; }
+  details.check .reveal p { font-size: 0.9rem; line-height: 1.6; }
+
+  /* completion */
+  .completion {
+    display: none;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--purple) 100%);
+    color: white; border-radius: 12px; padding: 26px 30px; margin: 24px 0; text-align: center;
+  }
+  .completion.show { display: block; animation: pop 0.5s ease; }
+  @keyframes pop { 0% { transform: scale(0.96); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .completion h2 { font-family: 'Playfair Display', serif; font-style: italic; color: white; font-size: 1.5rem; margin-bottom: 6px; }
+  .completion p { color: rgba(255,255,255,0.9); margin: 0; font-size: 0.92rem; }
+
+  /* saved + reset */
+  .saved-indicator {
+    position: fixed; bottom: 20px; left: 20px;
+    background: var(--teal); color: white;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; font-weight: 500;
+    padding: 9px 16px; border-radius: 22px;
+    box-shadow: 0 4px 14px rgba(43, 181, 160, 0.4);
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; z-index: 1001;
+  }
+  .saved-indicator.show { opacity: 1; transform: translateY(0); }
+  .reset-row { text-align: center; margin: 24px 0 12px; }
+  .reset-btn {
+    font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500;
+    color: var(--coral); background: transparent; border: 1.5px solid var(--coral);
+    border-radius: 8px; padding: 9px 18px; cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .reset-btn:hover { background: var(--coral); color: white; }
+
+  /* mobile toggle button (hidden on desktop) */
+  .mobile-toggle {
+    display: none;
+    position: fixed; bottom: 18px; right: 18px; z-index: 1002;
+    background: var(--purple); color: white; border: none;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem;
+    padding: 12px 20px; border-radius: 24px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(45, 27, 105, 0.4);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 860px) {
+    .split { flex-direction: column; height: auto; }
+    .left-panel, .right-panel { width: 100%; }
+    .left-panel { height: auto; overflow: visible; }
+    .right-panel {
+      position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+      height: auto; width: 100%; z-index: 900;
+      transform: translateX(100%); transition: transform 0.3s ease;
+    }
+    .right-panel.mobile-show { transform: translateX(0); }
+    .left-panel.mobile-hide { display: none; }
+    .mobile-toggle { display: block; }
+    .nav-progress-track { width: 70px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <span class="nav-brand">masterpiece labs</span>
+  <div class="nav-right">
+    <span class="nav-badge">SELF-STUDY · WEEK 02 · HS</span>
+    <div class="nav-progress-track"><div class="nav-progress-fill" id="progressFill"></div></div>
+    <span class="nav-progress-label" id="progressLabel">0 / 6</span>
+  </div>
+</nav>
+
+<div class="split">
+
+  <!-- ═══════════ LEFT: LESSON ═══════════ -->
+  <div class="left-panel" id="lessonPanel">
+
+    <header class="hero">
+      <div class="hero-eyebrow">Self-Study · The Fabric of the Internet</div>
+      <h1>The Web &amp; the Dilemmas It Creates</h1>
+      <p class="hero-sub">See how a name becomes a web page in real code — then reason about the dilemmas the Internet creates.</p>
+    </header>
+
+    <div class="content">
+
+      <!-- 1. HOW THIS WORKS -->
+      <section class="block">
+        <div class="kicker">Start Here</div>
+        <h2>How This Works</h2>
+        <p>Last week you made the network <em>reliable</em>. This week you go up the stack: how a name you type becomes a live web page — and the harder question of what an open Internet does to people. You'll <strong>run and edit real code</strong> in the live editor to your right. No installs, no setup: the code is already running.</p>
+        <ul class="examples">
+          <li><strong>Read</strong> the lesson on the left; <strong>run and edit code</strong> on the right.</li>
+          <li>The editor updates live — change something, refresh the preview, and read the output.</li>
+          <li>Your written answers save automatically. Check off each milestone to fill the progress bar.</li>
+        </ul>
+        <p class="muted">On a tablet or phone? Use the <strong>Switch to Editor</strong> button (bottom-right) to flip between the lesson and the code.</p>
+        <label class="step-check" data-check="ready">
+          <input type="checkbox" id="chk-ready">
+          <span>I'm ready to start</span>
+        </label>
+      </section>
+
+      <!-- 2. LESSON: DNS -->
+      <section class="block">
+        <div class="kicker">Lesson 1</div>
+        <h2>DNS: Names to Addresses</h2>
+        <p>You type <code class="ci">example.com</code>, but computers route by numbers — <strong>IP addresses</strong>. The <strong>Domain Name System (DNS)</strong> is the Internet's phone book: it turns human-friendly names into machine addresses. And it's not one giant list on one server — it's a <strong>distributed hierarchy</strong>, so no single machine has to know every name on earth.</p>
+        <div class="step input">
+          <h3>Your resolver <span class="tag">— the machine that asks around</span></h3>
+          <p>Your device sends the name to a <strong>resolver</strong> (often run by your ISP or a service like 1.1.1.1). Its job is to hunt down the answer on your behalf, step by step.</p>
+        </div>
+        <div class="step process">
+          <h3>Root &amp; TLD <span class="tag">— narrowing it down</span></h3>
+          <p>The resolver asks a <strong>root</strong> server, which points it to the right <strong>TLD</strong> server for the ending — <code class="ci">.com</code>, <code class="ci">.org</code>, <code class="ci">.edu</code>. Each step narrows the search instead of scanning everything.</p>
+        </div>
+        <div class="step output">
+          <h3>Authoritative server <span class="tag">— the final answer</span></h3>
+          <p>The TLD points to the domain's <strong>authoritative</strong> server, which returns the actual <strong>IP address</strong>. Now your browser knows where to connect.</p>
+        </div>
+        <div class="callout">
+          <p>The demo on the right resolves a domain name to an IP by looking it up in a DNS table.</p>
+        </div>
+        <label class="step-check" data-check="dns">
+          <input type="checkbox" id="chk-dns">
+          <span>I can explain DNS resolution</span>
+        </label>
+      </section>
+
+      <!-- 3. LESSON: HTTP -->
+      <section class="block">
+        <div class="kicker">Lesson 2</div>
+        <h2>HTTP: Request &amp; Response</h2>
+        <p>DNS gets you the address. Now the browser actually <em>talks</em> to the server using <strong>HTTP</strong>. It's a simple conversation: the browser sends a <strong>request</strong> (a <strong>method</strong> like <code class="ci">GET</code> plus a <strong>path</strong>), and the server sends back a <strong>response</strong> — a <strong>status code</strong> plus the page.</p>
+        <p>You've met these status codes without knowing it: <code class="ci">200</code> OK (here's your page), <code class="ci">404</code> Not Found (that page doesn't exist), <code class="ci">500</code> Server Error (something broke on their end).</p>
+        <p class="code-caption">A tiny HTTP exchange</p>
+        <pre class="cb">&gt; GET /about.html HTTP/1.1
+&gt; Host: example.com
+
+&lt; HTTP/1.1 200 OK
+&lt; Content-Type: text/html
+&lt;
+&lt; &lt;html&gt;...the page...&lt;/html&gt;</pre>
+        <p class="muted">Request goes up (<code class="ci">&gt;</code>), response comes back (<code class="ci">&lt;</code>). Same pattern behind every page you load, every image, every API call.</p>
+        <label class="step-check" data-check="http">
+          <input type="checkbox" id="chk-http">
+          <span>I understand HTTP request/response</span>
+        </label>
+      </section>
+
+      <!-- 4. RUN IT -->
+      <section class="block">
+        <div class="kicker">Run It</div>
+        <h2>Run the DNS Resolver</h2>
+        <p>The editor on the right is running a <strong>DNS Resolver</strong>. It has a small <code class="ci">dnsTable</code> that maps names to IP addresses — a stand-in for the real distributed hierarchy you just read about. Given a lookup name, it either returns the matching <strong>IP address</strong> or reports <code class="ci">NXDOMAIN</code> (the name wasn't found).</p>
+        <p>Click <strong>Run</strong> (or refresh the preview) and read the output. Notice it walks the <em>resolver → root → TLD → authoritative</em> idea in its comments, then prints the IP so the browser could send an HTTP request next.</p>
+        <div class="field">
+          <label for="ta-trace">How does it work?
+            <span class="hint">In your own words, how does the resolver turn a name into an IP, and what happens when the name isn't in the table?</span>
+          </label>
+          <textarea id="ta-trace" placeholder="Type your answer — it saves automatically."></textarea>
+        </div>
+        <label class="step-check" data-check="ran">
+          <input type="checkbox" id="chk-ran">
+          <span>I ran the resolver</span>
+        </label>
+      </section>
+
+      <!-- 5. MODIFY IT -->
+      <section class="block">
+        <div class="kicker">Make It Yours</div>
+        <h2>Make It Yours</h2>
+        <p>Now change the code on the right. Each of these is a real edit — and you get to decide which sites live in <em>your</em> corner of the Internet:</p>
+        <ul class="examples">
+          <li><strong>Add your own site:</strong> put <em>your</em> favorite website into the <code class="ci">dnsTable</code> with a made-up IP address.</li>
+          <li><strong>Resolve it:</strong> change <code class="ci">lookup</code> to your site and confirm it returns your IP.</li>
+          <li><strong>Break it on purpose:</strong> look up a name that's <em>not</em> in the table and watch it report <code class="ci">NXDOMAIN</code>.</li>
+          <li><strong>Stretch:</strong> make the resolver also print the domain's <strong>TLD</strong> — the part after the last dot (e.g. <code class="ci">io</code> from <code class="ci">mygame.io</code>).</li>
+        </ul>
+        <details class="check">
+          <summary>Stuck? Example edit</summary>
+          <div class="reveal">
+            <p>Add your own site by putting a new entry in the <code class="ci">dnsTable</code> in <code class="ci">index.js</code>, then point <code class="ci">lookup</code> at it:</p>
+            <pre class="cb">var dnsTable = {
+  "example.com": "93.184.216.34",
+  "school.edu": "192.0.2.10",
+  "mygame.io": "203.0.113.7",
+  "myfavesite.com": "198.51.100.42"   // &lt;- your site
+};
+
+var lookup = "myfavesite.com";</pre>
+            <p>To print the TLD, grab the part after the last dot with <code class="ci">split('.').pop()</code>:</p>
+            <pre class="cb">var tld = lookup.split(".").pop();   // "com"
+out.textContent += "\nTLD: ." + tld;</pre>
+            <p>Try a name you never added — like <code class="ci">"nope.xyz"</code> — and the output should report <code class="ci">NXDOMAIN</code>.</p>
+          </div>
+        </details>
+        <label class="step-check" data-check="modified">
+          <input type="checkbox" id="chk-modified">
+          <span>I modified the resolver</span>
+        </label>
+      </section>
+
+      <!-- 6. DILEMMA -->
+      <section class="block">
+        <div class="kicker">Reason About It</div>
+        <h2>Reason About a Dilemma</h2>
+        <p>Here's the twist. The <em>technical</em> Internet is neutral — a router doesn't care whether a packet carries homework, a protest, or a cat video. But the <em>human</em> Internet is full of dilemmas, because access and control aren't shared equally: <strong>net neutrality</strong> (should ISPs be allowed to speed up or slow down some traffic?), the <strong>digital divide</strong> (who gets fast, affordable access — and who doesn't?), <strong>censorship</strong> (who decides what you can reach?), and <strong>privacy</strong> (who gets to watch what you do?).</p>
+        <p>Pick <strong>one</strong> dilemma you actually care about and build a mini-argument. A good argument has a clear claim, real evidence, and an honest answer to the other side.</p>
+        <div class="field">
+          <label for="ta-dilemma-topic">The dilemma I care about:
+            <span class="hint">Net neutrality, the digital divide, censorship, privacy — or another Internet dilemma that matters to you.</span>
+          </label>
+          <input class="text-line" type="text" id="ta-dilemma-topic" placeholder="e.g. the digital divide in my town">
+        </div>
+        <div class="field">
+          <label for="ta-dilemma-claim">My claim:
+            <span class="hint">In one sentence, what do you believe should be true?</span>
+          </label>
+          <textarea id="ta-dilemma-claim" placeholder="Type your claim — it saves automatically."></textarea>
+        </div>
+        <div class="field">
+          <label for="ta-dilemma-evidence">One piece of evidence:
+            <span class="hint">A fact, an example, or something you've seen in your own life that backs up your claim.</span>
+          </label>
+          <textarea id="ta-dilemma-evidence" placeholder="Type your evidence — it saves automatically."></textarea>
+        </div>
+        <div class="field">
+          <label for="ta-dilemma-counter">The strongest counter-argument — and my response:
+            <span class="hint">What's the best point someone who disagrees would make? Now answer them.</span>
+          </label>
+          <textarea id="ta-dilemma-counter" placeholder="Type the counter-argument and your response — it saves automatically."></textarea>
+        </div>
+        <label class="step-check" data-check="dilemma">
+          <input type="checkbox" id="chk-dilemma">
+          <span>I reasoned about a dilemma</span>
+        </label>
+      </section>
+
+      <!-- COMPLETION -->
+      <div class="completion" id="completion" role="status">
+        <h2>You can explain the web AND argue its dilemmas! 🎉</h2>
+        <p>You traced how DNS turns a name into an IP, how HTTP loads a page, and you built a real argument about a dilemma an open Internet creates. That wraps <strong>The Fabric of the Internet</strong> unit — you can now explain how the Internet works <em>and</em> think critically about what it does to people.</p>
+      </div>
+
+      <!-- WRAP-UP -->
+      <section class="block">
+        <div class="kicker">Wrap-Up</div>
+        <h2>The Big Idea</h2>
+        <p><strong>DNS + HTTP turn a name into a page in milliseconds</strong> — a name becomes an address, an address becomes a request, a request becomes the page in front of you. But the hardest Internet questions aren't technical; they're about <strong>fairness, access, and power</strong>: who gets on, who gets fast lanes, who gets watched, who gets to decide.</p>
+        <p class="muted"><strong>Keep going:</strong> next time you hit a slow site, a paywall, a blocked page, or a "no service here," ask <em>who benefits from it working this way?</em> — that's the question an engineer <em>and</em> a citizen both need.</p>
+      </section>
+
+      <div class="reset-row">
+        <button class="reset-btn" id="resetBtn" type="button">Reset this lesson</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════ RIGHT: EDITOR ═══════════ -->
+  <div class="right-panel" id="editorPanel">
+    <div class="right-header">
+      <span class="rh-label">Live Code Editor</span>
+      <span class="rh-sub">powered by StackBlitz</span>
+    </div>
+    <div class="right-body">
+      <div id="editorFrame">
+        <div class="editor-fallback">
+          Loading the code editor…<br><br>
+          If it doesn't appear, make sure you're online, or
+          <a href="https://stackblitz.com/fork/js" target="_blank" rel="noopener">open a blank JavaScript project on StackBlitz</a>
+          and paste the DNS Resolver code from your worksheet.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- mobile flip button -->
+<button class="mobile-toggle" id="mobileToggle" type="button">Switch to Editor</button>
+
+<!-- saved indicator -->
+<div class="saved-indicator" id="savedIndicator">Saved ✓</div>
+
+<script src="https://unpkg.com/@stackblitz/sdk/bundles/sdk.umd.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_PREFIX = 'foti-week2-selfstudy-high:';
+
+  var TEXT_IDS = [
+    'ta-trace', 'ta-dilemma-topic', 'ta-dilemma-claim', 'ta-dilemma-evidence', 'ta-dilemma-counter'
+  ];
+  var CHECK_IDS = [
+    'chk-ready', 'chk-dns', 'chk-http', 'chk-ran', 'chk-modified', 'chk-dilemma'
+  ];
+  var TOTAL = CHECK_IDS.length;
+
+  var savedIndicator = document.getElementById('savedIndicator');
+  var savedTimer = null;
+
+  function save(k, v) { try { localStorage.setItem(STORAGE_PREFIX + k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(STORAGE_PREFIX + k); } catch (e) { return null; } }
+  function remove(k) { try { localStorage.removeItem(STORAGE_PREFIX + k); } catch (e) {} }
+
+  function flashSaved() {
+    if (!savedIndicator) return;
+    savedIndicator.classList.add('show');
+    if (savedTimer) clearTimeout(savedTimer);
+    savedTimer = setTimeout(function () { savedIndicator.classList.remove('show'); }, 1200);
+  }
+
+  function updateProgress() {
+    var done = 0;
+    CHECK_IDS.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.checked) done++;
+    });
+    var pct = TOTAL > 0 ? Math.round((done / TOTAL) * 100) : 0;
+    var fill = document.getElementById('progressFill');
+    var label = document.getElementById('progressLabel');
+    if (fill) fill.style.width = pct + '%';
+    if (label) label.textContent = done + ' / ' + TOTAL;
+    var completion = document.getElementById('completion');
+    if (completion) {
+      if (done === TOTAL && TOTAL > 0) completion.classList.add('show');
+      else completion.classList.remove('show');
+    }
+  }
+
+  // text fields
+  TEXT_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var stored = load(id);
+    if (stored !== null) el.value = stored;
+    el.addEventListener('input', function () { save(id, el.value); flashSaved(); });
+  });
+
+  // checkboxes
+  CHECK_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var stored = load(id);
+    if (stored === 'true') el.checked = true;
+    var labelWrap = el.closest('.step-check');
+    function sync() { if (labelWrap) labelWrap.classList.toggle('done', el.checked); }
+    sync();
+    el.addEventListener('change', function () {
+      save(id, el.checked ? 'true' : 'false');
+      sync();
+      updateProgress();
+      flashSaved();
+    });
+  });
+
+  // reset
+  var resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function () {
+      if (!window.confirm('Reset this lesson? This clears your saved answers and checkmarks on this page. This cannot be undone.')) return;
+      TEXT_IDS.forEach(function (id) { remove(id); var el = document.getElementById(id); if (el) el.value = ''; });
+      CHECK_IDS.forEach(function (id) {
+        remove(id);
+        var el = document.getElementById(id);
+        if (el) { el.checked = false; var w = el.closest('.step-check'); if (w) w.classList.remove('done'); }
+      });
+      updateProgress();
+      flashSaved();
+    });
+  }
+
+  // mobile toggle
+  var showingEditor = false;
+  var mobileToggle = document.getElementById('mobileToggle');
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', function () {
+      showingEditor = !showingEditor;
+      document.getElementById('lessonPanel').classList.toggle('mobile-hide', showingEditor);
+      document.getElementById('editorPanel').classList.toggle('mobile-show', showingEditor);
+      mobileToggle.textContent = showingEditor ? 'Switch to Lesson' : 'Switch to Editor';
+    });
+  }
+
+  updateProgress();
+
+  // ─── StackBlitz embed: DNS Resolver (input → processing → output) ───
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof StackBlitzSDK === 'undefined') return;
+    StackBlitzSDK.embedProject('editorFrame', {
+      title: 'DNS Resolver',
+      description: 'Week 2 — turning a domain name into an IP address',
+      template: 'javascript',
+      files: {
+        'index.html': '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>DNS Resolver</title>\n  <style>\n    body { font-family: system-ui, sans-serif; max-width: 520px;\n           margin: 40px auto; padding: 0 16px; color: #1a1a2e; }\n    h1 { color: #2d1b69; }\n    pre { background: #f4f0ff; border-left: 4px solid #2bb5a0;\n          border-radius: 8px; padding: 16px 18px; font-size: 1rem;\n          line-height: 1.6; white-space: pre-wrap; color: #1a1a2e; }\n  </style>\n</head>\n<body>\n  <h1>DNS Resolver</h1>\n  <pre id="out"></pre>\n  <script src="index.js"><\/script>\n</body>\n</html>',
+        'index.js': '// DNS Resolver\n// A tiny stand-in for the Domain Name System.\n// In reality this lookup walks a hierarchy: resolver -> root -> TLD -> authoritative server.\n\n// A small "DNS table": name -> IP address\nvar dnsTable = {\n  "example.com": "93.184.216.34",\n  "school.edu": "192.0.2.10",\n  "mygame.io": "203.0.113.7"\n};\n\n// 1) INPUT: the domain name we want to resolve\nvar lookup = "example.com";\n\n// 2) PROCESSING: look up the name in the DNS table\nvar ip = dnsTable[lookup];\n\n// 3) OUTPUT: report the result (or NXDOMAIN if the name isn\\u2019t found)\nvar out = document.getElementById("out");\nif (ip) {\n  out.textContent =\n    "Resolving " + lookup + " ...\\n" +\n    "  resolver -> root -> ." + lookup.split(".").pop() + " -> authoritative\\n" +\n    "  IP address: " + ip + "\\n\\n" +\n    "Now the browser can send an HTTP GET to " + ip + ".";\n} else {\n  out.textContent =\n    "Resolving " + lookup + " ...\\n" +\n    "  NXDOMAIN: no IP found for \\"" + lookup + "\\".\\n" +\n    "  (Try adding it to dnsTable, or check the spelling.)";\n}\n'
+      }
+    }, {
+      openFile: 'index.js',
+      view: 'default',
+      hideDevTools: true,
+      height: '100%'
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

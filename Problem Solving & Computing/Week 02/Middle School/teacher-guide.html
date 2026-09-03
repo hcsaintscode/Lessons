@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 2 Teacher Guide — Problem Solving &amp; Computing (Middle School)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --purple: #2d1b69;
+            --purple-light: #3d2b7a;
+            --purple-lighter: #f4f0ff;
+            --teal: #2bb5a0;
+            --teal-light: #e6f9f6;
+            --coral: #e8553d;
+            --coral-light: #fef0ed;
+            --text: #1a1a2e;
+            --text-light: #555;
+            --border: #e0e0e0;
+            --bg: #fafafa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            padding-top: 64px;
+        }
+
+        /* ─── STICKY NAV ─── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--purple);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+        }
+
+        .nav-brand {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-badge {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.95);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            padding: 80px 32px 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ─── AT A GLANCE ─── */
+        .at-a-glance {
+            max-width: 900px;
+            margin: -30px auto 40px;
+            padding: 32px 40px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .at-a-glance h2 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 20px;
+        }
+
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .glance-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .glance-item:last-child,
+        .glance-item:nth-last-child(2) {
+            border-bottom: none;
+        }
+
+        .glance-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .glance-value {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        /* ─── TABS ─── */
+        .tabs-container {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 4px;
+            background: var(--white);
+            border-radius: 12px 12px 0 0;
+            padding: 8px 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: var(--purple-lighter);
+            color: var(--purple);
+        }
+
+        .tab-btn.active {
+            background: var(--purple);
+            color: white;
+            font-weight: 600;
+        }
+
+        .tab-btn .tab-duration {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 2px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tab-btn.active .tab-duration {
+            opacity: 0.85;
+        }
+
+        .tab-content {
+            background: var(--white);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ─── DAY HEADER ─── */
+        .day-header {
+            margin-bottom: 32px;
+        }
+
+        .day-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .day-header .day-subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ─── TIMING TABLE ─── */
+        .timing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0 36px;
+            font-size: 0.9rem;
+        }
+
+        .timing-table th {
+            background: var(--purple-lighter);
+            color: var(--purple);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--purple);
+        }
+
+        .timing-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .timing-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .timing-table .time-col {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--purple);
+            white-space: nowrap;
+            width: 100px;
+        }
+
+        /* ─── SECTION HEADERS ─── */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 36px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--purple-lighter);
+        }
+
+        /* ─── SAY BLOCKS ─── */
+        .say-block {
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .say-block::before {
+            content: 'SAY';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            background: rgba(45, 27, 105, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .say-block p {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        /* ─── TIP BLOCKS ─── */
+        .tip-block {
+            background: var(--teal-light);
+            border-left: 4px solid var(--teal);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .tip-block::before {
+            content: 'TIP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.12);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .tip-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── WARNING BLOCKS ─── */
+        .warning-block {
+            background: var(--coral-light);
+            border-left: 4px solid var(--coral);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .warning-block::before {
+            content: 'HEADS UP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--coral);
+            background: rgba(232, 85, 61, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .warning-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── CHECKPOINT ─── */
+        .checkpoint {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 36px 0;
+            color: white;
+        }
+
+        .checkpoint::before {
+            content: '✓ CHECKPOINT';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            opacity: 0.85;
+        }
+
+        .checkpoint p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        /* ─── CONTENT HELPERS ─── */
+        .facilitation-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .facilitation-list li {
+            padding: 8px 0 8px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .facilitation-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        .discussion-questions {
+            list-style: none;
+            counter-reset: question;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .discussion-questions li {
+            counter-increment: question;
+            padding: 10px 0 10px 36px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .discussion-questions li::before {
+            content: counter(question);
+            position: absolute;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--purple-lighter);
+            color: var(--purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            top: 10px;
+        }
+
+        .exit-ticket {
+            background: #f8f7ff;
+            border: 2px dashed var(--purple);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+
+        .exit-ticket::before {
+            content: 'EXIT TICKET';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .exit-ticket p {
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* ─── ADDITIONAL NOTES ─── */
+        .additional-notes {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .notes-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .notes-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 24px;
+        }
+
+        .notes-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .notes-card h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .notes-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notes-card ul li {
+            padding: 6px 0 6px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .notes-card ul li::before {
+            content: '•';
+            position: absolute;
+            left: 4px;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .dashboard-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.green { background: #4caf50; }
+        .legend-dot.yellow { background: #ff9800; }
+        .legend-dot.gray { background: #bdbdbd; }
+
+        /* ─── DPTR STEP LIST (reuses existing color vars) ─── */
+        .dptr-list, .iosp-list {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .dptr-list li, .iosp-list li {
+            padding: 14px 18px;
+            margin: 10px 0;
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .dptr-list li strong, .iosp-list li strong {
+            color: var(--purple);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── CONSTRAINT REFERENCE (two-column, reuses vars) ─── */
+        .constraint-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .constraint-card {
+            border-radius: 8px;
+            padding: 18px 20px;
+        }
+
+        .constraint-card.together {
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+        }
+
+        .constraint-card.apart {
+            background: var(--coral-light);
+            border: 1px solid rgba(232, 85, 61, 0.35);
+        }
+
+        .constraint-card h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .constraint-card.together h4 { color: var(--teal); }
+        .constraint-card.apart h4 { color: var(--coral); }
+
+        .constraint-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .constraint-card li {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            line-height: 1.5;
+        }
+
+        /* ─── TEACHER ANSWER KEY BLOCK (teal-tinted, reuses vars) ─── */
+        .answer-key {
+            background: var(--teal-light);
+            border: 2px solid var(--teal);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+
+        .answer-key::before {
+            content: 'TEACHER ANSWER KEY';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.15);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+
+        .answer-key .ak-table {
+            background: var(--white);
+            border: 1px solid rgba(43, 181, 160, 0.4);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+
+        .answer-key .ak-table h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .answer-key .ak-table p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .answer-key .ak-note {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        /* ─── RUBRIC TABLE (reuses existing color vars) ─── */
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 32px;
+            font-size: 0.82rem;
+        }
+
+        .rubric-table th {
+            background: var(--purple);
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .rubric-table th:first-child {
+            background: var(--purple-light);
+        }
+
+        .rubric-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.45;
+        }
+
+        .rubric-table td:first-child {
+            font-weight: 600;
+            color: var(--purple);
+            background: var(--purple-lighter);
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            background: var(--purple);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 32px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .nav { padding: 0 16px; }
+            .hero h1 { font-size: 2rem; }
+            .at-a-glance { margin: -20px 16px 30px; padding: 24px; }
+            .glance-grid { grid-template-columns: 1fr; }
+            .tabs-container { padding: 0 12px; }
+            .tab-content { padding: 24px; }
+            .tabs-nav { flex-direction: column; gap: 2px; }
+            .tab-btn { border-radius: 8px; }
+            .constraint-grid { grid-template-columns: 1fr; }
+            .rubric-table { font-size: 0.72rem; }
+            .rubric-table th, .rubric-table td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <span class="nav-brand">masterpiece labs</span>
+    <span class="nav-badge">PROBLEM SOLVING · WEEK 02 · MIDDLE SCHOOL</span>
+</nav>
+
+<!-- ─── HERO ─── -->
+<header class="hero">
+    <div class="hero-eyebrow">Teacher Guide · Middle School</div>
+    <h1>What Is a Computer?</h1>
+    <p class="hero-sub">Week 2 — Input, Output, Storage, Processing — and designing an app that solves a problem</p>
+</header>
+
+<!-- ─── AT A GLANCE ─── -->
+<section class="at-a-glance" aria-label="Week at a glance">
+    <h2>At a Glance</h2>
+    <div class="glance-grid">
+        <div class="glance-item">
+            <div class="glance-label">Driving Question</div>
+            <div class="glance-value">How can the Input–Output–Storage–Processing model help us design an app that solves a problem?</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Big Idea</div>
+            <div class="glance-value">Every computer works by taking Input, doing Processing, using Storage, and giving Output (IOSP). You can use IOSP plus the problem-solving process to design a solution.</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Schedule</div>
+            <div class="glance-value">Day 1 Learn (45 min) · Day 2 Explore (90 min) · Day 3 Create (90 min)</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Week Deliverable</div>
+            <div class="glance-value">Completed App Design Project Guide + an app poster, presented to the class</div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── LEARNING OBJECTIVES ─── -->
+<section class="at-a-glance" aria-label="Learning objectives" style="margin-top:0;">
+    <h2>Learning Objectives</h2>
+    <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:12px;">Students will be able to:</p>
+    <ul class="facilitation-list">
+        <li>Define input, output, storage, and processing, and identify each in real devices</li>
+        <li>Explain the four kinds of processing (If/Then, Comparing, Finding a Match, Counting)</li>
+        <li>Apply the IOSP model to design an app that solves a real problem</li>
+        <li>Present and give feedback on an app design</li>
+    </ul>
+</section>
+
+<!-- ─── TABBED DAYS ─── -->
+<section class="tabs-container">
+    <div class="tabs-nav" role="tablist" aria-label="Daily lesson plans">
+        <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="day1" id="tab-day1" onclick="switchTab('day1')">
+            Day 1
+            <span class="tab-duration">45 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day2" id="tab-day2" onclick="switchTab('day2')">
+            Day 2
+            <span class="tab-duration">90 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day3" id="tab-day3" onclick="switchTab('day3')">
+            Day 3
+            <span class="tab-duration">90 min</span>
+        </button>
+    </div>
+
+    <div class="tab-content">
+
+        <!-- ═══════════ DAY 1 ═══════════ -->
+        <div class="tab-panel active" id="day1" role="tabpanel" aria-labelledby="tab-day1">
+            <div class="day-header">
+                <h2>Day 1 — Learn: What Is a Computer?</h2>
+                <p class="day-subtitle">The four things every computer does</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 1 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–6 min</td>
+                        <td>Hook — "What made computers different from earlier machines?"</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">6–22 min</td>
+                        <td>Mini-lesson — IOSP vocabulary + the two Code.org videos</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">22–34 min</td>
+                        <td>Four kinds of processing</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">34–42 min</td>
+                        <td>Smartphone IOSP breakdown (think-pair-share)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">42–45 min</td>
+                        <td>Exit ticket</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Hook (6 min)</h3>
+
+            <div class="say-block">
+                <p>"Computers are everywhere — but what actually makes something a computer? What made the first computers different from machines that came before them, like a typewriter or a calculator?"</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Take a few guesses. Don't correct yet — the payoff is that a computer can be REPROGRAMMED to do many different jobs, and it does it through Input, Processing, Storage, and Output.</p>
+            </div>
+
+            <h3 class="section-title">Mini-lesson: IOSP Vocabulary (16 min)</h3>
+
+            <div class="say-block">
+                <p>"A computer isn't defined by having a screen or a keyboard. It's defined by four things it does with information. Let's name them: Input, Output, Processing, and Storage — IOSP. Learn these four words and you can understand any computer, from a phone to a game console to an ATM."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>COMPUTER</strong> — a machine that works with information.</li>
+                <li><strong>INPUT</strong> — information a computer gets (from users, devices, or other computers).</li>
+                <li><strong>OUTPUT</strong> — information a computer gives (to users, devices, or other computers).</li>
+                <li><strong>PROCESSING</strong> — the "thinking work" a computer does to turn input into output.</li>
+                <li><strong>STORAGE</strong> — saving information to use in the future.</li>
+            </ul>
+
+            <p style="font-weight:600; margin: 16px 0 8px;">Show the two Code.org videos:</p>
+            <ul class="facilitation-list">
+                <li><a href="https://youtu.be/Qa64pdWtBqA">How Computers Work: Hardware &amp; Software</a></li>
+                <li><a href="https://youtu.be/mCq8-xTH7jA">How Computers Work: What Makes a Computer, a Computer?</a></li>
+            </ul>
+
+            <div class="tip-block">
+                <p>Play one video (Hardware &amp; Software) on Day 1; the second can be Day 2 warm-up if short on time.</p>
+            </div>
+
+            <h3 class="section-title">Four Kinds of Processing (12 min)</h3>
+
+            <ul class="iosp-list">
+                <li><strong>IF/THEN</strong> — If something is true, do something else.</li>
+                <li><strong>COMPARING</strong> — Check whether things are the same, or one is bigger.</li>
+                <li><strong>FINDING A MATCH</strong> — Search a list for a match.</li>
+                <li><strong>COUNTING</strong> — Keep track of how many.</li>
+            </ul>
+
+            <div class="say-block">
+                <p>"All the 'thinking' a computer does is built from simple operations like these four."</p>
+            </div>
+
+            <h3 class="section-title">Smartphone IOSP Breakdown (8 min)</h3>
+
+            <div class="say-block">
+                <p>"Think-pair-share: For a smartphone, name one example each of Input, Output, Storage, and Processing."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Examples if pairs get stuck — Input: touchscreen, mic, camera; Output: screen, speaker; Storage: photos, apps; Processing: unlocking with your face.</p>
+            </div>
+
+            <div class="exit-ticket">
+                <p>"Give one real example each of Input, Output, Storage, and Processing from a device you use."</p>
+            </div>
+
+            <div class="checkpoint">
+                <p>Every student can define IOSP and give a real example of each.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 2 ═══════════ -->
+        <div class="tab-panel" id="day2" role="tabpanel" aria-labelledby="tab-day2">
+            <div class="day-header">
+                <h2>Day 2 — Explore: IOSP in the Wild + Launch the Project</h2>
+                <p class="day-subtitle">Analyzing real devices, then starting your app design</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 2 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Review IOSP (optionally 2nd video)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–30 min</td>
+                        <td>IOSP labeling lab — analyze real apps/devices in teams</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">30–40 min</td>
+                        <td>Debrief the lab</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">40–50 min</td>
+                        <td>Launch the App Design Project + find partners</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">50–75 min</td>
+                        <td>DEFINE the problem (partner work — from the project guide)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">75–90 min</td>
+                        <td>Begin brainstorming the app (Prepare)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Review IOSP (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Quick recall: what are the four IOSP words? And what are the four kinds of processing — If/Then, Comparing, Finding a Match, Counting?"</p>
+            </div>
+
+            <h3 class="section-title">IOSP Labeling Lab (25 min)</h3>
+
+            <div class="say-block">
+                <p>"In teams, pick 3 everyday things — a video game, a smart speaker, an ATM, a fitness tracker, whatever — and break each one down into its Input, Output, Storage, and Processing. Fill in the table on your worksheet."</p>
+            </div>
+
+            <ul class="facilitation-list">
+                <li>Push for specifics ("the screen" is output; "which button does what" is processing)</li>
+                <li>Ask "what does it STORE between uses?" — storage is the one students forget</li>
+                <li>Have teams share one surprising example</li>
+            </ul>
+
+            <h3 class="section-title">Launch the App Design Project (10 min)</h3>
+
+            <div class="say-block">
+                <p>"Now you become the designer. Over the rest of this week you'll design your OWN app that solves a real problem — using the problem-solving process from last week AND the IOSP model. You'll work with a partner and present a poster of your app."</p>
+            </div>
+
+            <p style="font-weight:600; margin: 16px 0 8px;">Explain the deliverables (from the Lesson 8 project):</p>
+            <ul class="facilitation-list">
+                <li>Work with a partner</li>
+                <li>Define a real problem</li>
+                <li>Brainstorm how an app could help</li>
+                <li>Identify the app's IOSP</li>
+                <li>Give and get peer feedback</li>
+                <li>Make a poster</li>
+                <li>Present</li>
+            </ul>
+
+            <h3 class="section-title">DEFINE the Problem (25 min)</h3>
+
+            <div class="say-block">
+                <p>"With your partner, first DEFINE a real problem worth solving. On your worksheet answer: What is the problem? Who does it affect? How will you know if it's solved? Use the criteria: interesting, well-defined, and computing is relevant."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Steer students toward "information problems" — things an app could actually help with (reminders, finding things, organizing, connecting people) rather than physical problems.</p>
+            </div>
+
+            <h3 class="section-title">Begin Brainstorming (Prepare) (15 min)</h3>
+
+            <div class="say-block">
+                <p>"Name your app and describe what it does in a sentence or two — like you're telling a friend why they'd want it."</p>
+            </div>
+
+            <div class="checkpoint">
+                <p>Every pair has defined a real problem and named their app.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 3 ═══════════ -->
+        <div class="tab-panel" id="day3" role="tabpanel" aria-labelledby="tab-day3">
+            <div class="day-header">
+                <h2>Day 3 — Create: Design, Feedback, Present</h2>
+                <p class="day-subtitle">Finishing the IOSP design and presenting the app poster</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 3 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Recap the project</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–35 min</td>
+                        <td>IOSP design — sketch the app + label inputs/outputs/storage/processing</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">35–50 min</td>
+                        <td>Peer review (swap with another pair)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">50–70 min</td>
+                        <td>Make the poster</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">70–90 min</td>
+                        <td>Gallery walk / presentations</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Recap the Project (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Today you finish designing your app using IOSP, get feedback, make your poster, and present."</p>
+            </div>
+
+            <h3 class="section-title">IOSP Design (30 min)</h3>
+
+            <div class="say-block">
+                <p>"Sketch a screen of your app. Then label it: What are the INPUTS (what does the app need from the user or sensors)? What are the OUTPUTS (what does it show or produce)? What does it STORE? What PROCESSING does it do to turn input into output? This is all on your worksheet."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Every app is just IOSP wearing a costume. If a pair is stuck, walk them through their app one action at a time: "The user taps this — that's input. Then the app does what? That's processing. Then it shows what? Output."</p>
+            </div>
+
+            <h3 class="section-title">Peer Review (15 min)</h3>
+
+            <div class="say-block">
+                <p>"Swap projects with another pair. Use the peer review on your worksheet: name one thing that's strong, and one idea to improve. Look for gaps — did they forget storage? Is the processing clear?"</p>
+            </div>
+
+            <h3 class="section-title">Make the Poster (20 min)</h3>
+
+            <div class="say-block">
+                <p>"Make a poster with: your app's name, the target audience, the problem it solves, the inputs it uses, a drawing of the output, and how it processes and stores information."</p>
+            </div>
+
+            <h3 class="section-title">Present (20 min)</h3>
+
+            <div class="say-block">
+                <p>"Gallery walk or quick presentations. When you present, be ready to explain: the problem you defined, how your app works, its inputs and outputs, how it stores/processes info, and one change you made from peer feedback."</p>
+            </div>
+
+            <h3 class="section-title">Week 2 Deliverable Rubric</h3>
+            <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:4px;">For the App Design Project + poster. Use it to give quick, consistent feedback.</p>
+            <table class="rubric-table" aria-label="Week 2 deliverable rubric">
+                <thead>
+                    <tr>
+                        <th>Criteria</th>
+                        <th>Beginning</th>
+                        <th>Proficient</th>
+                        <th>Exemplary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Defines a real, well-scoped problem</td>
+                        <td>Vague or off-topic problem</td>
+                        <td>Real problem, clearly stated</td>
+                        <td>Real, focused problem with audience + success measure</td>
+                    </tr>
+                    <tr>
+                        <td>Identifies the app's Input, Output, Storage, Processing</td>
+                        <td>Names 1–2 of the four</td>
+                        <td>Names all four correctly</td>
+                        <td>All four, specific and well matched to the app</td>
+                    </tr>
+                    <tr>
+                        <td>Poster clearly communicates the app design</td>
+                        <td>Missing key parts</td>
+                        <td>Includes required parts</td>
+                        <td>Clear, complete, easy to follow</td>
+                    </tr>
+                    <tr>
+                        <td>Presentation explains the design + a change from feedback</td>
+                        <td>Unclear; no feedback change</td>
+                        <td>Explains design; names a change</td>
+                        <td>Clear explanation + thoughtful change from feedback</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="checkpoint">
+                <p>Every pair presented an app poster with a complete IOSP breakdown.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ─── ADDITIONAL NOTES ─── -->
+<section class="additional-notes" aria-label="Additional notes for teachers">
+    <div class="notes-card">
+        <h2>Additional Notes for the Teacher</h2>
+
+        <h3>Differentiation</h3>
+        <ul>
+            <li><strong>Struggling:</strong> Provide an IOSP graphic organizer with sentence starters; let them design a simple app (a reminder or counter app) so IOSP is easy to map; give an example app fully worked</li>
+            <li><strong>Advanced:</strong> Have them add a "four kinds of processing" analysis (which of If/Then, Comparing, Finding a Match, Counting does their app use, and where?); ask how the app would need to change to serve 1,000 users</li>
+        </ul>
+
+        <h3>Materials Needed</h3>
+        <ul>
+            <li>Student worksheet</li>
+            <li>Poster paper/markers (or a slide tool)</li>
+            <li>Projector for the videos</li>
+            <li>Devices for the IOSP labeling lab (optional)</li>
+        </ul>
+
+        <h3>Connecting to the Semester Arc</h3>
+        <ul>
+            <li>IOSP is the mental model for everything ahead. Next phase (Programming) students will BUILD apps; the inputs/outputs they designed here become real code. (High schoolers build a working prototype this week; middle schoolers design the poster and will build later.)</li>
+        </ul>
+
+        <h3>If you're running behind</h3>
+        <ul>
+            <li>The IOSP labeling lab can be shortened to 2 devices; protect time for the app design + presentation</li>
+            <li>Poster can be finished as homework; presentations are the priority</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+    Masterpiece Labs · Problem Solving &amp; Computing · Week 2 · Middle School
+</footer>
+
+<script>
+    function switchTab(dayId) {
+        // Deactivate all tabs and panels
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+
+        // Activate selected tab and panel
+        document.getElementById('tab-' + dayId).classList.add('active');
+        document.getElementById('tab-' + dayId).setAttribute('aria-selected', 'true');
+        document.getElementById(dayId).classList.add('active');
+    }
+
+    // Keyboard navigation for tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('keydown', (e) => {
+            const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+            const index = tabs.indexOf(e.target);
+            let newIndex;
+
+            if (e.key === 'ArrowRight') {
+                newIndex = (index + 1) % tabs.length;
+            } else if (e.key === 'ArrowLeft') {
+                newIndex = (index - 1 + tabs.length) % tabs.length;
+            } else {
+                return;
+            }
+
+            e.preventDefault();
+            tabs[newIndex].focus();
+            tabs[newIndex].click();
+        });
+    });
+</script>
+
+</body>
+</html>

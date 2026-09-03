@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 2 Teacher Guide — Problem Solving &amp; Computing (High School)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --purple: #2d1b69;
+            --purple-light: #3d2b7a;
+            --purple-lighter: #f4f0ff;
+            --teal: #2bb5a0;
+            --teal-light: #e6f9f6;
+            --coral: #e8553d;
+            --coral-light: #fef0ed;
+            --text: #1a1a2e;
+            --text-light: #555;
+            --border: #e0e0e0;
+            --bg: #fafafa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            padding-top: 64px;
+        }
+
+        /* ─── STICKY NAV ─── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--purple);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+        }
+
+        .nav-brand {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-badge {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.95);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            padding: 80px 32px 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ─── AT A GLANCE ─── */
+        .at-a-glance {
+            max-width: 900px;
+            margin: -30px auto 40px;
+            padding: 32px 40px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .at-a-glance h2 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 20px;
+        }
+
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .glance-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .glance-item:last-child,
+        .glance-item:nth-last-child(2) {
+            border-bottom: none;
+        }
+
+        .glance-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .glance-value {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        /* ─── TABS ─── */
+        .tabs-container {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 4px;
+            background: var(--white);
+            border-radius: 12px 12px 0 0;
+            padding: 8px 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: var(--purple-lighter);
+            color: var(--purple);
+        }
+
+        .tab-btn.active {
+            background: var(--purple);
+            color: white;
+            font-weight: 600;
+        }
+
+        .tab-btn .tab-duration {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 2px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tab-btn.active .tab-duration {
+            opacity: 0.85;
+        }
+
+        .tab-content {
+            background: var(--white);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ─── DAY HEADER ─── */
+        .day-header {
+            margin-bottom: 32px;
+        }
+
+        .day-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .day-header .day-subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ─── TIMING TABLE ─── */
+        .timing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0 36px;
+            font-size: 0.9rem;
+        }
+
+        .timing-table th {
+            background: var(--purple-lighter);
+            color: var(--purple);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--purple);
+        }
+
+        .timing-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .timing-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .timing-table .time-col {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--purple);
+            white-space: nowrap;
+            width: 100px;
+        }
+
+        /* ─── SECTION HEADERS ─── */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 36px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--purple-lighter);
+        }
+
+        /* ─── SAY BLOCKS ─── */
+        .say-block {
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .say-block::before {
+            content: 'SAY';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            background: rgba(45, 27, 105, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .say-block p {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        /* ─── TIP BLOCKS ─── */
+        .tip-block {
+            background: var(--teal-light);
+            border-left: 4px solid var(--teal);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .tip-block::before {
+            content: 'TIP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.12);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .tip-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── WARNING BLOCKS ─── */
+        .warning-block {
+            background: var(--coral-light);
+            border-left: 4px solid var(--coral);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .warning-block::before {
+            content: 'HEADS UP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--coral);
+            background: rgba(232, 85, 61, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .warning-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── CHECKPOINT ─── */
+        .checkpoint {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 36px 0;
+            color: white;
+        }
+
+        .checkpoint::before {
+            content: '✓ CHECKPOINT';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            opacity: 0.85;
+        }
+
+        .checkpoint p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        /* ─── CONTENT HELPERS ─── */
+        .facilitation-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .facilitation-list li {
+            padding: 8px 0 8px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .facilitation-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        .discussion-questions {
+            list-style: none;
+            counter-reset: question;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .discussion-questions li {
+            counter-increment: question;
+            padding: 10px 0 10px 36px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .discussion-questions li::before {
+            content: counter(question);
+            position: absolute;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--purple-lighter);
+            color: var(--purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            top: 10px;
+        }
+
+        .exit-ticket {
+            background: #f8f7ff;
+            border: 2px dashed var(--purple);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+
+        .exit-ticket::before {
+            content: 'EXIT TICKET';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .exit-ticket p {
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* ─── ADDITIONAL NOTES ─── */
+        .additional-notes {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .notes-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .notes-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 24px;
+        }
+
+        .notes-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .notes-card h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .notes-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notes-card ul li {
+            padding: 6px 0 6px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .notes-card ul li::before {
+            content: '•';
+            position: absolute;
+            left: 4px;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .dashboard-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.green { background: #4caf50; }
+        .legend-dot.yellow { background: #ff9800; }
+        .legend-dot.gray { background: #bdbdbd; }
+
+        /* ─── DPTR STEP LIST (reuses existing color vars) ─── */
+        .dptr-list, .iosp-list {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .dptr-list li, .iosp-list li {
+            padding: 14px 18px;
+            margin: 10px 0;
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .dptr-list li strong, .iosp-list li strong {
+            color: var(--purple);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── CONSTRAINT REFERENCE (two-column, reuses vars) ─── */
+        .constraint-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .constraint-card {
+            border-radius: 8px;
+            padding: 18px 20px;
+        }
+
+        .constraint-card.together {
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+        }
+
+        .constraint-card.apart {
+            background: var(--coral-light);
+            border: 1px solid rgba(232, 85, 61, 0.35);
+        }
+
+        .constraint-card h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .constraint-card.together h4 { color: var(--teal); }
+        .constraint-card.apart h4 { color: var(--coral); }
+
+        .constraint-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .constraint-card li {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            line-height: 1.5;
+        }
+
+        /* ─── CODE BLOCK (monospace, purple-tinted, reuses vars) ─── */
+        .code-block {
+            background: #201545;
+            color: #e9e4ff;
+            border: 1px solid var(--purple-light);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 14px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre;
+            tab-size: 2;
+        }
+
+        .code-block .code-label {
+            display: block;
+            font-size: 0.62rem;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #b9a9ff;
+            margin-bottom: 10px;
+            white-space: normal;
+        }
+
+        .code-inline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            background: var(--purple-lighter);
+            color: var(--purple);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* ─── TEACHER ANSWER KEY BLOCK (teal-tinted, reuses vars) ─── */
+        .answer-key {
+            background: var(--teal-light);
+            border: 2px solid var(--teal);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+
+        .answer-key::before {
+            content: 'TEACHER REFERENCE — WORKING APP';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.15);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+
+        .answer-key .ak-table {
+            background: var(--white);
+            border: 1px solid rgba(43, 181, 160, 0.4);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+
+        .answer-key .ak-table h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .answer-key .ak-table p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .answer-key .ak-note {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        /* ─── RUBRIC TABLE (reuses existing color vars) ─── */
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 32px;
+            font-size: 0.82rem;
+        }
+
+        .rubric-table th {
+            background: var(--purple);
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .rubric-table th:first-child {
+            background: var(--purple-light);
+        }
+
+        .rubric-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.45;
+        }
+
+        .rubric-table td:first-child {
+            font-weight: 600;
+            color: var(--purple);
+            background: var(--purple-lighter);
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            background: var(--purple);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 32px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .nav { padding: 0 16px; }
+            .hero h1 { font-size: 2rem; }
+            .at-a-glance { margin: -20px 16px 30px; padding: 24px; }
+            .glance-grid { grid-template-columns: 1fr; }
+            .tabs-container { padding: 0 12px; }
+            .tab-content { padding: 24px; }
+            .tabs-nav { flex-direction: column; gap: 2px; }
+            .tab-btn { border-radius: 8px; }
+            .constraint-grid { grid-template-columns: 1fr; }
+            .rubric-table { font-size: 0.72rem; }
+            .rubric-table th, .rubric-table td { padding: 8px; }
+            .code-block { font-size: 0.72rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <span class="nav-brand">masterpiece labs</span>
+    <span class="nav-badge">PROBLEM SOLVING · WEEK 02 · HIGH SCHOOL</span>
+</nav>
+
+<!-- ─── HERO ─── -->
+<header class="hero">
+    <div class="hero-eyebrow">Teacher Guide · High School</div>
+    <h1>What Is a Computer?</h1>
+    <p class="hero-sub">Week 2 — The IOSP model, and building a real app prototype in JavaScript</p>
+</header>
+
+<!-- ─── AT A GLANCE ─── -->
+<section class="at-a-glance" aria-label="Week at a glance">
+    <h2>At a Glance</h2>
+    <div class="glance-grid">
+        <div class="glance-item">
+            <div class="glance-label">Driving Question</div>
+            <div class="glance-value">How does the Input–Output–Storage–Processing model let us design AND build an app that solves a problem?</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Big Idea</div>
+            <div class="glance-value">Every computer is Input, Processing, Storage, Output. Once you can model a problem as IOSP, you can turn that model directly into working code.</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Schedule</div>
+            <div class="glance-value">Day 1 Learn (45) · Day 2 Explore (90) · Day 3 Create (90)</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Week Deliverable</div>
+            <div class="glance-value">A working HTML/JS app prototype (input → process → output) + IOSP design doc, presented to the class</div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── LEARNING OBJECTIVES ─── -->
+<section class="at-a-glance" aria-label="Learning objectives" style="margin-top:0;">
+    <h2>Learning Objectives</h2>
+    <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:12px;">Students will be able to:</p>
+    <ul class="facilitation-list">
+        <li>Define IOSP and analyze real computing systems in those terms</li>
+        <li>Explain the four kinds of processing (If/Then, Comparing, Finding a Match, Counting) and identify them in code</li>
+        <li>Map an app's IOSP design directly to HTML inputs, JavaScript processing, and rendered output</li>
+        <li>Build, test, and present a working app prototype</li>
+    </ul>
+</section>
+
+<!-- ─── TABBED DAYS ─── -->
+<section class="tabs-container">
+    <div class="tabs-nav" role="tablist" aria-label="Daily lesson plans">
+        <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="day1" id="tab-day1" onclick="switchTab('day1')">
+            Day 1
+            <span class="tab-duration">45 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day2" id="tab-day2" onclick="switchTab('day2')">
+            Day 2
+            <span class="tab-duration">90 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day3" id="tab-day3" onclick="switchTab('day3')">
+            Day 3
+            <span class="tab-duration">90 min</span>
+        </button>
+    </div>
+
+    <div class="tab-content">
+
+        <!-- ═══════════ DAY 1 ═══════════ -->
+        <div class="tab-panel active" id="day1" role="tabpanel" aria-labelledby="tab-day1">
+            <div class="day-header">
+                <h2>Day 1 — Learn: What Is a Computer? The IOSP Model</h2>
+                <p class="day-subtitle">A system model you can turn into code</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 1 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–6 min</td>
+                        <td>Hook — what makes a computer general-purpose?</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">6–20 min</td>
+                        <td>Mini-lesson — IOSP as a system model + the two Code.org videos</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">20–32 min</td>
+                        <td>Four kinds of processing (with tiny code examples)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">32–42 min</td>
+                        <td>IOSP analysis of a real app (whole class)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">42–45 min</td>
+                        <td>Exit ticket</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Hook (0–6 min)</h3>
+
+            <div class="say-block">
+                <p>"A calculator does math. A typewriter types. But your laptop can be a calculator, a typewriter, a synthesizer, and a game — all at once. What makes a computer able to do ANY of these? Hold that thought."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>The answer: it's programmable, and every program is built from the same primitive: take Input, do Processing (using Storage), produce Output. IOSP is the universal shape of computation.</p>
+            </div>
+
+            <h3 class="section-title">Mini-lesson: IOSP as a System Model (6–20 min)</h3>
+
+            <div class="say-block">
+                <p>"A computer isn't defined by having a screen or a keyboard. It's a programmable machine that processes information. Whatever the program, the shape is the same: data flows in, gets transformed, may be remembered, and results come out. That shape is IOSP."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>COMPUTER</strong> — a programmable machine that processes information.</li>
+                <li><strong>INPUT</strong> — the data that flows in (from users, sensors, files, or other programs).</li>
+                <li><strong>PROCESSING</strong> — the transformation that turns input into output; this is where the problem actually gets solved.</li>
+                <li><strong>STORAGE</strong> — information the system remembers to use later.</li>
+                <li><strong>OUTPUT</strong> — the results that come out (to a screen, a file, a speaker, or another program).</li>
+            </ul>
+
+            <div class="tip-block">
+                <p>Frame IOSP as a SYSTEM MODEL, not just vocabulary: data flows in (input), is transformed (processing), may be remembered (storage), and results come out (output). This is the mental picture students will map directly onto HTML and JavaScript on Day 2.</p>
+            </div>
+
+            <p style="font-weight:600; margin: 16px 0 8px;">Show the two Code.org videos:</p>
+            <ul class="facilitation-list">
+                <li><a href="https://youtu.be/Qa64pdWtBqA">How Computers Work: Hardware &amp; Software</a></li>
+                <li><a href="https://youtu.be/mCq8-xTH7jA">How Computers Work: What Makes a Computer, a Computer?</a></li>
+            </ul>
+
+            <h3 class="section-title">Four Kinds of Processing (20–32 min)</h3>
+
+            <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:4px;">All processing is built from a small set of moves. Here are four, each with a tiny piece of plain JavaScript.</p>
+
+            <div class="code-block"><span class="code-label">If/Then — do something only when a condition is true</span>if (age &gt;= 13) { showContent(); }</div>
+
+            <div class="code-block"><span class="code-label">Comparing — check which value is bigger / smaller / equal</span>if (score &gt; highScore) { highScore = score; }</div>
+
+            <div class="code-block"><span class="code-label">Finding a Match — search a list for an item</span>contacts.find(c =&gt; c.name === "Mom")</div>
+
+            <div class="code-block"><span class="code-label">Counting — keep a running total</span>count = count + 1;</div>
+
+            <div class="say-block">
+                <p>"Every bit of processing you'll ever write is built from simple moves like these four."</p>
+            </div>
+
+            <h3 class="section-title">IOSP Analysis of a Real App (32–42 min)</h3>
+
+            <div class="say-block">
+                <p>"Let's model a real app as IOSP together — take a ride-share app. What's the Input? (pickup, destination, tap). Processing? (match you to a nearby driver — that's Finding a Match; calculate price — comparing/counting). Storage? (your trip history, saved places). Output? (map, ETA, price)."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Emphasize that Processing is where the problem actually gets solved — input and output are just the edges.</p>
+            </div>
+
+            <div class="exit-ticket">
+                <p>"Model any app you use as IOSP. Name a specific Input, Processing step (which of the 4 kinds?), Storage item, and Output."</p>
+            </div>
+
+            <div class="checkpoint">
+                <p>Every student can model a real app as IOSP and name which kind of processing it uses.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 2 ═══════════ -->
+        <div class="tab-panel" id="day2" role="tabpanel" aria-labelledby="tab-day2">
+            <div class="day-header">
+                <h2>Day 2 — Explore: From IOSP Model to Code + Launch the Build</h2>
+                <p class="day-subtitle">Seeing how IOSP becomes HTML and JavaScript — then starting your own</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 2 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Review IOSP</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–35 min</td>
+                        <td>Guided demo — walk through a working example app and map each part to IOSP</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">35–45 min</td>
+                        <td>Define the problem for YOUR app (partner)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">45–70 min</td>
+                        <td>Design the IOSP + plan the code (what inputs, what processing, what output)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">70–90 min</td>
+                        <td>Start building in StackBlitz</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Review IOSP (0–5 min)</h3>
+
+            <div class="say-block">
+                <p>"Quick recall: what are the four parts of IOSP? And what are the four kinds of processing — If/Then, Comparing, Finding a Match, Counting?"</p>
+            </div>
+
+            <h3 class="section-title">Guided Demo: IOSP Becomes Code (5–35 min)</h3>
+
+            <div class="say-block">
+                <p>"I'm going to show you a tiny finished app, and we'll label every part with IOSP. This is the pattern your app will follow."</p>
+            </div>
+
+            <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:4px;">The reference app is a simple <strong>Study Break Picker</strong>: the user picks how much time they have and their energy level (INPUT via dropdowns), clicks a button, and the app suggests an activity (OUTPUT) using if/then logic (PROCESSING). It is fully offline — no API, no internet needed.</p>
+
+            <div class="code-block"><span class="code-label">index.html</span>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;meta charset="UTF-8"&gt;&lt;title&gt;Study Break Picker&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Study Break Picker&lt;/h1&gt;
+  &lt;label&gt;Time I have:
+    &lt;select id="time"&gt;
+      &lt;option value="5"&gt;5 minutes&lt;/option&gt;
+      &lt;option value="15"&gt;15 minutes&lt;/option&gt;
+      &lt;option value="30"&gt;30 minutes&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/label&gt;
+  &lt;label&gt;My energy:
+    &lt;select id="energy"&gt;
+      &lt;option value="low"&gt;Low&lt;/option&gt;
+      &lt;option value="high"&gt;High&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/label&gt;
+  &lt;button id="go"&gt;Suggest a break&lt;/button&gt;
+  &lt;p id="result"&gt;&lt;/p&gt;
+  &lt;script src="index.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+
+            <div class="code-block"><span class="code-label">index.js</span>// INPUT: read the dropdowns when the button is clicked
+document.getElementById("go").addEventListener("click", function () {
+  const time = Number(document.getElementById("time").value);
+  const energy = document.getElementById("energy").value;
+
+  // PROCESSING: if/then + comparing decide the suggestion
+  let suggestion;
+  if (energy === "high" &amp;&amp; time &gt;= 30) {
+    suggestion = "Go for a walk outside.";
+  } else if (energy === "high") {
+    suggestion = "Do 20 jumping jacks.";
+  } else if (time &gt;= 15) {
+    suggestion = "Close your eyes and rest.";
+  } else {
+    suggestion = "Drink some water and stretch.";
+  }
+
+  // OUTPUT: show the result on the page
+  document.getElementById("result").textContent = suggestion;
+});</div>
+
+            <div class="tip-block">
+                <p><strong>Map it to IOSP:</strong> INPUT = the two <span class="code-inline">&lt;select&gt;</span> dropdowns; PROCESSING = the if/then + comparing in JS; OUTPUT = writing to the <span class="code-inline">&lt;p id="result"&gt;</span>; STORAGE = this simple version stores nothing — a stretch goal is to save the last suggestion with <span class="code-inline">localStorage</span>.</p>
+            </div>
+
+            <div class="tip-block">
+                <p><strong>For the non-CS teacher:</strong> "You do NOT need to write this from scratch or memorize it. Open the reference app in StackBlitz, run it, and change ONE thing (add an option, change a suggestion). Seeing it work is the goal." The self-study module has the same code embedded so students can experiment.</p>
+            </div>
+
+            <h3 class="section-title">Define the Problem (35–45 min)</h3>
+
+            <div class="say-block">
+                <p>"With your partner, define a real problem your app will solve. Same criteria as always: real, well-defined, and an information problem a computer can help with."</p>
+            </div>
+
+            <h3 class="section-title">Design the IOSP + Plan the Code (45–70 min)</h3>
+
+            <div class="say-block">
+                <p>"Before coding, write your app's IOSP on the worksheet, and note: what HTML inputs (dropdowns, text boxes, buttons)? what processing (which of the four kinds)? what output (text, a list, a number)? This plan IS your code outline."</p>
+            </div>
+
+            <h3 class="section-title">Start Building in StackBlitz (70–90 min)</h3>
+
+            <div class="say-block">
+                <p>"Open StackBlitz, start from the Study Break Picker as a template, and begin changing it into YOUR app. Keep it small — one input area, one button, one output."</p>
+            </div>
+
+            <div class="warning-block">
+                <p>Scope creep is the #1 risk. Keep prototypes to: a few inputs, one processing step, one output. A working tiny app beats a broken ambitious one.</p>
+            </div>
+
+            <div class="checkpoint">
+                <p>Every pair has defined a problem, written their app's IOSP, and has the reference app running in StackBlitz.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 3 ═══════════ -->
+        <div class="tab-panel" id="day3" role="tabpanel" aria-labelledby="tab-day3">
+            <div class="day-header">
+                <h2>Day 3 — Create: Build, Test, Present</h2>
+                <p class="day-subtitle">Finishing and demoing a working prototype</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 3 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Recap</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–45 min</td>
+                        <td>Build &amp; test the prototype</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">45–60 min</td>
+                        <td>Peer testing (swap and try each other's apps)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">60–75 min</td>
+                        <td>Revise based on feedback</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">75–90 min</td>
+                        <td>Demos + IOSP explanation</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Recap (0–5 min)</h3>
+
+            <div class="say-block">
+                <p>"Today you finish a WORKING prototype, test it, and demo it."</p>
+            </div>
+
+            <h3 class="section-title">Build &amp; Test the Prototype (5–45 min)</h3>
+
+            <div class="say-block">
+                <p>"Get your app working end to end: input goes in, processing runs when the button is clicked, output appears. It doesn't need to be fancy — it needs to WORK."</p>
+            </div>
+
+            <p style="font-weight:600; margin: 16px 0 8px;">Facilitation (non-CS teacher survival tips):</p>
+            <ul class="facilitation-list">
+                <li>If the app "does nothing" on click: check the button id matches the <span class="code-inline">getElementById</span>, and that <span class="code-inline">index.js</span> is linked</li>
+                <li>If nothing shows: check the output element id matches</li>
+                <li>Encourage <span class="code-inline">console.log</span> to see values; StackBlitz shows errors in its preview/console</li>
+                <li>Direct deep code questions to pairs helping pairs; you facilitate, you don't debug alone</li>
+            </ul>
+
+            <h3 class="section-title">Peer Testing (45–60 min)</h3>
+
+            <div class="say-block">
+                <p>"Swap computers with another pair. Try to use their app. Report: did it work? was the output clear? one suggestion."</p>
+            </div>
+
+            <h3 class="section-title">Revise (60–75 min)</h3>
+
+            <div class="say-block">
+                <p>"Fix what peer testing found. Optionally add a stretch goal: remember the last result with localStorage (Storage!)."</p>
+            </div>
+
+            <h3 class="section-title">Demos + IOSP Explanation (75–90 min)</h3>
+
+            <div class="say-block">
+                <p>"Each pair demos their working app and explains its IOSP: what's the input, what processing (which of the four kinds), what output, and what (if anything) it stores."</p>
+            </div>
+
+            <h3 class="section-title">Week 2 Deliverable Rubric</h3>
+            <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:4px;">For the working prototype + IOSP explanation. Use it to give quick, consistent feedback.</p>
+            <table class="rubric-table" aria-label="Week 2 deliverable rubric">
+                <thead>
+                    <tr>
+                        <th>Criteria</th>
+                        <th>Beginning</th>
+                        <th>Proficient</th>
+                        <th>Exemplary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>App runs: input → processing → output works</td>
+                        <td>Doesn't run or no output</td>
+                        <td>Runs; produces output</td>
+                        <td>Runs cleanly; output always correct</td>
+                    </tr>
+                    <tr>
+                        <td>IOSP clearly identified in design + code</td>
+                        <td>Names 1–2 parts</td>
+                        <td>All four named</td>
+                        <td>All four mapped to specific lines</td>
+                    </tr>
+                    <tr>
+                        <td>Uses at least one of the four kinds of processing correctly</td>
+                        <td>No clear processing</td>
+                        <td>One kind used correctly</td>
+                        <td>Multiple kinds, well chosen</td>
+                    </tr>
+                    <tr>
+                        <td>Demo explains design + a change from peer testing</td>
+                        <td>Unclear; no change</td>
+                        <td>Explains design; names a change</td>
+                        <td>Clear explanation + thoughtful change</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="answer-key">
+                <p class="ak-note">The <strong>Study Break Picker</strong> code shown on Day 2 is the canonical working example. If a pair gets stuck, have them start from it and change one thing at a time — it is guaranteed to run in StackBlitz with no setup.</p>
+                <div class="ak-table">
+                    <h4>localStorage stretch goal (Storage)</h4>
+                    <p>Save the last suggestion after building it, and show it again when the page loads:</p>
+                </div>
+                <div class="code-block"><span class="code-label">save it (add after the OUTPUT line)</span>localStorage.setItem('lastBreak', suggestion);</div>
+                <div class="code-block"><span class="code-label">restore it (run once when the page loads)</span>document.getElementById('result').textContent = localStorage.getItem('lastBreak') || '';</div>
+            </div>
+
+            <div class="checkpoint">
+                <p>Every pair demoed a working prototype and explained its IOSP.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ─── ADDITIONAL NOTES ─── -->
+<section class="additional-notes" aria-label="Additional notes for teachers">
+    <div class="notes-card">
+        <h2>Additional Notes for the Teacher</h2>
+
+        <h3>Differentiation</h3>
+        <ul>
+            <li><strong>Support:</strong> Let them modify the reference app minimally (change suggestions/options) rather than build new; pair a nervous coder with a confident one</li>
+            <li><strong>Challenge:</strong> Add more inputs; use an array + Finding a Match instead of if/then; implement the localStorage storage stretch goal; add input validation</li>
+        </ul>
+
+        <h3>For the Non-Technical Teacher</h3>
+        <ul>
+            <li>You are NOT expected to debug JavaScript live. Your job: keep pairs unblocked, enforce small scope, and make sure everyone can run the reference app. The self-study module embeds the same code for students to experiment independently.</li>
+        </ul>
+
+        <h3>Materials Needed</h3>
+        <ul>
+            <li>Computers with a browser + StackBlitz (no installs), the student worksheet, projector for the demo</li>
+        </ul>
+
+        <h3>Connecting to the Semester Arc</h3>
+        <ul>
+            <li>This is the bridge INTO the Programming phase. Students just turned an IOSP model into running code — exactly what all of programming is.</li>
+        </ul>
+
+        <h3>If you're running behind</h3>
+        <ul>
+            <li>Everyone modifying the reference app (vs. building from scratch) is a fine floor; a working modified app meets the objective</li>
+            <li>Peer testing can shrink to 10 min; protect the demos</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+    Masterpiece Labs · Problem Solving &amp; Computing · Week 2 · High School
+</footer>
+
+<script>
+    function switchTab(dayId) {
+        // Deactivate all tabs and panels
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+
+        // Activate selected tab and panel
+        document.getElementById('tab-' + dayId).classList.add('active');
+        document.getElementById('tab-' + dayId).setAttribute('aria-selected', 'true');
+        document.getElementById(dayId).classList.add('active');
+    }
+
+    // Keyboard navigation for tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('keydown', (e) => {
+            const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+            const index = tabs.indexOf(e.target);
+            let newIndex;
+
+            if (e.key === 'ArrowRight') {
+                newIndex = (index + 1) % tabs.length;
+            } else if (e.key === 'ArrowLeft') {
+                newIndex = (index - 1 + tabs.length) % tabs.length;
+            } else {
+                return;
+            }
+
+            e.preventDefault();
+            tabs[newIndex].focus();
+            tabs[newIndex].click();
+        });
+    });
+</script>
+
+</body>
+</html>

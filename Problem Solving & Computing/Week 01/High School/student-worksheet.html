@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 1 Student Worksheet — The Problem Solving Process (High School)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --purple: #2d1b69;
+  --purple-light: #3d2b7a;
+  --purple-lighter: #f4f0ff;
+  --teal: #2bb5a0;
+  --teal-light: #e6f9f6;
+  --coral: #e8553d;
+  --coral-light: #fef0ed;
+  --sand: #f5f0e8;
+  --text: #1a1a2e;
+  --border: #e0e0e0;
+  --white: #ffffff;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text);
+  background: var(--sand);
+  line-height: 1.6;
+  padding: 40px 20px 80px;
+}
+
+.page {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+/* ─── PRINT BUTTON / CONTROLS ─── */
+.controls {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(45, 27, 105, 0.25);
+  transition: transform 0.1s ease, opacity 0.15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-print { background: var(--purple); color: #fff; }
+.btn-clear { background: var(--coral); color: #fff; font-size: 0.78rem; padding: 7px 13px; }
+
+.save-indicator {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--teal);
+  background: var(--white);
+  border: 1px solid var(--teal);
+  border-radius: 20px;
+  padding: 5px 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.save-indicator.show { opacity: 1; }
+
+/* ─── HEADER BAND ─── */
+.header {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+  color: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 36px 44px 32px;
+}
+
+.wordmark {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 1.05rem;
+  letter-spacing: 1px;
+  opacity: 0.85;
+  margin-bottom: 18px;
+}
+.wordmark span { font-weight: 600; }
+
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2.6rem;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.header .subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+  margin-bottom: 26px;
+}
+
+.namebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 28px;
+  align-items: flex-end;
+}
+.namebar .field { display: flex; align-items: flex-end; gap: 8px; flex: 1 1 auto; }
+.namebar .field.name { flex: 2 1 260px; }
+.namebar label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+.namebar input {
+  flex: 1;
+  min-width: 60px;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid rgba(255,255,255,0.55);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  padding: 2px 4px 4px;
+  outline: none;
+}
+.namebar input:focus { border-bottom-color: var(--teal); }
+
+/* ─── BODY WRAPPER ─── */
+.body-wrap {
+  background: var(--white);
+  border-radius: 0 0 16px 16px;
+  padding: 8px 0 4px;
+  box-shadow: 0 8px 34px rgba(45, 27, 105, 0.12);
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 30px 34px;
+  margin: 26px 24px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+
+.card-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.card h2 {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.7rem;
+  color: var(--purple);
+  margin-bottom: 14px;
+}
+
+.card h3 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--purple);
+  margin: 24px 0 10px;
+}
+
+.instructions {
+  background: var(--purple-lighter);
+  border-left: 3px solid var(--purple);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  margin-bottom: 18px;
+}
+.overview {
+  font-size: 0.98rem;
+  margin-bottom: 16px;
+}
+
+/* ─── CHIPS ─── */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  background: var(--teal-light);
+  color: var(--purple);
+  border: 1px solid var(--teal);
+  border-radius: 20px;
+  padding: 5px 13px;
+}
+
+/* ─── WORD SEARCH GRID ─── */
+.wordsearch {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--sand);
+  padding: 16px;
+}
+.wordsearch pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.02rem;
+  line-height: 1.85;
+  letter-spacing: 0.42em;
+  color: var(--text);
+  margin: 0;
+  white-space: pre;
+  text-align: center;
+}
+
+/* ─── GUEST LIST ─── */
+.guest-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.guest-list .guest {
+  font-size: 0.88rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 11px;
+}
+
+/* ─── CONSTRAINT BOX ─── */
+.constraints {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.constraint {
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.constraint.together { background: var(--teal-light); border: 1px solid var(--teal); }
+.constraint.apart { background: var(--coral-light); border: 1px solid var(--coral); }
+.constraint h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.constraint.together h4 { color: #1a8a78; }
+.constraint.apart h4 { color: var(--coral); }
+.constraint ul { list-style: none; }
+.constraint li { font-size: 0.92rem; padding: 3px 0; }
+.constraint li::before { content: "•"; margin-right: 8px; opacity: 0.6; }
+
+/* ─── TABLE ANSWER BOXES ─── */
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.table-box {
+  border: 1.5px solid var(--purple);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.table-box .table-head {
+  background: var(--purple);
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-align: center;
+  padding: 8px;
+}
+.table-box .seats { padding: 12px 14px; }
+.seat-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.seat-line .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--teal);
+  width: 16px;
+}
+.seat-line input {
+  flex: 1;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  padding: 3px 2px;
+  outline: none;
+  background: transparent;
+}
+.seat-line input:focus { border-bottom-color: var(--teal); }
+
+/* ─── GENERIC TEXTAREA / INPUT BLOCKS ─── */
+.write-box {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  padding: 14px 16px;
+  resize: vertical;
+  outline: none;
+  background: var(--white);
+  line-height: 1.9;
+}
+.write-box:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-light); }
+
+.box-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--purple);
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.field-group { margin-bottom: 18px; }
+
+.scratch { margin-top: 18px; }
+.scratch .box-label { color: var(--coral); }
+.scratch .write-box { background: var(--coral-light); border-color: var(--coral); }
+
+/* ─── DATA TABLES (goals / reflection) ─── */
+table.grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+}
+table.grid-table th {
+  background: var(--purple);
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid var(--purple);
+}
+table.grid-table td {
+  border: 1px solid var(--border);
+  padding: 0;
+  vertical-align: top;
+}
+table.grid-table td .cell-fixed {
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  background: var(--purple-lighter);
+  min-height: 46px;
+}
+table.grid-table td input.cell,
+table.grid-table td textarea.cell {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  color: var(--text);
+  padding: 10px 12px;
+  resize: vertical;
+  line-height: 1.6;
+}
+table.grid-table td textarea.cell { min-height: 52px; }
+table.grid-table td input.cell:focus,
+table.grid-table td textarea.cell:focus { background: var(--teal-light); }
+
+/* ─── DRAW BOX ─── */
+.draw-box {
+  border: 2px dashed var(--purple);
+  border-radius: 12px;
+  background: var(--purple-lighter);
+  min-height: 260px;
+  padding: 14px;
+}
+.draw-box textarea {
+  width: 100%;
+  min-height: 232px;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  resize: vertical;
+  line-height: 1.9;
+}
+
+/* ─── FILL-IN PROMPTS ─── */
+.prompt { margin-bottom: 18px; }
+.prompt .plabel {
+  font-weight: 600;
+  color: var(--purple);
+  margin-bottom: 6px;
+  display: block;
+}
+.prompt .plabel .mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  color: var(--teal);
+  text-transform: uppercase;
+  margin-left: 6px;
+}
+
+.footer {
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  color: var(--purple);
+  opacity: 0.6;
+  margin: 30px 0 0;
+}
+
+@media (max-width: 640px) {
+  .constraints { grid-template-columns: 1fr; }
+  .tables-grid { grid-template-columns: 1fr; }
+  .header { padding: 28px 22px; }
+  .card { padding: 24px 20px; margin: 20px 12px; }
+}
+
+/* ─── PRINT ─── */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  body { background: #fff; padding: 0; }
+  .controls { display: none !important; }
+  .page { max-width: 100%; }
+  .body-wrap { box-shadow: none; }
+  .header { border-radius: 0; }
+  .card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-shadow: none;
+    margin: 16px 0;
+  }
+  .header, .constraint, .chip, .instructions, .table-box .table-head,
+  table.grid-table th, .draw-box, .cell-fixed, .scratch .write-box {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  input, textarea { border-color: #999 !important; }
+  .write-box, .draw-box textarea, textarea.cell { overflow: visible; }
+  a { text-decoration: none; color: inherit; }
+}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <button class="btn btn-print" onclick="window.print()">&#128424; Print / Save as PDF</button>
+  <button class="btn btn-clear" onclick="clearAnswers()">Clear my answers</button>
+  <span class="save-indicator" id="saveIndicator">Saved &#10003;</span>
+</div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="wordmark">masterpiece <span>labs</span></div>
+    <h1>The Problem Solving Process</h1>
+    <div class="subtitle">Week 1 Student Worksheet &middot; Problem Solving &amp; Computing &middot; High School</div>
+    <div class="namebar">
+      <div class="field name">
+        <label>Name(s)</label>
+        <input type="text" id="f_names" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Period</label>
+        <input type="text" id="f_period" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input type="text" id="f_date" autocomplete="off">
+      </div>
+    </div>
+  </header>
+
+  <div class="body-wrap">
+
+    <!-- 1. WORD SEARCH -->
+    <section class="card">
+      <div class="card-eyebrow">Activity 1 &middot; Warm-Up</div>
+      <h2>Word Search + Search Strategy</h2>
+      <div class="instructions">Find all 8 words (horizontal, vertical, or diagonal, any direction). Then describe the <strong>search strategy</strong> you used &mdash; your step-by-step method.</div>
+      <div class="chips">
+        <span class="chip">DEFINE</span>
+        <span class="chip">PREPARE</span>
+        <span class="chip">TRY</span>
+        <span class="chip">REFLECT</span>
+        <span class="chip">PROBLEM</span>
+        <span class="chip">SOLVE</span>
+        <span class="chip">COMPUTER</span>
+        <span class="chip">SCIENCE</span>
+      </div>
+      <div class="wordsearch">
+<pre>E S Q H J H R C F A X M G M U E B L N I
+S R K E R E T U P M O C E C M Z T Y J C
+D X A P N X Q L Y V K L S X X N C E H N
+J M X P K W W O J Q B B O Q M H E A H T
+B I U O E Y H K M O A R L F R D L P H A
+N J H T Y R A E R C F L V M S C F A J M
+T I R Y Q W P P H D X Q E Q U N E R G S
+H Y R I M I X D Z K B M N G O J R B K U
+P U B U E U J E G D T F B D T I M V V P
+H V W S K F D G K V D M S O X Y O R S F
+S C I E N C E W P Q T E O R I A S Q M U
+H R G D Y V N H I J D C F G V H E M Z M
+U O H H N A G X O Q K K B I G M T W O L
+O P E I O Q G B A R V H P N N A Z E X V
+Y I S W N R N U U W G H X H A E B O P N
+L X D J X R P V Y J H U H X D Y F O I D
+F U D J X V U K F C V D Q B P D Z I B D
+F B R D S I W P K F K V T R D R G Y C R
+Y E T Y O D M X H L L V P T J V I J C D
+H E X K R O I P B W E T O Y X I B W V O</pre>
+      </div>
+
+      <div class="field-group" style="margin-top:20px;">
+        <span class="box-label">Describe your search strategy (your algorithm):</span>
+        <textarea class="write-box" id="ws_strategy" rows="5"></textarea>
+      </div>
+      <div class="field-group">
+        <span class="box-label">How would you tell a computer to find a word in this grid?</span>
+        <textarea class="write-box" id="ws_computer" rows="4"></textarea>
+      </div>
+    </section>
+
+    <!-- 2. BIRTHDAY GUESTS -->
+    <section class="card">
+      <div class="card-eyebrow">Activity 2 &middot; Constraint Satisfaction</div>
+      <h2>Birthday Guests</h2>
+      <p class="overview">15 guests, 3 tables that seat 5 each. Some pairs must sit together; some must sit apart. Find an arrangement that satisfies <strong>ALL</strong> constraints.</p>
+
+      <div class="guest-list">
+        <span class="guest">Aysha</span><span class="guest">Ben</span><span class="guest">Carla</span>
+        <span class="guest">Damien</span><span class="guest">Eric</span><span class="guest">Fan</span>
+        <span class="guest">Genaro</span><span class="guest">Hannah</span><span class="guest">Isaias</span>
+        <span class="guest">Jessica</span><span class="guest">Kyla</span><span class="guest">Laila</span>
+        <span class="guest">Max</span><span class="guest">Nazek</span><span class="guest">Owen</span>
+      </div>
+
+      <div class="constraints">
+        <div class="constraint together">
+          <h4>Must Sit Together</h4>
+          <ul>
+            <li>Aysha &amp; Damien</li>
+            <li>Max &amp; Isaias</li>
+            <li>Nazek &amp; Laila</li>
+            <li>Owen &amp; Genaro</li>
+            <li>Ben &amp; Jessica</li>
+            <li>Genaro &amp; Eric</li>
+          </ul>
+        </div>
+        <div class="constraint apart">
+          <h4>Must Sit Apart</h4>
+          <ul>
+            <li>Aysha &amp; Genaro</li>
+            <li>Ben &amp; Hannah</li>
+            <li>Fan &amp; Max</li>
+            <li>Damien &amp; Laila</li>
+            <li>Isaias &amp; Owen</li>
+            <li>Kyla &amp; Jessica</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Model the Problem First <span style="font-weight:400;color:var(--teal);">(Prepare)</span></h3>
+      <div class="field-group">
+        <span class="box-label">Variables (what are you assigning?)</span>
+        <textarea class="write-box" id="bg_variables" rows="2"></textarea>
+      </div>
+      <div class="field-group">
+        <span class="box-label">Domains (what values can each take?)</span>
+        <textarea class="write-box" id="bg_domains" rows="2"></textarea>
+      </div>
+      <div class="field-group">
+        <span class="box-label">Which guest is the MOST constrained? Start there. Why?</span>
+        <textarea class="write-box" id="bg_most_constrained" rows="3"></textarea>
+      </div>
+
+      <div class="instructions" style="margin-top:6px;">Write each table's 5 guests in the boxes below. Every "together" and "apart" rule must hold.</div>
+
+      <div class="tables-grid">
+        <div class="table-box">
+          <div class="table-head">Table 1</div>
+          <div class="seats">
+            <div class="seat-line"><span class="num">1</span><input type="text" id="t1s1" autocomplete="off"></div>
+            <div class="seat-line"><span class="num">2</span><input type="text" id="t1s2" autocomplete="off"></div>
+            <div class="seat-line"><span class="num">3</span><input type="text" id="t1s3" autocomplete="off"></div>
+            <div class="seat-line"><span class="num">4</span><input type="text" id="t1s4" autocomplete="off"></div>
+            <div class="seat-line"><span class="num">5</span><input type="text" id="t1s5" autocomplete="off"></div>
+          </div>
+        </div>
+        <div class="table-box">
+          <div class="table-head">Table 2</div>
+          <div class="seats">
+            <div class="seat-line"><span class="num">1</span><input type="text" id="t2s1" autocomplete="off"></div>
+            <div class="seat-line"><span class="num">2</span><input type="text" id="t2s2" autocomplete="off"></div>
+            <div class="seat-line"><span class="num">3</span><input type="text" id="t2s3" autocomplete="off"></div>
+            <div class="seat-line"><span class="num">4</span><input type="text" id="t2s4" autocomplete="off"></div>
+            <div class="seat-line"><span class="num">5</span><input type="text" id="t2s5" autocomplete="off"></div>
+          </div>
+        </div>
+        <div class="table-box">
+          <div class="table-head">Table 3</div>
+          <div class="seats">
+            <div class="seat-line"><span class="num">1</span><input type="text" id="t3s1" autocomplete="off"></div>
+            <div class="seat-line"><span class="num">2</span><input type="text" id="t3s2" autocomplete="off"></div>
+            <div class="seat-line"><span class="num">3</span><input type="text" id="t3s3" autocomplete="off"></div>
+            <div class="seat-line"><span class="num">4</span><input type="text" id="t3s4" autocomplete="off"></div>
+            <div class="seat-line"><span class="num">5</span><input type="text" id="t3s5" autocomplete="off"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scratch">
+        <span class="box-label">Scratch space &mdash; test assignments and backtrack as you go</span>
+        <textarea class="write-box" id="guest_scratch" rows="4"></textarea>
+      </div>
+
+      <h3>Check: Satisfiable vs Optimal</h3>
+      <div class="field-group">
+        <span class="box-label">Does your arrangement satisfy every constraint? (satisfiable?)</span>
+        <textarea class="write-box" id="bg_satisfiable" rows="3"></textarea>
+      </div>
+      <div class="field-group">
+        <span class="box-label">What would 'optimal' mean here? Define an objective.</span>
+        <textarea class="write-box" id="bg_optimal" rows="3"></textarea>
+      </div>
+    </section>
+
+    <!-- 3. REDESIGN CLASSROOM -->
+    <section class="card">
+      <div class="card-eyebrow">Activity 3 &middot; Open-Ended Design</div>
+      <h2>Redesign Your Classroom</h2>
+      <p class="overview">Redesign the classroom. Unlike Birthday Guests, there's no single right answer &mdash; you must define your own success criteria and separate them from fixed constraints.</p>
+
+      <h3>Define &mdash; Constraints vs Success Criteria</h3>
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th style="width:50%;">Fixed Constraints (can't change)</th>
+            <th>Success Criteria (optimize for)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="cell-fixed">Room size / door location</div></td>
+            <td><div class="cell-fixed">Every seat can see the board</div></td>
+          </tr>
+          <tr>
+            <td><textarea class="cell" id="rc_con2" rows="1"></textarea></td>
+            <td><textarea class="cell" id="rc_crit2" rows="1"></textarea></td>
+          </tr>
+          <tr>
+            <td><textarea class="cell" id="rc_con3" rows="1"></textarea></td>
+            <td><textarea class="cell" id="rc_crit3" rows="1"></textarea></td>
+          </tr>
+          <tr>
+            <td><textarea class="cell" id="rc_con4" rows="1"></textarea></td>
+            <td><textarea class="cell" id="rc_crit4" rows="1"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Design &amp; Trade-off Analysis <span style="font-weight:400;color:var(--teal);">(Prepare + Try)</span></h3>
+      <div class="draw-box">
+        <span class="box-label" style="color:var(--purple);">Sketch or describe your layout</span>
+        <textarea id="rc_layout" placeholder=""></textarea>
+      </div>
+
+      <span class="box-label" style="margin-top:18px;">Rate each success criterion (1&ndash;5) and note the trade-off</span>
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th style="width:52%;">Success Criterion</th>
+            <th style="width:14%;">Rating (1&ndash;5)</th>
+            <th>Trade-off Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><textarea class="cell" id="rc_rate1_name" rows="1"></textarea></td>
+            <td><input class="cell" type="text" id="rc_rate1_score" autocomplete="off"></td>
+            <td><textarea class="cell" id="rc_rate1_note" rows="1"></textarea></td>
+          </tr>
+          <tr>
+            <td><textarea class="cell" id="rc_rate2_name" rows="1"></textarea></td>
+            <td><input class="cell" type="text" id="rc_rate2_score" autocomplete="off"></td>
+            <td><textarea class="cell" id="rc_rate2_note" rows="1"></textarea></td>
+          </tr>
+          <tr>
+            <td><textarea class="cell" id="rc_rate3_name" rows="1"></textarea></td>
+            <td><input class="cell" type="text" id="rc_rate3_score" autocomplete="off"></td>
+            <td><textarea class="cell" id="rc_rate3_note" rows="1"></textarea></td>
+          </tr>
+          <tr>
+            <td><textarea class="cell" id="rc_rate4_name" rows="1"></textarea></td>
+            <td><input class="cell" type="text" id="rc_rate4_score" autocomplete="off"></td>
+            <td><textarea class="cell" id="rc_rate4_note" rows="1"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Peer Critique</h3>
+      <span class="box-label">Reviewer feedback &mdash; one criterion served well, one trade-off made</span>
+      <textarea class="write-box" id="rc_critique" rows="4"></textarea>
+
+      <h3>Reflect &mdash; Final Design + Trade-off Summary</h3>
+      <span class="box-label">Final design and what you optimized for vs sacrificed</span>
+      <textarea class="write-box" id="rc_final" rows="5"></textarea>
+    </section>
+
+    <!-- 4. PROCESS NOTES + AUTOMATION -->
+    <section class="card">
+      <div class="card-eyebrow">Activity 4 &middot; Week 1 Deliverable</div>
+      <h2>Process Notes + Automation Analysis</h2>
+
+      <h3>Process Analysis</h3>
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th style="width:22%;">Activity</th>
+            <th>Define</th>
+            <th>Prepare</th>
+            <th>Try</th>
+            <th>Reflect</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="cell-fixed">Word Search</div></td>
+            <td><textarea class="cell" id="p_ws_define" rows="2"></textarea></td>
+            <td><textarea class="cell" id="p_ws_prepare" rows="2"></textarea></td>
+            <td><textarea class="cell" id="p_ws_try" rows="2"></textarea></td>
+            <td><textarea class="cell" id="p_ws_reflect" rows="2"></textarea></td>
+          </tr>
+          <tr>
+            <td><div class="cell-fixed">Birthday Guests</div></td>
+            <td><textarea class="cell" id="p_bg_define" rows="2"></textarea></td>
+            <td><textarea class="cell" id="p_bg_prepare" rows="2"></textarea></td>
+            <td><textarea class="cell" id="p_bg_try" rows="2"></textarea></td>
+            <td><textarea class="cell" id="p_bg_reflect" rows="2"></textarea></td>
+          </tr>
+          <tr>
+            <td><div class="cell-fixed">Redesign Classroom</div></td>
+            <td><textarea class="cell" id="p_rc_define" rows="2"></textarea></td>
+            <td><textarea class="cell" id="p_rc_prepare" rows="2"></textarea></td>
+            <td><textarea class="cell" id="p_rc_try" rows="2"></textarea></td>
+            <td><textarea class="cell" id="p_rc_reflect" rows="2"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Purpose &amp; Justification</h3>
+      <div class="prompt">
+        <span class="plabel">Define <span class="mono">Step 1</span></span>
+        <span class="box-label" style="text-transform:none;letter-spacing:0;color:var(--text);font-family:'Inter',sans-serif;font-weight:400;margin-bottom:6px;">Explain the purpose AND what fails if you skip it.</span>
+        <textarea class="write-box" id="j_define" rows="3"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">Prepare <span class="mono">Step 2</span></span>
+        <span class="box-label" style="text-transform:none;letter-spacing:0;color:var(--text);font-family:'Inter',sans-serif;font-weight:400;margin-bottom:6px;">Explain the purpose AND what fails if you skip it.</span>
+        <textarea class="write-box" id="j_prepare" rows="3"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">Try <span class="mono">Step 3</span></span>
+        <span class="box-label" style="text-transform:none;letter-spacing:0;color:var(--text);font-family:'Inter',sans-serif;font-weight:400;margin-bottom:6px;">Explain the purpose AND what fails if you skip it.</span>
+        <textarea class="write-box" id="j_try" rows="3"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">Reflect <span class="mono">Step 4</span></span>
+        <span class="box-label" style="text-transform:none;letter-spacing:0;color:var(--text);font-family:'Inter',sans-serif;font-weight:400;margin-bottom:6px;">Explain the purpose AND what fails if you skip it.</span>
+        <textarea class="write-box" id="j_reflect" rows="3"></textarea>
+      </div>
+
+      <h3>Automation Analysis</h3>
+      <div class="instructions">For each activity, could a computer solve it? What would it need as input, and what steps (algorithm) would it follow?</div>
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th style="width:22%;">Activity</th>
+            <th style="width:20%;">Automatable? (Y/N/Partly)</th>
+            <th style="width:26%;">Inputs needed</th>
+            <th>How a computer would approach it</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="cell-fixed">Word Search</div></td>
+            <td><input class="cell" type="text" id="a_ws_auto" autocomplete="off"></td>
+            <td><textarea class="cell" id="a_ws_inputs" rows="2"></textarea></td>
+            <td><textarea class="cell" id="a_ws_approach" rows="2"></textarea></td>
+          </tr>
+          <tr>
+            <td><div class="cell-fixed">Birthday Guests</div></td>
+            <td><input class="cell" type="text" id="a_bg_auto" autocomplete="off"></td>
+            <td><textarea class="cell" id="a_bg_inputs" rows="2"></textarea></td>
+            <td><textarea class="cell" id="a_bg_approach" rows="2"></textarea></td>
+          </tr>
+          <tr>
+            <td><div class="cell-fixed">Redesign Classroom</div></td>
+            <td><input class="cell" type="text" id="a_rc_auto" autocomplete="off"></td>
+            <td><textarea class="cell" id="a_rc_inputs" rows="2"></textarea></td>
+            <td><textarea class="cell" id="a_rc_approach" rows="2"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+
+  <div class="footer">masterpiece labs &middot; Week 1 &middot; The Problem Solving Process &middot; High School</div>
+
+</div>
+
+<script>
+(function () {
+  var STORAGE_PREFIX = 'psc_w1_hs_worksheet:';
+  var indicator = document.getElementById('saveIndicator');
+  var indicatorTimer = null;
+
+  function fields() {
+    return document.querySelectorAll('input[id], textarea[id]');
+  }
+
+  function showSaved() {
+    if (!indicator) return;
+    indicator.classList.add('show');
+    if (indicatorTimer) clearTimeout(indicatorTimer);
+    indicatorTimer = setTimeout(function () {
+      indicator.classList.remove('show');
+    }, 1200);
+  }
+
+  function save(el) {
+    try {
+      localStorage.setItem(STORAGE_PREFIX + el.id, el.value);
+      showSaved();
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function restore() {
+    try {
+      fields().forEach(function (el) {
+        var v = localStorage.getItem(STORAGE_PREFIX + el.id);
+        if (v !== null) {
+          el.value = v;
+          autoGrow(el);
+        }
+      });
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function autoGrow(el) {
+    if (el.tagName.toLowerCase() !== 'textarea') return;
+    el.style.height = 'auto';
+    el.style.height = (el.scrollHeight) + 'px';
+  }
+
+  function init() {
+    fields().forEach(function (el) {
+      el.addEventListener('input', function () {
+        autoGrow(el);
+        save(el);
+      });
+    });
+    restore();
+  }
+
+  window.clearAnswers = function () {
+    if (!window.confirm('Clear all your answers on this worksheet? This cannot be undone.')) return;
+    try {
+      fields().forEach(function (el) {
+        localStorage.removeItem(STORAGE_PREFIX + el.id);
+        el.value = '';
+        autoGrow(el);
+      });
+      showSaved();
+    } catch (e) { /* storage unavailable */ }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>

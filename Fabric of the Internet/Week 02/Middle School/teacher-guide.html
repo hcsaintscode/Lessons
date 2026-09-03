@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 2 Teacher Guide — The Fabric of the Internet (Middle School)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --purple: #2d1b69;
+            --purple-light: #3d2b7a;
+            --purple-lighter: #f4f0ff;
+            --teal: #2bb5a0;
+            --teal-light: #e6f9f6;
+            --coral: #e8553d;
+            --coral-light: #fef0ed;
+            --text: #1a1a2e;
+            --text-light: #555;
+            --border: #e0e0e0;
+            --bg: #fafafa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            padding-top: 64px;
+        }
+
+        /* ─── STICKY NAV ─── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--purple);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+        }
+
+        .nav-brand {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-badge {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.95);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            padding: 80px 32px 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ─── AT A GLANCE ─── */
+        .at-a-glance {
+            max-width: 900px;
+            margin: -30px auto 40px;
+            padding: 32px 40px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .at-a-glance h2 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 20px;
+        }
+
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .glance-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .glance-item:last-child,
+        .glance-item:nth-last-child(2) {
+            border-bottom: none;
+        }
+
+        .glance-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .glance-value {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        /* ─── TABS ─── */
+        .tabs-container {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 4px;
+            background: var(--white);
+            border-radius: 12px 12px 0 0;
+            padding: 8px 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: var(--purple-lighter);
+            color: var(--purple);
+        }
+
+        .tab-btn.active {
+            background: var(--purple);
+            color: white;
+            font-weight: 600;
+        }
+
+        .tab-btn .tab-duration {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 2px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tab-btn.active .tab-duration {
+            opacity: 0.85;
+        }
+
+        .tab-content {
+            background: var(--white);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ─── DAY HEADER ─── */
+        .day-header {
+            margin-bottom: 32px;
+        }
+
+        .day-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .day-header .day-subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ─── TIMING TABLE ─── */
+        .timing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0 36px;
+            font-size: 0.9rem;
+        }
+
+        .timing-table th {
+            background: var(--purple-lighter);
+            color: var(--purple);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--purple);
+        }
+
+        .timing-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .timing-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .timing-table .time-col {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--purple);
+            white-space: nowrap;
+            width: 100px;
+        }
+
+        /* ─── SECTION HEADERS ─── */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 36px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--purple-lighter);
+        }
+
+        /* ─── SAY BLOCKS ─── */
+        .say-block {
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .say-block::before {
+            content: 'SAY';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            background: rgba(45, 27, 105, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .say-block p {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        /* ─── TIP BLOCKS ─── */
+        .tip-block {
+            background: var(--teal-light);
+            border-left: 4px solid var(--teal);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .tip-block::before {
+            content: 'TIP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.12);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .tip-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── WARNING BLOCKS ─── */
+        .warning-block {
+            background: var(--coral-light);
+            border-left: 4px solid var(--coral);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .warning-block::before {
+            content: 'HEADS UP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--coral);
+            background: rgba(232, 85, 61, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .warning-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── CHECKPOINT ─── */
+        .checkpoint {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 36px 0;
+            color: white;
+        }
+
+        .checkpoint::before {
+            content: '✓ CHECKPOINT';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            opacity: 0.85;
+        }
+
+        .checkpoint p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        /* ─── CONTENT HELPERS ─── */
+        .facilitation-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .facilitation-list li {
+            padding: 8px 0 8px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .facilitation-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        .discussion-questions {
+            list-style: none;
+            counter-reset: question;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .discussion-questions li {
+            counter-increment: question;
+            padding: 10px 0 10px 36px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .discussion-questions li::before {
+            content: counter(question);
+            position: absolute;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--purple-lighter);
+            color: var(--purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            top: 10px;
+        }
+
+        .exit-ticket {
+            background: #f8f7ff;
+            border: 2px dashed var(--purple);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+
+        .exit-ticket::before {
+            content: 'EXIT TICKET';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .exit-ticket p {
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* ─── ADDITIONAL NOTES ─── */
+        .additional-notes {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .notes-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .notes-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 24px;
+        }
+
+        .notes-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .notes-card h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .notes-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notes-card ul li {
+            padding: 6px 0 6px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .notes-card ul li::before {
+            content: '•';
+            position: absolute;
+            left: 4px;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .dashboard-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.green { background: #4caf50; }
+        .legend-dot.yellow { background: #ff9800; }
+        .legend-dot.gray { background: #bdbdbd; }
+
+        /* ─── DPTR STEP LIST (reuses existing color vars) ─── */
+        .dptr-list, .iosp-list {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .dptr-list li, .iosp-list li {
+            padding: 14px 18px;
+            margin: 10px 0;
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .dptr-list li strong, .iosp-list li strong {
+            color: var(--purple);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── CONSTRAINT REFERENCE (two-column, reuses vars) ─── */
+        .constraint-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .constraint-card {
+            border-radius: 8px;
+            padding: 18px 20px;
+        }
+
+        .constraint-card.together {
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+        }
+
+        .constraint-card.apart {
+            background: var(--coral-light);
+            border: 1px solid rgba(232, 85, 61, 0.35);
+        }
+
+        .constraint-card h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .constraint-card.together h4 { color: var(--teal); }
+        .constraint-card.apart h4 { color: var(--coral); }
+
+        .constraint-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .constraint-card li {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            line-height: 1.5;
+        }
+
+        /* ─── TEACHER ANSWER KEY BLOCK (teal-tinted, reuses vars) ─── */
+        .answer-key {
+            background: var(--teal-light);
+            border: 2px solid var(--teal);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+
+        .answer-key::before {
+            content: 'TEACHER ANSWER KEY';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.15);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+
+        .answer-key .ak-table {
+            background: var(--white);
+            border: 1px solid rgba(43, 181, 160, 0.4);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+
+        .answer-key .ak-table h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .answer-key .ak-table p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .answer-key .ak-note {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        /* ─── RUBRIC TABLE (reuses existing color vars) ─── */
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 32px;
+            font-size: 0.82rem;
+        }
+
+        .rubric-table th {
+            background: var(--purple);
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .rubric-table th:first-child {
+            background: var(--purple-light);
+        }
+
+        .rubric-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.45;
+        }
+
+        .rubric-table td:first-child {
+            font-weight: 600;
+            color: var(--purple);
+            background: var(--purple-lighter);
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ─── RESOURCE LINK (optional enrichment, reuses vars) ─── */
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--teal);
+            text-decoration: none;
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin: 6px 0;
+        }
+
+        .resource-link::before {
+            content: '↗';
+            font-weight: 700;
+        }
+
+        .resource-link:hover {
+            background: rgba(43, 181, 160, 0.18);
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            background: var(--purple);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 32px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .nav { padding: 0 16px; }
+            .hero h1 { font-size: 2rem; }
+            .at-a-glance { margin: -20px 16px 30px; padding: 24px; }
+            .glance-grid { grid-template-columns: 1fr; }
+            .tabs-container { padding: 0 12px; }
+            .tab-content { padding: 24px; }
+            .tabs-nav { flex-direction: column; gap: 2px; }
+            .tab-btn { border-radius: 8px; }
+            .constraint-grid { grid-template-columns: 1fr; }
+            .rubric-table { font-size: 0.72rem; }
+            .rubric-table th, .rubric-table td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <span class="nav-brand">masterpiece labs</span>
+    <span class="nav-badge">FABRIC OF THE INTERNET · WEEK 02 · MIDDLE SCHOOL</span>
+</nav>
+
+<!-- ─── HERO ─── -->
+<header class="hero">
+    <div class="hero-eyebrow">Teacher Guide · Middle School</div>
+    <h1>Finding Websites &amp; Who Gets Access</h1>
+    <p class="hero-sub">Week 2 — DNS, HTTP, the digital divide, and an advocacy campaign</p>
+</header>
+
+<!-- ─── AT A GLANCE ─── -->
+<section class="at-a-glance" aria-label="Week at a glance">
+    <h2>At a Glance</h2>
+    <div class="glance-grid">
+        <div class="glance-item">
+            <div class="glance-label">Driving Question</div>
+            <div class="glance-value">How does your browser find a website — and does everyone get the same access to the Internet?</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Big Idea</div>
+            <div class="glance-value">DNS translates website names into addresses and HTTP fetches the page; but access to the Internet isn't equal — the digital divide affects real people, and we can advocate to close it.</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Schedule</div>
+            <div class="glance-value">Day 1 Learn (45 min) · Day 2 Explore (90 min) · Day 3 Create (90 min)</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Week Deliverable</div>
+            <div class="glance-value">An Internet Access Advocacy Campaign (poster or slides) on a student-chosen issue, presented to the class</div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── LEARNING OBJECTIVES ─── -->
+<section class="at-a-glance" aria-label="Learning objectives" style="margin-top:0;">
+    <h2>Learning Objectives</h2>
+    <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:12px;">Students will be able to:</p>
+    <ul class="facilitation-list">
+        <li>Explain how DNS translates a website name into an IP address (the Internet's phone book)</li>
+        <li>Describe how an HTTP request/response delivers a web page to your browser</li>
+        <li>Interpret real data about the digital divide and explain net neutrality in plain terms</li>
+        <li>Design and present an advocacy campaign proposing a solution to an access problem they care about</li>
+    </ul>
+</section>
+
+<!-- ─── TABBED DAYS ─── -->
+<section class="tabs-container">
+    <div class="tabs-nav" role="tablist" aria-label="Daily lesson plans">
+        <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="day1" id="tab-day1" onclick="switchTab('day1')">
+            Day 1
+            <span class="tab-duration">45 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day2" id="tab-day2" onclick="switchTab('day2')">
+            Day 2
+            <span class="tab-duration">90 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day3" id="tab-day3" onclick="switchTab('day3')">
+            Day 3
+            <span class="tab-duration">90 min</span>
+        </button>
+    </div>
+
+    <div class="tab-content">
+
+        <!-- ═══════════ DAY 1 ═══════════ -->
+        <div class="tab-panel active" id="day1" role="tabpanel" aria-labelledby="tab-day1">
+            <div class="day-header">
+                <h2>Day 1 — Learn: How Your Browser Finds a Website</h2>
+                <p class="day-subtitle">DNS, the Internet's phone book — and HTTP, the delivery</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 1 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–7 min</td>
+                        <td>Hook — "You type a name, not a number. How does that work?"</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">7–22 min</td>
+                        <td>Mini-lesson — DNS (name → IP) + HTTP (request → response)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">22–36 min</td>
+                        <td>Classroom DNS simulation (unplugged)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">36–42 min</td>
+                        <td>Trace it on your OWN device (personalized, optional live demo)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">42–45 min</td>
+                        <td>Exit ticket</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Hook (7 min)</h3>
+
+            <div class="say-block">
+                <p>"When you want a website, you type a NAME like 'youtube.com' — not a number. But computers find each other using IP addresses (numbers), which we learned last week. So how does 'youtube.com' turn into the right number? Who's the translator?"</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Let them guess. The answer — DNS, the Domain Name System — is like a giant phone book that looks up the number for a name.</p>
+            </div>
+
+            <h3 class="section-title">Mini-lesson: DNS + HTTP (15 min)</h3>
+
+            <ul class="iosp-list">
+                <li><strong>DNS</strong> — Domain Name System — translates human-friendly website names (like www.example.com) into numerical IP addresses. The Internet's phone book.</li>
+                <li><strong>HTTP</strong> — HyperText Transfer Protocol — the rules your browser and a server use to request and deliver a web page.</li>
+            </ul>
+
+            <div class="say-block">
+                <p>"Let's walk the full trip. You type a name → your device asks DNS for the IP → DNS answers with the number → your browser sends an HTTP request to that server → the server sends back the page (an HTTP response). That whole round trip happens in a fraction of a second."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Analogy — DNS is looking up a friend's phone number by their name; HTTP is the actual phone call where you ask for something and they hand it over.</p>
+            </div>
+
+            <h3 class="section-title">Classroom DNS Simulation (14 min)</h3>
+
+            <div class="say-block">
+                <p>"Let's BE the DNS system. Half of you are 'websites' with a name and a secret 'IP number.' The other half are browsers who must find a site's number by asking the class 'DNS' (a few students acting as the phone book). Walk around, look up a name, get its number, then 'connect.'"</p>
+            </div>
+
+            <ul class="facilitation-list">
+                <li>Give ~6 students name cards ("catvideos.com", etc.) each with a made-up IP number.</li>
+                <li>Appoint 2–3 students as the DNS "phone book" holding the name→number list.</li>
+                <li>Everyone else is a browser: pick a site name, go to DNS, get the number, then find that student.</li>
+                <li>Debrief: "What if DNS was slow or down? What if it gave you the WRONG number?"</li>
+            </ul>
+
+            <h3 class="section-title">Make It Yours: Trace It on Your Own Device (6 min)</h3>
+
+            <div class="tip-block">
+                <p>Optional live demo — on a class computer, show that a real site name maps to a real number. (Teachers: you can run <strong>nslookup youtube.com</strong> in a terminal, or just show that different names lead to different servers.) Keep it light; the point is that DNS is real.</p>
+            </div>
+
+            <div class="exit-ticket">
+                <p>"In your own words, what does DNS do, and what does HTTP do? Use the phone-book / phone-call analogy or your own."</p>
+            </div>
+
+            <div class="checkpoint">
+                <p>Every student can explain that DNS turns a name into an IP address and HTTP fetches the page.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 2 ═══════════ -->
+        <div class="tab-panel" id="day2" role="tabpanel" aria-labelledby="tab-day2">
+            <div class="day-header">
+                <h2>Day 2 — Explore: Who Gets Access?</h2>
+                <p class="day-subtitle">The digital divide, net neutrality, and real people</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 2 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Warm-up — "What would you NOT be able to do without the Internet?"</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–20 min</td>
+                        <td>Mini-lesson — the digital divide + net neutrality</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">20–45 min</td>
+                        <td>Data dive — read real Pew Research data</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">45–70 min</td>
+                        <td>Persona case study (Diego, Lisa, Mr. Johnson, Aisha)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">70–85 min</td>
+                        <td>Pick YOUR issue (personalized brainstorm for the campaign)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">85–90 min</td>
+                        <td>Wrap + record vocab</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Warm-up (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Make a quick list: what would you NOT be able to do this week without the Internet — for school, fun, or family? Share a few. Now imagine not having reliable Internet at all. Millions of people don't."</p>
+            </div>
+
+            <h3 class="section-title">Mini-lesson: The Digital Divide + Net Neutrality (15 min)</h3>
+
+            <ul class="iosp-list">
+                <li><strong>DIGITAL DIVIDE</strong> — the gap between people who have good access to the Internet and technology and those who don't.</li>
+                <li><strong>NET NEUTRALITY</strong> — the idea that Internet providers should treat all websites and services equally, without slowing down or blocking some or charging for faster access.</li>
+            </ul>
+
+            <div class="say-block">
+                <p>"Let's talk about why these matter. When Internet access is unequal, it affects school, jobs, healthcare, and just staying connected to family and friends. And net neutrality decides whether every site loads fairly — or whether the ones who pay more get the fast lane."</p>
+            </div>
+
+            <h3 class="section-title">Data Dive: Real Access Data (25 min)</h3>
+
+            <div class="say-block">
+                <p>"Let's look at REAL data on who has access. On your worksheet, record what you notice: who has the most access, who has the least, and what surprised you."</p>
+            </div>
+            <a class="resource-link" href="https://www.pewresearch.org/internet/fact-sheet/internet-broadband/">Pew Research · Internet &amp; Broadband Fact Sheet</a>
+
+            <div class="tip-block">
+                <p>Focus on 2–3 comparisons (by income, by community type — urban/rural, by age). Keep it concrete: "What's the gap between the highest and lowest group?"</p>
+            </div>
+
+            <h3 class="section-title">Persona Case Study (25 min)</h3>
+
+            <div class="say-block">
+                <p>"Meet four people dealing with real access challenges. With a partner, pick one and dig into their situation."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>DIEGO</strong> — a high school student with no home Internet.</li>
+                <li><strong>LISA</strong> — a small business owner in a rural area with unreliable Internet.</li>
+                <li><strong>MR. JOHNSON</strong> — a retired senior who struggles with digital literacy and access.</li>
+                <li><strong>AISHA</strong> — a college student affected by Internet speed restrictions.</li>
+            </ul>
+
+            <ul class="facilitation-list">
+                <li>For their chosen persona, students answer: What challenge does this person face?</li>
+                <li>How does it affect their life (school / work / health)?</li>
+                <li>What's one solution that could help?</li>
+            </ul>
+
+            <h3 class="section-title">Make It Yours: Pick Your Issue (15 min)</h3>
+
+            <div class="say-block">
+                <p>"Tomorrow you'll build an advocacy campaign. Today, choose the access issue YOU most want to help solve — it can be one of the personas, something in your own community or family, or an issue you've seen. Write down who it affects and why you care."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Encourage students to pick something personally meaningful — a relative without good Internet, their own neighborhood, a school issue. Ownership drives better campaigns.</p>
+            </div>
+
+            <h3 class="section-title">Wrap + Vocab (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Record today's vocabulary in your Unit Guide: DNS, HTTP, digital divide, net neutrality."</p>
+            </div>
+
+            <div class="checkpoint">
+                <p>Every student interpreted real access data, analyzed a persona, and chose an issue for their campaign.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 3 ═══════════ -->
+        <div class="tab-panel" id="day3" role="tabpanel" aria-labelledby="tab-day3">
+            <div class="day-header">
+                <h2>Day 3 — Create: Advocacy Campaign</h2>
+                <p class="day-subtitle">Make a real case to close the digital divide</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 3 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Launch the campaign</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–25 min</td>
+                        <td>Research &amp; define your message</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">25–55 min</td>
+                        <td>Build the campaign (poster or slides)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">55–75 min</td>
+                        <td>Peer feedback</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">75–88 min</td>
+                        <td>Present / gallery walk</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">88–90 min</td>
+                        <td>Reflection</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Launch the Campaign (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Today you build an advocacy campaign about the access issue you chose — a real, sharable message that could actually persuade someone (a principal, a city, a company) to help close the digital divide."</p>
+            </div>
+
+            <h3 class="section-title">Research &amp; Define Your Message (20 min)</h3>
+
+            <div class="say-block">
+                <p>"On your worksheet, define: the problem, who it affects, one piece of evidence (from the Pew data or your persona), your proposed solution, and your call to action — what you want people to DO."</p>
+            </div>
+
+            <h3 class="section-title">Build the Campaign (30 min)</h3>
+
+            <div class="say-block">
+                <p>"Make your campaign as a poster or a few slides. It needs: a clear title, the problem, who's affected, your evidence, your solution, and a call to action. Make it persuasive and make it yours — use your own voice."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Offer format choice — poster, slide deck, a short script for a video, or a social-post mockup. Choice increases ownership.</p>
+            </div>
+
+            <h3 class="section-title">Peer Feedback (20 min)</h3>
+
+            <div class="say-block">
+                <p>"Trade with another team. Use the feedback form: What's the most compelling part? One question you have? One suggestion to make it stronger?"</p>
+            </div>
+
+            <h3 class="section-title">Present / Gallery Walk (13 min)</h3>
+
+            <div class="say-block">
+                <p>"Gallery walk or short presentations. Each team shares their campaign and their call to action."</p>
+            </div>
+
+            <div class="tip-block">
+                <p><strong>Extend Beyond the Classroom:</strong> Encourage students to actually SHARE their campaign — post it (with permission), show a family member, or send it to a relevant decision-maker. A campaign that leaves the classroom is real.</p>
+            </div>
+
+            <h3 class="section-title">Reflection + Deliverable (2 min)</h3>
+
+            <div class="say-block">
+                <p>"Reflection: Why does the issue you chose matter to you? What's one thing you could personally do about Internet access in your own life or community?"</p>
+            </div>
+
+            <h3 class="section-title">Week 2 Deliverable Rubric</h3>
+            <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:4px;">For the advocacy campaign + reflection. Use it to give quick, consistent feedback.</p>
+            <table class="rubric-table" aria-label="Week 2 deliverable rubric">
+                <thead>
+                    <tr>
+                        <th>Criteria</th>
+                        <th>Beginning</th>
+                        <th>Proficient</th>
+                        <th>Exemplary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Clearly states a real access problem and who it affects</td>
+                        <td>Problem is vague or unclear</td>
+                        <td>States the problem and who it affects</td>
+                        <td>Sharp, specific problem with a real audience</td>
+                    </tr>
+                    <tr>
+                        <td>Uses evidence (data or persona) to support the case</td>
+                        <td>Little or no evidence</td>
+                        <td>Uses one piece of evidence</td>
+                        <td>Evidence is strong and clearly connected</td>
+                    </tr>
+                    <tr>
+                        <td>Proposes a specific solution + call to action</td>
+                        <td>Solution is missing or unclear</td>
+                        <td>Names a solution and an action</td>
+                        <td>Specific solution with a clear, doable ask</td>
+                    </tr>
+                    <tr>
+                        <td>Campaign is persuasive and reflects the student's own voice/choice</td>
+                        <td>Generic; little personal voice</td>
+                        <td>Persuasive with some personal voice</td>
+                        <td>Compelling; clearly the student's own choice</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="checkpoint">
+                <p>Every team presented an advocacy campaign with a problem, evidence, solution, and call to action.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ─── ADDITIONAL NOTES ─── -->
+<section class="additional-notes" aria-label="Additional notes for teachers">
+    <div class="notes-card">
+        <h2>Additional Notes for the Teacher</h2>
+
+        <h3>Differentiation</h3>
+        <ul>
+            <li><strong>Struggling:</strong> Provide a campaign template with sentence frames ("The problem is ___. It affects ___. I want ___ to ___."); let them focus on one persona; a one-page poster is fine</li>
+            <li><strong>Advanced:</strong> Have them find additional real data, address a counter-argument, or compare two possible solutions; propose a specific policy</li>
+        </ul>
+
+        <h3>Materials Needed</h3>
+        <ul>
+            <li>Poster paper / markers or a slide tool</li>
+            <li>The student worksheet</li>
+            <li>Projector</li>
+            <li>Computer access for the Pew data (or printed data snapshots)</li>
+        </ul>
+
+        <h3>Extend Beyond the Classroom</h3>
+        <ul>
+            <li>Students share their campaign with a family member or a decision-maker</li>
+            <li>Look for a real digital-divide moment in their own community</li>
+        </ul>
+
+        <h3>Optional: Code.org resources</h3>
+        <ul>
+            <li>AI Foundations Lessons 6–8 cover DNS/HTTP and the advocacy project with the Internet Simulator; optional — the core lessons need no Code.org login. <a href="https://studio.code.org/courses/ai-foundations-year1-2026">studio.code.org/courses/ai-foundations-year1-2026</a></li>
+        </ul>
+
+        <h3>If you're running behind</h3>
+        <ul>
+            <li>The persona case study is the priority on Day 2; the DNS simulation can be shortened to a quick demo</li>
+            <li>Campaigns can be finished as homework; protect time for presentations</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+    Masterpiece Labs · The Fabric of the Internet · Week 2 · Middle School
+</footer>
+
+<script>
+    function switchTab(dayId) {
+        // Deactivate all tabs and panels
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+
+        // Activate selected tab and panel
+        document.getElementById('tab-' + dayId).classList.add('active');
+        document.getElementById('tab-' + dayId).setAttribute('aria-selected', 'true');
+        document.getElementById(dayId).classList.add('active');
+    }
+
+    // Keyboard navigation for tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('keydown', (e) => {
+            const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+            const index = tabs.indexOf(e.target);
+            let newIndex;
+
+            if (e.key === 'ArrowRight') {
+                newIndex = (index + 1) % tabs.length;
+            } else if (e.key === 'ArrowLeft') {
+                newIndex = (index - 1 + tabs.length) % tabs.length;
+            } else {
+                return;
+            }
+
+            e.preventDefault();
+            tabs[newIndex].focus();
+            tabs[newIndex].click();
+        });
+    });
+</script>
+
+</body>
+</html>

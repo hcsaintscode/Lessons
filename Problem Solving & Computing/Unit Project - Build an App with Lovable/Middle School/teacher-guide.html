@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Project Teacher Guide — Build an App with Lovable (Middle School)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --purple: #2d1b69;
+            --purple-light: #3d2b7a;
+            --purple-lighter: #f4f0ff;
+            --teal: #2bb5a0;
+            --teal-light: #e6f9f6;
+            --coral: #e8553d;
+            --coral-light: #fef0ed;
+            --text: #1a1a2e;
+            --text-light: #555;
+            --border: #e0e0e0;
+            --bg: #fafafa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            padding-top: 64px;
+        }
+
+        /* ─── STICKY NAV ─── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--purple);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+        }
+
+        .nav-brand {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-badge {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.95);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            padding: 80px 32px 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ─── AT A GLANCE ─── */
+        .at-a-glance {
+            max-width: 900px;
+            margin: -30px auto 40px;
+            padding: 32px 40px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .at-a-glance h2 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 20px;
+        }
+
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .glance-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .glance-item:last-child,
+        .glance-item:nth-last-child(2) {
+            border-bottom: none;
+        }
+
+        .glance-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .glance-value {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        /* ─── TABS ─── */
+        .tabs-container {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 4px;
+            background: var(--white);
+            border-radius: 12px 12px 0 0;
+            padding: 8px 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: var(--purple-lighter);
+            color: var(--purple);
+        }
+
+        .tab-btn.active {
+            background: var(--purple);
+            color: white;
+            font-weight: 600;
+        }
+
+        .tab-btn .tab-duration {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 2px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tab-btn.active .tab-duration {
+            opacity: 0.85;
+        }
+
+        .tab-content {
+            background: var(--white);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ─── DAY HEADER ─── */
+        .day-header {
+            margin-bottom: 32px;
+        }
+
+        .day-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .day-header .day-subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ─── TIMING TABLE ─── */
+        .timing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0 36px;
+            font-size: 0.9rem;
+        }
+
+        .timing-table th {
+            background: var(--purple-lighter);
+            color: var(--purple);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--purple);
+        }
+
+        .timing-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .timing-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .timing-table .time-col {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--purple);
+            white-space: nowrap;
+            width: 100px;
+        }
+
+        /* ─── SECTION HEADERS ─── */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 36px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--purple-lighter);
+        }
+
+        /* ─── SAY BLOCKS ─── */
+        .say-block {
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .say-block::before {
+            content: 'SAY';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            background: rgba(45, 27, 105, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .say-block p {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        /* ─── TIP BLOCKS ─── */
+        .tip-block {
+            background: var(--teal-light);
+            border-left: 4px solid var(--teal);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .tip-block::before {
+            content: 'TIP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.12);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .tip-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── WARNING BLOCKS ─── */
+        .warning-block {
+            background: var(--coral-light);
+            border-left: 4px solid var(--coral);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .warning-block::before {
+            content: 'HEADS UP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--coral);
+            background: rgba(232, 85, 61, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .warning-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── CHECKPOINT ─── */
+        .checkpoint {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 36px 0;
+            color: white;
+        }
+
+        .checkpoint::before {
+            content: '✓ CHECKPOINT';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            opacity: 0.85;
+        }
+
+        .checkpoint p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        /* ─── CONTENT HELPERS ─── */
+        .facilitation-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .facilitation-list li {
+            padding: 8px 0 8px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .facilitation-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        .discussion-questions {
+            list-style: none;
+            counter-reset: question;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .discussion-questions li {
+            counter-increment: question;
+            padding: 10px 0 10px 36px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .discussion-questions li::before {
+            content: counter(question);
+            position: absolute;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--purple-lighter);
+            color: var(--purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            top: 10px;
+        }
+
+        .exit-ticket {
+            background: #f8f7ff;
+            border: 2px dashed var(--purple);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+
+        .exit-ticket::before {
+            content: 'EXIT TICKET';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .exit-ticket p {
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* ─── ADDITIONAL NOTES ─── */
+        .additional-notes {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .notes-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .notes-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 24px;
+        }
+
+        .notes-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .notes-card h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .notes-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notes-card ul li {
+            padding: 6px 0 6px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .notes-card ul li::before {
+            content: '•';
+            position: absolute;
+            left: 4px;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .dashboard-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.green { background: #4caf50; }
+        .legend-dot.yellow { background: #ff9800; }
+        .legend-dot.gray { background: #bdbdbd; }
+
+        /* ─── DPTR STEP LIST (reuses existing color vars) ─── */
+        .dptr-list, .iosp-list {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .dptr-list li, .iosp-list li {
+            padding: 14px 18px;
+            margin: 10px 0;
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .dptr-list li strong, .iosp-list li strong {
+            color: var(--purple);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── CONSTRAINT REFERENCE (two-column, reuses vars) ─── */
+        .constraint-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .constraint-card {
+            border-radius: 8px;
+            padding: 18px 20px;
+        }
+
+        .constraint-card.together {
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+        }
+
+        .constraint-card.apart {
+            background: var(--coral-light);
+            border: 1px solid rgba(232, 85, 61, 0.35);
+        }
+
+        .constraint-card h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .constraint-card.together h4 { color: var(--teal); }
+        .constraint-card.apart h4 { color: var(--coral); }
+
+        .constraint-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .constraint-card li {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            line-height: 1.5;
+        }
+
+        /* ─── TEACHER ANSWER KEY BLOCK (teal-tinted, reuses vars) ─── */
+        .answer-key {
+            background: var(--teal-light);
+            border: 2px solid var(--teal);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+
+        .answer-key::before {
+            content: 'TEACHER ANSWER KEY';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.15);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+
+        .answer-key .ak-table {
+            background: var(--white);
+            border: 1px solid rgba(43, 181, 160, 0.4);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+
+        .answer-key .ak-table h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .answer-key .ak-table p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .answer-key .ak-note {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        /* ─── RUBRIC TABLE (reuses existing color vars) ─── */
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 32px;
+            font-size: 0.82rem;
+        }
+
+        .rubric-table th {
+            background: var(--purple);
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .rubric-table th:first-child {
+            background: var(--purple-light);
+        }
+
+        .rubric-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.45;
+        }
+
+        .rubric-table td:first-child {
+            font-weight: 600;
+            color: var(--purple);
+            background: var(--purple-lighter);
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ─── RESOURCE LINK (optional enrichment, reuses vars) ─── */
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--teal);
+            text-decoration: none;
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin: 6px 0;
+        }
+
+        .resource-link::before {
+            content: '↗';
+            font-weight: 700;
+        }
+
+        .resource-link:hover {
+            background: rgba(43, 181, 160, 0.18);
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            background: var(--purple);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 32px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .nav { padding: 0 16px; }
+            .hero h1 { font-size: 2rem; }
+            .at-a-glance { margin: -20px 16px 30px; padding: 24px; }
+            .glance-grid { grid-template-columns: 1fr; }
+            .tabs-container { padding: 0 12px; }
+            .tab-content { padding: 24px; }
+            .tabs-nav { flex-direction: column; gap: 2px; }
+            .tab-btn { border-radius: 8px; }
+            .constraint-grid { grid-template-columns: 1fr; }
+            .rubric-table { font-size: 0.72rem; }
+            .rubric-table th, .rubric-table td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <span class="nav-brand">masterpiece labs</span>
+    <span class="nav-badge">PROBLEM SOLVING &amp; COMPUTING · UNIT PROJECT · MIDDLE SCHOOL</span>
+</nav>
+
+<!-- ─── HERO ─── -->
+<header class="hero">
+    <div class="hero-eyebrow">Unit Project · Middle School</div>
+    <h1>Build an App with Lovable</h1>
+    <p class="hero-sub">Apply the problem-solving process and IOSP to design, build, and share a real app</p>
+</header>
+
+<!-- ─── AT A GLANCE ─── -->
+<section class="at-a-glance" aria-label="Project at a glance">
+    <h2>At a Glance</h2>
+    <div class="glance-grid">
+        <div class="glance-item">
+            <div class="glance-label">Driving Question</div>
+            <div class="glance-value">Can you design and build a real app that solves a problem YOU care about?</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Big Idea</div>
+            <div class="glance-value">You already know the problem-solving process (Define, Prepare, Try, Reflect) and the IOSP model. Now you'll use them to write a clear plan — and turn that plan into a working, shareable app with an AI builder.</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Format</div>
+            <div class="glance-value">Project — flexible over ~3–5 sessions (see the phase tabs). Individual, pairs, or teacher-driven build.</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Deliverable</div>
+            <div class="glance-value">A working app deployed to a shareable URL + a completed Project Guide + a showcase presentation</div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── LEARNING OBJECTIVES ─── -->
+<section class="at-a-glance" aria-label="Learning objectives" style="margin-top:0;">
+    <h2>Learning Objectives</h2>
+    <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:12px;">Students will be able to:</p>
+    <ul class="facilitation-list">
+        <li>Apply DPTR to define a real problem worth solving</li>
+        <li>Translate an app idea into an IOSP spec (Inputs, Outputs, Storage, Processing)</li>
+        <li>Turn that spec into a clear natural-language prompt for an AI app builder</li>
+        <li>Build, test, and iterate a working app; then share and reflect on it</li>
+    </ul>
+</section>
+
+<!-- ─── TABBED PHASES ─── -->
+<section class="tabs-container">
+    <div class="tabs-nav" role="tablist" aria-label="Project phases">
+        <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="setup" id="tab-setup" onclick="switchTab('setup')">
+            Setup
+            <span class="tab-duration">~30 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="plan" id="tab-plan" onclick="switchTab('plan')">
+            Define &amp; Plan
+            <span class="tab-duration">1–2 sessions</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="build" id="tab-build" onclick="switchTab('build')">
+            Build &amp; Iterate
+            <span class="tab-duration">1–2 sessions</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="share" id="tab-share" onclick="switchTab('share')">
+            Share &amp; Reflect
+            <span class="tab-duration">1 session</span>
+        </button>
+    </div>
+
+    <div class="tab-content">
+
+        <!-- ═══════════ SETUP ═══════════ -->
+        <div class="tab-panel active" id="setup" role="tabpanel" aria-labelledby="tab-setup">
+            <div class="day-header">
+                <h2>Setup — Before You Start</h2>
+                <p class="day-subtitle">Accounts, credit budget, and expectations</p>
+            </div>
+
+            <div class="say-block">
+                <p>"You've learned how to think through problems and how computers work. Now you become a builder: you'll make a REAL app that solves a problem you actually care about — and put it on the internet to share."</p>
+            </div>
+
+            <h3 class="section-title">What Is lovable.dev?</h3>
+
+            <ul class="iosp-list">
+                <li><strong>AI APP BUILDER</strong> — lovable.dev is a tool where you describe the app you want in plain language, and it builds a working web app you can preview, change, and publish to a real web link.</li>
+                <li><strong>NO CODE TYPING</strong> — you don't write code. In Week 2 you saw raw code in StackBlitz; here, lovable is your first real "build." The skill is DESCRIBING the app precisely and ITERATING on it.</li>
+                <li><strong>YOUR IOSP BECOMES THE PROMPT</strong> — the written IOSP spec from Week 2 is exactly what you hand to lovable. A clear spec makes a clear app.</li>
+            </ul>
+
+            <div class="warning-block">
+                <p>The free plan gives about 5 "build credits" per day (they don't roll over — roughly 30 a month). Every message you send the AI uses a credit. That's PLENTY if you plan first — but you can burn a whole day's credits on vague prompts. The golden rule: write your full plan on paper BEFORE you touch lovable.</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Two ways to run this within free-tier limits: (1) Small groups of 2–3 share one build — great for collaboration and for stretching credits. (2) Teacher-driven — students write specs, and you build the class's chosen example live on the projector to model the process, then students build their own if accounts and time allow. Pick whichever fits your class; the shared/group model works especially well inside the free-tier budget.</p>
+            </div>
+
+            <h3 class="section-title">Setup Checklist</h3>
+
+            <ul class="facilitation-list">
+                <li>Confirm every student's lovable.dev account works (they have approved accounts)</li>
+                <li>Confirm students can reach lovable.dev on the school network</li>
+                <li>Decide the model: individual vs. small-group vs. teacher-driven</li>
+                <li>Hand out the Project Guide</li>
+                <li>Set the norm loud and clear: planning happens on paper first</li>
+            </ul>
+
+            <a class="resource-link" href="https://lovable.dev">lovable.dev</a>
+            <a class="resource-link" href="https://docs.lovable.dev/introduction/getting-started">lovable docs · Getting Started</a>
+
+            <div class="checkpoint">
+                <p>Every student (or group) has account access and a Project Guide, and understands the credit budget.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DEFINE & PLAN ═══════════ -->
+        <div class="tab-panel" id="plan" role="tabpanel" aria-labelledby="tab-plan">
+            <div class="day-header">
+                <h2>Define &amp; Plan</h2>
+                <p class="day-subtitle">DPTR + IOSP → a written spec (all on paper)</p>
+            </div>
+
+            <div class="say-block">
+                <p>"This is the most important phase — and none of it uses lovable yet. A clear plan is what makes the build work on the first try."</p>
+            </div>
+
+            <h3 class="section-title">Define (DPTR)</h3>
+
+            <div class="say-block">
+                <p>"Pick a real problem in YOUR life, family, school, or community — something you actually want fixed. In your Project Guide, answer: What's the problem? Who does it affect (this could be you)? How will you know the app helped?"</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Steer students toward simple, real "information" apps a beginner AI build handles well — a study-reminder app, a chore/allowance tracker for their family, a water-intake tracker, a flashcard quizzer for a class they're taking, a simple club sign-up page, or a "what should I cook tonight?" picker. Warn away from anything needing logins to other services, payments, or lots of data.</p>
+            </div>
+
+            <h3 class="section-title">Prepare (IOSP Spec)</h3>
+
+            <div class="say-block">
+                <p>"Now translate your idea into IOSP. What are the INPUTS (what the user types, taps, or chooses)? The OUTPUTS (what the app shows back)? What does it STORE? And the PROCESSING — remember the four kinds: if/then, comparing, finding a match, counting. This IOSP spec is the heart of your plan."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>INPUT</strong> — what the user types, taps, or chooses.</li>
+                <li><strong>OUTPUT</strong> — what the app shows back to the user.</li>
+                <li><strong>STORAGE</strong> — what the app needs to remember between uses.</li>
+                <li><strong>PROCESSING</strong> — the thinking work: if/then, comparing, finding a match, counting.</li>
+            </ul>
+
+            <h3 class="section-title">Write the Build Prompt</h3>
+
+            <div class="say-block">
+                <p>"Here's the payoff: your IOSP spec becomes the actual prompt you paste into lovable. Write it out fully, in order — Input, Output, Storage, Processing — plus a note on how it should look. Then it's ready to send as one strong first prompt."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>EXAMPLE FIRST PROMPT</strong> — "Build a simple water-tracker web app. INPUT: a button to add a glass of water and a daily goal the user sets. OUTPUT: how many glasses today and a progress bar toward the goal. STORAGE: remember today's count. PROCESSING: compare the count to the goal and show an encouraging message when the goal is reached. Keep it colorful and simple for a middle-school user."</li>
+            </ul>
+
+            <div class="tip-block">
+                <p>Credit-thrift: one strong first prompt that describes the whole app beats ten tiny ones. Plan the whole spec, send it as one clear prompt, THEN refine.</p>
+            </div>
+
+            <div class="checkpoint">
+                <p>Every student/group has a written problem definition, an IOSP spec, and a drafted first build prompt — before opening lovable.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ BUILD & ITERATE ═══════════ -->
+        <div class="tab-panel" id="build" role="tabpanel" aria-labelledby="tab-build">
+            <div class="day-header">
+                <h2>Build &amp; Iterate</h2>
+                <p class="day-subtitle">Spend credits wisely; refine in small loops</p>
+            </div>
+
+            <div class="say-block">
+                <p>"Now open lovable and paste your first prompt. Watch it build. Then look carefully at what you got and improve it in small, specific steps."</p>
+            </div>
+
+            <h3 class="section-title">Facilitating the Build</h3>
+
+            <ul class="facilitation-list">
+                <li>Circulate constantly — the build phase moves fast</li>
+                <li>Make sure students READ what the AI built before prompting again</li>
+                <li>Teach ONE change per prompt ("make the button bigger and blue," not five things at once)</li>
+                <li>If something breaks, lovable often offers a Fix option — have them use it</li>
+                <li>Remind them to save/keep the project so it isn't lost</li>
+            </ul>
+
+            <h3 class="section-title">Good Iteration Prompts</h3>
+
+            <ul class="iosp-list">
+                <li><strong>RENAME</strong> — "Change the title to 'My Water Tracker'."</li>
+                <li><strong>ADD ONE THING</strong> — "Add a reset button for a new day."</li>
+                <li><strong>TWEAK LOOK</strong> — "Make the progress bar green when I hit my goal."</li>
+            </ul>
+
+            <div class="tip-block">
+                <p>Small, specific, one idea each. That's how you keep control of the build and your credits.</p>
+            </div>
+
+            <div class="warning-block">
+                <p>If a group is out of credits for the day, that's fine — they switch to PLANNING their next round of changes on paper so tomorrow's credits are spent instantly and well. Running out is a planning lesson, not a failure.</p>
+            </div>
+
+            <div class="tip-block">
+                <p>The goal is a WORKING app that solves the problem — not a perfect one. "Done and shared" beats "fancy and unfinished."</p>
+            </div>
+
+            <h3 class="section-title">Publish</h3>
+
+            <div class="say-block">
+                <p>"When your app works, use lovable's Publish button to get a shareable web link. Copy that link into your Project Guide — that's your real, on-the-internet app."</p>
+            </div>
+
+            <a class="resource-link" href="https://docs.lovable.dev/features/publish">lovable docs · Publish</a>
+
+            <div class="checkpoint">
+                <p>Every student/group has a working, published app with a URL, and a build log in their Project Guide.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ SHARE & REFLECT ═══════════ -->
+        <div class="tab-panel" id="share" role="tabpanel" aria-labelledby="tab-share">
+            <div class="day-header">
+                <h2>Share &amp; Reflect</h2>
+                <p class="day-subtitle">Showcase, share with real people, reflect</p>
+            </div>
+
+            <div class="say-block">
+                <p>"You built something real. Now show it, share it with the people who have the problem, and think about what you learned."</p>
+            </div>
+
+            <h3 class="section-title">Showcase</h3>
+
+            <div class="say-block">
+                <p>"Gallery walk or short demos — each student or group shows their app, states the problem it solves, and walks through its IOSP: what goes In, what comes Out, what it Stores, and how it Processes."</p>
+            </div>
+
+            <ul class="facilitation-list">
+                <li>Keep demos short — 1–2 minutes each</li>
+                <li>Ask each presenter to name the one processing type their app leans on most</li>
+                <li>Have the audience note one thing they'd want to build next</li>
+            </ul>
+
+            <h3 class="section-title">Extend Beyond the Classroom</h3>
+
+            <div class="say-block">
+                <p>"Share your app's link with the actual people who have this problem — your family, a friend, a teammate, a club. Ask them to try it and tell you one thing that helped and one thing to improve."</p>
+            </div>
+
+            <h3 class="section-title">Reflect</h3>
+
+            <ul class="discussion-questions">
+                <li>Why does the problem you chose matter to you?</li>
+                <li>What did you have to make clear for the AI to build it right?</li>
+                <li>What would you build next?</li>
+            </ul>
+
+            <div class="exit-ticket">
+                <p>"In one sentence: what problem does your app solve, and who is it for?"</p>
+            </div>
+
+            <h3 class="section-title">Unit Project Rubric</h3>
+
+            <table class="rubric-table" aria-label="Unit project rubric">
+                <thead>
+                    <tr>
+                        <th>Criterion</th>
+                        <th>Beginning</th>
+                        <th>Proficient</th>
+                        <th>Exemplary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Defines a real problem the student cares about (+ who it helps)</td>
+                        <td>Vague or borrowed problem; no clear audience</td>
+                        <td>Real problem, clearly stated, with an audience</td>
+                        <td>Personal, focused problem with a clear audience and a way to tell it helped</td>
+                    </tr>
+                    <tr>
+                        <td>IOSP spec is clear and complete</td>
+                        <td>Names 1–2 of the four parts</td>
+                        <td>All four parts present and correct</td>
+                        <td>All four specific, matched to the app, and used to write the prompt</td>
+                    </tr>
+                    <tr>
+                        <td>App works and solves the problem; published to a shareable URL</td>
+                        <td>App incomplete or not published</td>
+                        <td>Working app, published with a URL</td>
+                        <td>Working app that clearly solves the problem, published and easy to use</td>
+                    </tr>
+                    <tr>
+                        <td>Reflection + sharing show real ownership and personal relevance</td>
+                        <td>Little reflection; not shared</td>
+                        <td>Reflects and shares the link with someone</td>
+                        <td>Thoughtful reflection + shared with real users and acted on their feedback</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="checkpoint">
+                <p>Every student/group presented, shared their app link with a real person, and completed their reflection.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ─── ADDITIONAL NOTES ─── -->
+<section class="additional-notes" aria-label="Additional notes for teachers">
+    <div class="notes-card">
+        <h2>Additional Notes for the Teacher</h2>
+
+        <h3>Managing the Free Tier (read this first)</h3>
+        <ul>
+            <li>About 5 build credits per day, no rollover, roughly 30 per month</li>
+            <li>Plan the full spec on paper first — every AI prompt costs a credit</li>
+            <li>One strong prompt beats many vague ones</li>
+            <li>Groups sharing a single build stretches credits and boosts collaboration</li>
+            <li>A day without credits is a planning day, not a lost day</li>
+        </ul>
+
+        <h3>Good Beginner App Ideas</h3>
+        <ul>
+            <li>Reminder and tracker apps (study, water, chores/allowance)</li>
+            <li>Flashcard quizzers for a class they're taking</li>
+            <li>Simple pickers/deciders ("what should I cook tonight?")</li>
+            <li>Club or event sign-up pages</li>
+            <li>A personal links or hobby page</li>
+            <li>Avoid payments, external logins, or heavy data</li>
+        </ul>
+
+        <h3>Differentiation</h3>
+        <ul>
+            <li><strong>Struggling:</strong> Provide a fill-in-the-blank IOSP spec + a ready first-prompt template; let them personalize a provided example app rather than start from scratch</li>
+            <li><strong>Advanced:</strong> Add a second feature, use more of the four processing types, design for a specific real audience, and fold that audience's feedback into a second iteration</li>
+        </ul>
+
+        <h3>If You're Running Behind</h3>
+        <ul>
+            <li>The Define &amp; Plan phase is the priority — a great plan is most of the learning even if the build is short</li>
+            <li>The build can be a single strong prompt + publish</li>
+            <li>Sharing and reflection can be assigned as homework</li>
+        </ul>
+
+        <h3>Safety &amp; Good Practice</h3>
+        <ul>
+            <li>Students should not put real personal info (full names, addresses, phone numbers) into their apps</li>
+            <li>Keep test data made-up</li>
+            <li>Review apps before sharing them widely</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+    Masterpiece Labs · Problem Solving &amp; Computing · Unit Project · Middle School
+</footer>
+
+<script>
+    function switchTab(dayId) {
+        // Deactivate all tabs and panels
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+
+        // Activate selected tab and panel
+        document.getElementById('tab-' + dayId).classList.add('active');
+        document.getElementById('tab-' + dayId).setAttribute('aria-selected', 'true');
+        document.getElementById(dayId).classList.add('active');
+    }
+
+    // Keyboard navigation for tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('keydown', (e) => {
+            const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+            const index = tabs.indexOf(e.target);
+            let newIndex;
+
+            if (e.key === 'ArrowRight') {
+                newIndex = (index + 1) % tabs.length;
+            } else if (e.key === 'ArrowLeft') {
+                newIndex = (index - 1 + tabs.length) % tabs.length;
+            } else {
+                return;
+            }
+
+            e.preventDefault();
+            tabs[newIndex].focus();
+            tabs[newIndex].click();
+        });
+    });
+</script>
+
+</body>
+</html>

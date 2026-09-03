@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 2 Student Worksheet — What Is a Computer? (High School)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --purple: #2d1b69;
+  --purple-light: #3d2b7a;
+  --purple-lighter: #f4f0ff;
+  --teal: #2bb5a0;
+  --teal-light: #e6f9f6;
+  --coral: #e8553d;
+  --coral-light: #fef0ed;
+  --sand: #f5f0e8;
+  --text: #1a1a2e;
+  --border: #e0e0e0;
+  --white: #ffffff;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text);
+  background: var(--sand);
+  line-height: 1.6;
+  padding: 40px 20px 80px;
+}
+
+.page {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+/* ─── PRINT BUTTON / CONTROLS ─── */
+.controls {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(45, 27, 105, 0.25);
+  transition: transform 0.1s ease, opacity 0.15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-print { background: var(--purple); color: #fff; }
+.btn-clear { background: var(--coral); color: #fff; font-size: 0.78rem; padding: 7px 13px; }
+
+.save-indicator {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--teal);
+  background: var(--white);
+  border: 1px solid var(--teal);
+  border-radius: 20px;
+  padding: 5px 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.save-indicator.show { opacity: 1; }
+
+/* ─── HEADER BAND ─── */
+.header {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+  color: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 36px 44px 32px;
+}
+
+.wordmark {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 1.05rem;
+  letter-spacing: 1px;
+  opacity: 0.85;
+  margin-bottom: 18px;
+}
+.wordmark span { font-weight: 600; }
+
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2.6rem;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.header .subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+  margin-bottom: 26px;
+}
+
+.namebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 28px;
+  align-items: flex-end;
+}
+.namebar .field { display: flex; align-items: flex-end; gap: 8px; flex: 1 1 auto; }
+.namebar .field.name { flex: 2 1 260px; }
+.namebar label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+.namebar input {
+  flex: 1;
+  min-width: 60px;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid rgba(255,255,255,0.55);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  padding: 2px 4px 4px;
+  outline: none;
+}
+.namebar input:focus { border-bottom-color: var(--teal); }
+
+/* ─── BODY WRAPPER ─── */
+.body-wrap {
+  background: var(--white);
+  border-radius: 0 0 16px 16px;
+  padding: 8px 0 4px;
+  box-shadow: 0 8px 34px rgba(45, 27, 105, 0.12);
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 30px 34px;
+  margin: 26px 24px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+
+.card-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.card h2 {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.7rem;
+  color: var(--purple);
+  margin-bottom: 14px;
+}
+
+.card h3 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--purple);
+  margin: 24px 0 10px;
+}
+
+.instructions {
+  background: var(--purple-lighter);
+  border-left: 3px solid var(--purple);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  margin-bottom: 18px;
+}
+.overview {
+  font-size: 0.98rem;
+  margin-bottom: 16px;
+}
+
+/* ─── CHIPS ─── */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  background: var(--teal-light);
+  color: var(--purple);
+  border: 1px solid var(--teal);
+  border-radius: 20px;
+  padding: 5px 13px;
+}
+
+/* ─── INLINE CODE + CODE BLOCK (JetBrains Mono, tinted) ─── */
+code.code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  background: var(--purple-lighter);
+  border: 1px solid #ddd4f5;
+  border-radius: 5px;
+  padding: 1px 6px;
+  color: var(--purple);
+  white-space: nowrap;
+}
+pre.code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  background: #f8f6ff;
+  border: 1px solid #ddd4f5;
+  border-left: 3px solid var(--purple);
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: #2a2450;
+  overflow-x: auto;
+  white-space: pre;
+  margin: 6px 0 14px;
+  tab-size: 2;
+}
+.code-caption {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 500;
+  margin: 16px 0 4px;
+}
+
+/* ─── DEFINITION LIST (vocab) ─── */
+.deflist { list-style: none; margin-bottom: 6px; }
+.deflist li {
+  display: flex;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.96rem;
+  align-items: baseline;
+}
+.deflist li:last-child { border-bottom: none; }
+.deflist .term {
+  font-weight: 600;
+  color: var(--purple);
+  min-width: 118px;
+  flex-shrink: 0;
+}
+.deflist .term .mono {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  color: var(--teal);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.deflist.processing .term { min-width: 138px; }
+
+/* ─── GENERIC TEXTAREA / INPUT BLOCKS ─── */
+.write-box {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  padding: 14px 16px;
+  resize: vertical;
+  outline: none;
+  background: var(--white);
+  line-height: 1.9;
+}
+.write-box:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-light); }
+
+.box-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--purple);
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* ─── SINGLE-LINE FIELD ─── */
+.field-line { margin-bottom: 18px; }
+.field-line input.line-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1.5px solid var(--border);
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: var(--text);
+  padding: 6px 4px;
+  outline: none;
+  background: transparent;
+}
+.field-line input.line-input:focus { border-bottom-color: var(--teal); }
+
+/* ─── FILL-IN PROMPTS ─── */
+.prompt { margin-bottom: 18px; }
+.prompt .plabel {
+  font-weight: 600;
+  color: var(--purple);
+  margin-bottom: 6px;
+  display: block;
+}
+.prompt .plabel .mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  color: var(--teal);
+  text-transform: uppercase;
+  margin-left: 6px;
+}
+.prompt .phint { font-weight: 400; color: var(--text); opacity: 0.7; font-size: 0.9rem; }
+
+/* ─── NOTE / HELPER ─── */
+.note {
+  background: var(--teal-light);
+  border: 1px solid var(--teal);
+  border-radius: 8px;
+  padding: 11px 15px;
+  font-size: 0.88rem;
+  margin: 14px 0;
+}
+.note .mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #1a8a78;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.criteria-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--purple);
+  margin-top: 12px;
+}
+.criteria-note .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+.criteria-note .pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  background: var(--coral-light);
+  border: 1px solid var(--coral);
+  color: var(--coral);
+  border-radius: 20px;
+  padding: 3px 11px;
+}
+
+/* ─── DATA TABLES ─── */
+table.grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+}
+table.grid-table th {
+  background: var(--purple);
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid var(--purple);
+}
+table.grid-table td {
+  border: 1px solid var(--border);
+  padding: 0;
+  vertical-align: top;
+}
+table.grid-table td .cell-fixed {
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  background: var(--purple-lighter);
+  min-height: 46px;
+}
+table.grid-table td .cell-hint {
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--purple);
+  opacity: 0.55;
+  background: #faf8ff;
+  line-height: 1.5;
+}
+table.grid-table td input.cell,
+table.grid-table td textarea.cell {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  color: var(--text);
+  padding: 10px 12px;
+  resize: vertical;
+  line-height: 1.6;
+}
+table.grid-table td textarea.cell { min-height: 52px; }
+table.grid-table td input.cell:focus,
+table.grid-table td textarea.cell:focus { background: var(--teal-light); }
+
+/* ─── CHECKLIST ─── */
+.checklist { list-style: none; }
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-size: 0.98rem;
+  background: var(--white);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.checklist li:hover { border-color: var(--teal); }
+.checklist input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--teal);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.checklist label { cursor: pointer; }
+.checklist input[type="checkbox"]:checked + label { color: var(--purple); font-weight: 500; }
+
+.footer {
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  color: var(--purple);
+  opacity: 0.6;
+  margin: 30px 0 0;
+}
+
+@media (max-width: 640px) {
+  .header { padding: 28px 22px; }
+  .card { padding: 24px 20px; margin: 20px 12px; }
+  .deflist li { flex-direction: column; gap: 2px; }
+  .deflist .term { min-width: 0; }
+}
+
+/* ─── PRINT ─── */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  body { background: #fff; padding: 0; }
+  .controls { display: none !important; }
+  .page { max-width: 100%; }
+  .body-wrap { box-shadow: none; }
+  .header { border-radius: 0; }
+  .card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-shadow: none;
+    margin: 16px 0;
+  }
+  .header, .chip, .instructions, .note, .criteria-note .pill,
+  table.grid-table th, .cell-fixed, .cell-hint, .checklist li,
+  pre.code, code.code {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  input, textarea { border-color: #999 !important; }
+  .write-box, textarea.cell { overflow: visible; }
+  pre.code { white-space: pre-wrap; word-break: break-word; }
+  a { text-decoration: none; color: inherit; }
+}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <button class="btn btn-print" onclick="window.print()">&#128424; Print / Save as PDF</button>
+  <button class="btn btn-clear" onclick="clearAnswers()">Clear my answers</button>
+  <span class="save-indicator" id="saveIndicator">Saved &#10003;</span>
+</div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="wordmark">masterpiece <span>labs</span></div>
+    <h1>What Is a Computer?</h1>
+    <div class="subtitle">Week 2 Student Worksheet &middot; Problem Solving &amp; Computing &middot; High School</div>
+    <div class="namebar">
+      <div class="field name">
+        <label>Name(s)</label>
+        <input type="text" id="f_names" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Period</label>
+        <input type="text" id="f_period" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input type="text" id="f_date" autocomplete="off">
+      </div>
+    </div>
+  </header>
+
+  <div class="body-wrap">
+
+    <!-- 1. KEY VOCABULARY -->
+    <section class="card">
+      <div class="card-eyebrow">Reference</div>
+      <h2>Key Vocabulary</h2>
+      <ul class="deflist">
+        <li><span class="term">Computer</span><span>A programmable machine that processes information.</span></li>
+        <li><span class="term">Input</span><span>The information a computer takes in.</span></li>
+        <li><span class="term">Output</span><span>The information a computer produces.</span></li>
+        <li><span class="term">Processing</span><span>The work of turning input into output.</span></li>
+        <li><span class="term">Storage</span><span>Saving information so it can be used later.</span></li>
+      </ul>
+
+      <h3>Four Kinds of Processing</h3>
+      <p class="overview" style="margin-bottom:8px;">Almost every program is built from these four moves. Each one maps directly to code:</p>
+      <ul class="deflist processing">
+        <li><span class="term">If / Then</span><span>Making a decision. &nbsp;<code class="code">if (age &gt;= 13) { show(); }</code></span></li>
+        <li><span class="term">Comparing</span><span>Checking two values against each other. &nbsp;<code class="code">if (score &gt; best) { best = score; }</code></span></li>
+        <li><span class="term">Finding a Match</span><span>Searching data for something that fits. &nbsp;<code class="code">list.find(x =&gt; x === target)</code></span></li>
+        <li><span class="term">Counting</span><span>Keeping a running total. &nbsp;<code class="code">count = count + 1;</code></span></li>
+      </ul>
+    </section>
+
+    <!-- 2. IOSP SYSTEM ANALYSIS -->
+    <section class="card">
+      <div class="card-eyebrow">Activity 1</div>
+      <h2>IOSP System Analysis</h2>
+      <div class="instructions">Analyze 2 real computing systems (an app, a device, a website). Break each into IOSP and name which of the four kinds of processing it uses.</div>
+      <div class="note">
+        <span class="mono">Worked Example &mdash; Ride-share app</span>
+        <strong>Input</strong> = pickup / destination &nbsp;&middot;&nbsp; <strong>Processing</strong> = match nearby driver (Finding a Match) + price (Counting / Comparing) &nbsp;&middot;&nbsp; <strong>Storage</strong> = trip history &nbsp;&middot;&nbsp; <strong>Output</strong> = map, ETA, price.
+      </div>
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th style="width:16%;">System</th>
+            <th>Input</th>
+            <th>Processing <span style="opacity:0.7;">(+ which kind)</span></th>
+            <th>Storage</th>
+            <th>Output</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><textarea class="cell" id="sys_r1_system" rows="3"></textarea></td>
+            <td><textarea class="cell" id="sys_r1_input" rows="3"></textarea></td>
+            <td><textarea class="cell" id="sys_r1_processing" rows="3"></textarea></td>
+            <td><textarea class="cell" id="sys_r1_storage" rows="3"></textarea></td>
+            <td><textarea class="cell" id="sys_r1_output" rows="3"></textarea></td>
+          </tr>
+          <tr>
+            <td><textarea class="cell" id="sys_r2_system" rows="3"></textarea></td>
+            <td><textarea class="cell" id="sys_r2_input" rows="3"></textarea></td>
+            <td><textarea class="cell" id="sys_r2_processing" rows="3"></textarea></td>
+            <td><textarea class="cell" id="sys_r2_storage" rows="3"></textarea></td>
+            <td><textarea class="cell" id="sys_r2_output" rows="3"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 3. APP PROTOTYPE — DEFINE -->
+    <section class="card">
+      <div class="card-eyebrow">Activity 2 &middot; App Prototype</div>
+      <h2>Define</h2>
+      <p class="overview">With a partner, you'll design <strong>AND</strong> build a working app prototype. Start by defining the problem.</p>
+
+      <div class="field-line">
+        <span class="box-label">Partner's name</span>
+        <input type="text" class="line-input" id="partner_name" autocomplete="off">
+      </div>
+
+      <div class="prompt">
+        <span class="plabel">What is the problem?</span>
+        <textarea class="write-box" id="def_problem" rows="3"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">Who does it affect?</span>
+        <textarea class="write-box" id="def_affect" rows="3"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">How will you know it's solved? <span class="phint">(success criteria)</span></span>
+        <textarea class="write-box" id="def_success" rows="3"></textarea>
+      </div>
+
+      <div class="criteria-note">
+        <span class="lbl">A strong problem is:</span>
+        <span class="pill">Real</span>
+        <span class="pill">Well-Defined</span>
+        <span class="pill">Information problem</span>
+      </div>
+    </section>
+
+    <!-- 4. APP PROTOTYPE — IOSP → CODE PLAN -->
+    <section class="card">
+      <div class="card-eyebrow">Activity 2 &middot; App Prototype</div>
+      <h2>IOSP &rarr; Code Plan</h2>
+      <p class="overview">Before you code, plan your app as IOSP &mdash; and note how each part becomes code. This plan IS your code outline.</p>
+
+      <div class="field-line">
+        <span class="box-label">App name</span>
+        <input type="text" class="line-input" id="app_name" autocomplete="off">
+      </div>
+      <div class="field-line">
+        <span class="box-label">What it does (one sentence)</span>
+        <input type="text" class="line-input" id="app_does" autocomplete="off">
+      </div>
+
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th style="width:16%;">IOSP Part</th>
+            <th style="width:44%;">Your app's plan</th>
+            <th>How it becomes code</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="cell-fixed">Input</div></td>
+            <td><textarea class="cell" id="plan_input" rows="2"></textarea></td>
+            <td><div class="cell-hint">HTML &lt;input&gt;, &lt;select&gt;, or button</div></td>
+          </tr>
+          <tr>
+            <td><div class="cell-fixed">Processing</div></td>
+            <td><textarea class="cell" id="plan_processing" rows="2"></textarea></td>
+            <td><div class="cell-hint">JavaScript: if/then, comparing, find, counting</div></td>
+          </tr>
+          <tr>
+            <td><div class="cell-fixed">Storage</div></td>
+            <td><textarea class="cell" id="plan_storage" rows="2"></textarea></td>
+            <td><div class="cell-hint">localStorage (optional)</div></td>
+          </tr>
+          <tr>
+            <td><div class="cell-fixed">Output</div></td>
+            <td><textarea class="cell" id="plan_output" rows="2"></textarea></td>
+            <td><div class="cell-hint">write to an element's textContent / innerHTML</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 5. BUILD IT -->
+    <section class="card">
+      <div class="card-eyebrow">Activity 3 &middot; Build It</div>
+      <h2>Build It (StackBlitz)</h2>
+      <div class="instructions">Open StackBlitz. Start from the Study Break Picker reference app (in your self-study module), run it, then change it into your app. Keep scope small: a few inputs, one processing step, one output.</div>
+
+      <p class="overview" style="margin-bottom:4px;">Reference code &mdash; the Study Break Picker. Use it as your starting point.</p>
+
+      <div class="code-caption">index.html</div>
+      <pre class="code">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Study Break Picker&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Study Break Picker&lt;/h1&gt;
+
+  &lt;label&gt;How much time?
+    &lt;select id="time"&gt;
+      &lt;option value="5"&gt;5 minutes&lt;/option&gt;
+      &lt;option value="15"&gt;15 minutes&lt;/option&gt;
+      &lt;option value="30"&gt;30 minutes&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/label&gt;
+
+  &lt;label&gt;Energy level?
+    &lt;select id="energy"&gt;
+      &lt;option value="low"&gt;Low&lt;/option&gt;
+      &lt;option value="high"&gt;High&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/label&gt;
+
+  &lt;button id="go"&gt;Pick my break&lt;/button&gt;
+  &lt;p id="result"&gt;&lt;/p&gt;
+
+  &lt;script src="index.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+      <div class="code-caption">index.js</div>
+      <pre class="code">// INPUT: read the two dropdowns when the button is clicked
+document.getElementById("go").addEventListener("click", function () {
+  var minutes = Number(document.getElementById("time").value);
+  var energy = document.getElementById("energy").value;
+
+  // PROCESSING: if/then + comparing to pick a break
+  var idea;
+  if (energy === "high" &amp;&amp; minutes &gt;= 30) {
+    idea = "Go for a walk outside.";
+  } else if (energy === "high") {
+    idea = "Do 20 jumping jacks.";
+  } else if (minutes &gt;= 15) {
+    idea = "Rest your eyes and stretch.";
+  } else {
+    idea = "Drink some water and stretch.";
+  }
+
+  // OUTPUT: write the result to the page
+  document.getElementById("result").textContent = idea;
+});</pre>
+
+      <h3>Build checklist</h3>
+      <ul class="checklist">
+        <li><input type="checkbox" id="build_runs"><label for="build_runs">App runs without errors</label></li>
+        <li><input type="checkbox" id="build_input"><label for="build_input">Input is read on button click</label></li>
+        <li><input type="checkbox" id="build_processing"><label for="build_processing">Processing produces the right output</label></li>
+        <li><input type="checkbox" id="build_output"><label for="build_output">Output appears on the page</label></li>
+        <li><input type="checkbox" id="build_storage"><label for="build_storage">(Stretch) Last result saved with localStorage</label></li>
+      </ul>
+    </section>
+
+    <!-- 6. TEST & REFLECT -->
+    <section class="card">
+      <div class="card-eyebrow">Activity 4 &middot; Test &amp; Reflect</div>
+      <h2>Test &amp; Reflect</h2>
+
+      <h3>Peer Testing</h3>
+      <div class="prompt">
+        <span class="plabel">What worked when a classmate used your app?</span>
+        <textarea class="write-box" id="test_worked" rows="3"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">One bug or confusing thing they found:</span>
+        <textarea class="write-box" id="test_bug" rows="3"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">One change you made:</span>
+        <textarea class="write-box" id="test_change" rows="3"></textarea>
+      </div>
+
+      <h3>Reflection</h3>
+      <div class="prompt">
+        <span class="plabel">Explain your app as IOSP: what's the input, the processing (which of the four kinds?), the storage, and the output?</span>
+        <textarea class="write-box" id="reflect_iosp" rows="5"></textarea>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="footer">masterpiece labs &middot; Week 2 &middot; What Is a Computer?</div>
+
+</div>
+
+<script>
+(function () {
+  var STORAGE_PREFIX = 'psc_w2_hs_worksheet:';
+  var indicator = document.getElementById('saveIndicator');
+  var indicatorTimer = null;
+
+  function textFields() {
+    return document.querySelectorAll('input[id]:not([type=checkbox]), textarea[id]');
+  }
+  function checkFields() {
+    return document.querySelectorAll('input[type=checkbox][id]');
+  }
+
+  function showSaved() {
+    if (!indicator) return;
+    indicator.classList.add('show');
+    if (indicatorTimer) clearTimeout(indicatorTimer);
+    indicatorTimer = setTimeout(function () {
+      indicator.classList.remove('show');
+    }, 1200);
+  }
+
+  function saveText(el) {
+    try {
+      localStorage.setItem(STORAGE_PREFIX + el.id, el.value);
+      showSaved();
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function saveCheck(el) {
+    try {
+      localStorage.setItem(STORAGE_PREFIX + el.id, el.checked ? '1' : '0');
+      showSaved();
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function restore() {
+    try {
+      textFields().forEach(function (el) {
+        var v = localStorage.getItem(STORAGE_PREFIX + el.id);
+        if (v !== null) {
+          el.value = v;
+          autoGrow(el);
+        }
+      });
+      checkFields().forEach(function (el) {
+        var v = localStorage.getItem(STORAGE_PREFIX + el.id);
+        if (v !== null) el.checked = (v === '1');
+      });
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function autoGrow(el) {
+    if (el.tagName.toLowerCase() !== 'textarea') return;
+    el.style.height = 'auto';
+    el.style.height = (el.scrollHeight) + 'px';
+  }
+
+  function init() {
+    textFields().forEach(function (el) {
+      el.addEventListener('input', function () {
+        autoGrow(el);
+        saveText(el);
+      });
+    });
+    checkFields().forEach(function (el) {
+      el.addEventListener('change', function () {
+        saveCheck(el);
+      });
+    });
+    restore();
+  }
+
+  window.clearAnswers = function () {
+    if (!window.confirm('Clear all your answers on this worksheet? This cannot be undone.')) return;
+    try {
+      textFields().forEach(function (el) {
+        localStorage.removeItem(STORAGE_PREFIX + el.id);
+        el.value = '';
+        autoGrow(el);
+      });
+      checkFields().forEach(function (el) {
+        localStorage.removeItem(STORAGE_PREFIX + el.id);
+        el.checked = false;
+      });
+      showSaved();
+    } catch (e) { /* storage unavailable */ }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>

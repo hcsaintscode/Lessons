@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 1 Self-Study — The Problem Solving Process (Middle School)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --purple: #2d1b69;
+            --purple-light: #3d2b7a;
+            --purple-lighter: #f4f0ff;
+            --teal: #2bb5a0;
+            --teal-light: #e6f9f6;
+            --coral: #e8553d;
+            --coral-light: #fef0ed;
+            --sand: #f5f0e8;
+            --olive: #7a8450;
+            --olive-light: #f0f2e6;
+            --text: #1a1a2e;
+            --text-light: #555;
+            --border: #e0e0e0;
+            --bg: #fafafa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.65;
+            padding-top: 64px;
+        }
+
+        /* ─── STICKY NAV ─── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--purple);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+        }
+
+        .nav-brand {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-badge {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.95);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── PROGRESS BAR (sticky under nav) ─── */
+        .progress-wrap {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            padding: 10px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 10px;
+            background: var(--purple-lighter);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--teal) 0%, var(--purple) 100%);
+            border-radius: 20px;
+            transition: width 0.4s ease;
+        }
+
+        .progress-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--purple);
+            white-space: nowrap;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            padding: 80px 32px 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        /* ─── MAIN COLUMN ─── */
+        .wrap {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 36px 40px;
+            margin: 32px 0;
+        }
+
+        .card.lift {
+            margin-top: -30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        section h2 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.7rem;
+            font-weight: 400;
+            color: var(--purple);
+            margin-bottom: 6px;
+        }
+
+        .kicker {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 8px;
+        }
+
+        section p {
+            font-size: 0.98rem;
+            color: var(--text);
+            margin: 12px 0;
+        }
+
+        section p.muted {
+            color: var(--text-light);
+            font-size: 0.92rem;
+        }
+
+        .examples {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .examples li {
+            padding: 8px 0 8px 24px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .examples li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        /* ─── DPTR STEP BLOCKS (color-accented) ─── */
+        .step {
+            border-radius: 0 10px 10px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .step h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .step .step-tag {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 1.05rem;
+        }
+
+        .step ul {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0 0;
+        }
+
+        .step ul li {
+            font-size: 0.92rem;
+            padding: 4px 0 4px 18px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .step ul li::before {
+            content: '·';
+            position: absolute;
+            left: 4px;
+            font-weight: 700;
+        }
+
+        .step.define { background: var(--teal-light); border-left: 4px solid var(--teal); }
+        .step.define h3 { color: var(--teal); }
+        .step.define ul li::before { color: var(--teal); }
+
+        .step.prepare { background: var(--purple-lighter); border-left: 4px solid var(--purple); }
+        .step.prepare h3 { color: var(--purple); }
+        .step.prepare ul li::before { color: var(--purple); }
+
+        .step.try { background: var(--coral-light); border-left: 4px solid var(--coral); }
+        .step.try h3 { color: var(--coral); }
+        .step.try ul li::before { color: var(--coral); }
+
+        .step.reflect { background: var(--olive-light); border-left: 4px solid var(--olive); }
+        .step.reflect h3 { color: var(--olive); }
+        .step.reflect ul li::before { color: var(--olive); }
+
+        /* ─── CALLOUT ─── */
+        .callout {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 22px 26px;
+            margin: 24px 0;
+        }
+
+        .callout::before {
+            content: '↻ IT\2019S A CYCLE';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            opacity: 0.85;
+            margin-bottom: 8px;
+        }
+
+        .callout p {
+            color: white;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* ─── VIDEO BUTTON ─── */
+        .video-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--coral);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 16px 28px;
+            border-radius: 10px;
+            margin: 16px 0;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 4px 14px rgba(232, 85, 61, 0.3);
+        }
+
+        .video-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 85, 61, 0.4);
+        }
+
+        /* ─── REFLECTION WORKSPACE ─── */
+        .field {
+            margin: 18px 0;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .field label .field-hint {
+            display: block;
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: 2px;
+        }
+
+        textarea, input.text-line {
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            background: #fcfcfd;
+            resize: vertical;
+            transition: border-color 0.2s ease;
+        }
+
+        textarea {
+            min-height: 90px;
+            line-height: 1.6;
+        }
+
+        textarea:focus, input.text-line:focus {
+            outline: none;
+            border-color: var(--teal);
+            background: var(--white);
+        }
+
+        .field-tag {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .field-tag.define { background: var(--teal-light); color: var(--teal); }
+        .field-tag.prepare { background: var(--purple-lighter); color: var(--purple); }
+        .field-tag.try { background: var(--coral-light); color: var(--coral); }
+        .field-tag.reflect { background: var(--olive-light); color: var(--olive); }
+
+        /* ─── CHECKBOX STEP ─── */
+        .step-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: var(--sand);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 24px 0 8px;
+            cursor: pointer;
+            border: 1.5px solid transparent;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .step-check:hover {
+            border-color: var(--teal);
+        }
+
+        .step-check input {
+            width: 22px;
+            height: 22px;
+            margin-top: 1px;
+            accent-color: var(--teal);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .step-check span {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .step-check.done {
+            background: var(--teal-light);
+            border-color: var(--teal);
+        }
+
+        /* ─── PUZZLE CONSTRAINTS ─── */
+        .constraint-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 18px 0;
+        }
+
+        .constraint-card {
+            border-radius: 8px;
+            padding: 18px 20px;
+        }
+
+        .constraint-card.together {
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+        }
+
+        .constraint-card.apart {
+            background: var(--coral-light);
+            border: 1px solid rgba(232, 85, 61, 0.35);
+        }
+
+        .constraint-card h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .constraint-card.together h4 { color: var(--teal); }
+        .constraint-card.apart h4 { color: var(--coral); }
+
+        .constraint-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .constraint-card li {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            line-height: 1.5;
+        }
+
+        .guest-list {
+            background: var(--purple-lighter);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+
+        .guest-list strong {
+            color: var(--purple);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* ─── CHECK YOUR THINKING (details) ─── */
+        details.check {
+            background: var(--olive-light);
+            border: 2px solid var(--olive);
+            border-radius: 10px;
+            padding: 4px 4px;
+            margin: 24px 0;
+        }
+
+        details.check summary {
+            cursor: pointer;
+            list-style: none;
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--olive);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        details.check summary::-webkit-details-marker { display: none; }
+
+        details.check summary::before {
+            content: '▸';
+            transition: transform 0.2s ease;
+        }
+
+        details.check[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        details.check .reveal {
+            padding: 0 20px 20px;
+        }
+
+        details.check .reveal .sol-table {
+            background: var(--white);
+            border: 1px solid rgba(122, 132, 80, 0.4);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 10px 0;
+        }
+
+        details.check .reveal .sol-table h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 2px;
+        }
+
+        details.check .reveal .sol-table p {
+            font-size: 0.9rem;
+            margin: 0;
+            color: var(--text);
+        }
+
+        details.check .reveal > p {
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        /* ─── COMPLETION BANNER ─── */
+        .completion {
+            display: none;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--purple) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 32px 36px;
+            margin: 32px 0;
+            text-align: center;
+        }
+
+        .completion.show {
+            display: block;
+            animation: pop 0.5s ease;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.96); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .completion h2 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .completion p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+        }
+
+        /* ─── SAVED INDICATOR + RESET ─── */
+        .saved-indicator {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--teal);
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 10px 18px;
+            border-radius: 24px;
+            box-shadow: 0 4px 14px rgba(43, 181, 160, 0.4);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            z-index: 1001;
+        }
+
+        .saved-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reset-row {
+            text-align: center;
+            margin: 8px 0 48px;
+        }
+
+        .reset-btn {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--coral);
+            background: transparent;
+            border: 1.5px solid var(--coral);
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .reset-btn:hover {
+            background: var(--coral);
+            color: white;
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            background: var(--purple);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 32px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .nav { padding: 0 16px; }
+            .progress-wrap { padding: 10px 16px; }
+            .hero { padding: 60px 20px 48px; }
+            .hero h1 { font-size: 2rem; }
+            .card { padding: 24px 22px; }
+            .constraint-grid { grid-template-columns: 1fr; }
+            section h2 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <span class="nav-brand">masterpiece labs</span>
+    <span class="nav-badge">SELF-STUDY · WEEK 01</span>
+</nav>
+
+<!-- ─── PROGRESS BAR ─── -->
+<div class="progress-wrap" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <span class="progress-label" id="progressLabel">0 of 6 complete</span>
+</div>
+
+<!-- ─── HERO ─── -->
+<header class="hero">
+    <div class="hero-eyebrow">Self-Study · Problem Solving &amp; Computing</div>
+    <h1>The Problem Solving Process</h1>
+    <p class="hero-sub">Learn the process behind every solution — at your own pace.</p>
+</header>
+
+<div class="wrap">
+
+    <!-- ─── 2. HOW THIS WORKS ─── -->
+    <section class="card lift" aria-label="How this works">
+        <div class="kicker">Start Here</div>
+        <h2>How This Works</h2>
+        <p>This module is yours to move through at your own speed. Here's the rhythm:</p>
+        <ul class="examples">
+            <li><strong>Read</strong> each part slowly — every section builds on the one before it.</li>
+            <li><strong>Try the activities yourself</strong> in the writing spaces. Your answers save automatically.</li>
+            <li>Use the <strong>"Check your thinking"</strong> toggles to compare your ideas with a sample answer — <em>after</em> you've had a real go.</li>
+        </ul>
+        <p class="muted">There's no coding this week. This is all about learning <em>how</em> to think through a problem — a skill you'll use in every week that follows. Check off each step as you finish it to fill your progress bar at the top.</p>
+
+        <label class="step-check" data-check="ready">
+            <input type="checkbox" id="chk-ready">
+            <span>I'm ready to start</span>
+        </label>
+    </section>
+
+    <!-- ─── 3. WHAT IS A PROBLEM ─── -->
+    <section class="card" aria-label="What is a problem">
+        <div class="kicker">Lesson 1</div>
+        <h2>What Is a Problem?</h2>
+        <p>A "problem" isn't always something bad. In problem solving, a problem is <strong>any situation where you want to get from where you are now to somewhere better</strong>. There's a starting point, a goal, and a gap in between that you need to cross.</p>
+        <p>That means you're already solving problems all the time — you just might not call them that:</p>
+        <ul class="examples">
+            <li>Beating a tricky level in a video game</li>
+            <li>Planning a birthday party your friends will love</li>
+            <li>Figuring out why your code (or your bike) won't work</li>
+        </ul>
+        <p class="muted">Big or small, silly or serious — they all share the same shape. And that's why one process can help you solve almost any of them.</p>
+    </section>
+
+    <!-- ─── 4. THE FOUR STEPS (DPTR) ─── -->
+    <section class="card" aria-label="The four steps DPTR">
+        <div class="kicker">Lesson 2</div>
+        <h2>The Four Steps (DPTR)</h2>
+        <p>Great problem solvers — engineers, chefs, athletes, coders — tend to follow the same four steps, even when their problems look nothing alike. We call it <strong>DPTR</strong>: Define, Prepare, Try, Reflect.</p>
+
+        <div class="step define">
+            <h3>Define <span class="step-tag">— understand the problem</span></h3>
+            <ul>
+                <li>What am I actually trying to solve?</li>
+                <li>What are my constraints (my rules and limits)?</li>
+                <li>What does success look like?</li>
+            </ul>
+        </div>
+
+        <div class="step prepare">
+            <h3>Prepare <span class="step-tag">— get ready with a plan</span></h3>
+            <ul>
+                <li>Brainstorm as many options as I can.</li>
+                <li>Compare the pros and cons of each.</li>
+                <li>Choose one and make a plan.</li>
+            </ul>
+        </div>
+
+        <div class="step try">
+            <h3>Try <span class="step-tag">— put the plan into action</span></h3>
+            <ul>
+                <li>Actually do it — test my plan in the real world.</li>
+            </ul>
+        </div>
+
+        <div class="step reflect">
+            <h3>Reflect <span class="step-tag">— learn from what happened</span></h3>
+            <ul>
+                <li>Did it work? How do my results compare to my goal?</li>
+                <li>What would I do better next time?</li>
+                <li>What new problems appeared?</li>
+            </ul>
+        </div>
+
+        <div class="callout">
+            <p>DPTR is a cycle, not a straight line. When you Reflect, you almost always loop right back to Define with a sharper idea of the problem. Define → Prepare → Try → Reflect → back to Define. It never really "ends" — it just gets better each loop.</p>
+        </div>
+
+        <label class="step-check" data-check="fourstep">
+            <input type="checkbox" id="chk-fourstep">
+            <span>I can name all four steps</span>
+        </label>
+    </section>
+
+    <!-- ─── 5. WATCH ─── -->
+    <section class="card" aria-label="See it in action">
+        <div class="kicker">Watch</div>
+        <h2>See It in Action</h2>
+        <p>Let's watch the process in the real world. In this video, an engineer at Zipline — a company that delivers medical supplies by drone — uses these exact four steps when lives are on the line.</p>
+
+        <a class="video-btn" href="https://www.youtube.com/watch?v=nZuVchNli5c" target="_blank" rel="noopener">▶ Watch: Problem Solving with Zipline (Code.org)</a>
+
+        <div class="field">
+            <label for="ta-video">After you watch, think it through:
+                <span class="field-hint">Which step did the engineer spend the most time on? Why do you think that step matters most?</span>
+            </label>
+            <textarea id="ta-video" placeholder="Type your thinking here — it saves automatically."></textarea>
+        </div>
+
+        <label class="step-check" data-check="watched">
+            <input type="checkbox" id="chk-watched">
+            <span>I watched the video</span>
+        </label>
+    </section>
+
+    <!-- ─── 6. TRY IT: MAP YOUR OWN PROBLEM ─── -->
+    <section class="card" aria-label="Map your own problem">
+        <div class="kicker">Try It</div>
+        <h2>Map Your Own Problem</h2>
+        <p>Think of a problem you're genuinely good at solving — a game, a recipe, a hobby, sorting out a disagreement. Now map <em>your</em> process onto the four steps. You already do most of these, even if you've never named them.</p>
+
+        <div class="field">
+            <label for="ta-map-define"><span class="field-tag define">Define</span> How do you figure out what you're really solving?</label>
+            <textarea id="ta-map-define" placeholder="Type your Define step..."></textarea>
+        </div>
+        <div class="field">
+            <label for="ta-map-prepare"><span class="field-tag prepare">Prepare</span> How do you plan or get ready?</label>
+            <textarea id="ta-map-prepare" placeholder="Type your Prepare step..."></textarea>
+        </div>
+        <div class="field">
+            <label for="ta-map-try"><span class="field-tag try">Try</span> What does "putting it into action" look like?</label>
+            <textarea id="ta-map-try" placeholder="Type your Try step..."></textarea>
+        </div>
+        <div class="field">
+            <label for="ta-map-reflect"><span class="field-tag reflect">Reflect</span> How do you check if it worked and improve? (Most people skip this one!)</label>
+            <textarea id="ta-map-reflect" placeholder="Type your Reflect step..."></textarea>
+        </div>
+
+        <label class="step-check" data-check="mapped">
+            <input type="checkbox" id="chk-mapped">
+            <span>I mapped my own problem</span>
+        </label>
+    </section>
+
+    <!-- ─── 7. CHALLENGE: BIRTHDAY GUESTS ─── -->
+    <section class="card" aria-label="Birthday Guests challenge">
+        <div class="kicker">Challenge</div>
+        <h2>Birthday Guests</h2>
+        <p>Time to use DPTR on a real puzzle. You're planning a party for <strong>15 guests</strong> seated at <strong>3 tables of 5</strong>. Some guests must sit <em>together</em>; some must sit <em>apart</em>. Your job: find a seating that satisfies every rule.</p>
+
+        <div class="guest-list">
+            <strong>The 15 Guests</strong>
+            Aysha, Damien, Max, Isaias, Nazek, Laila, Owen, Genaro, Eric, Ben, Jessica, Hannah, Fan, Kyla, Carla
+        </div>
+
+        <div class="constraint-grid">
+            <div class="constraint-card together">
+                <h4>Must Sit Together</h4>
+                <ul>
+                    <li>Aysha &amp; Damien</li>
+                    <li>Max &amp; Isaias</li>
+                    <li>Nazek &amp; Laila</li>
+                    <li>Owen &amp; Genaro</li>
+                    <li>Ben &amp; Jessica</li>
+                    <li>Genaro &amp; Eric</li>
+                </ul>
+            </div>
+            <div class="constraint-card apart">
+                <h4>Must Sit Apart</h4>
+                <ul>
+                    <li>Aysha &amp; Genaro</li>
+                    <li>Ben &amp; Hannah</li>
+                    <li>Fan &amp; Max</li>
+                    <li>Damien &amp; Laila</li>
+                    <li>Isaias &amp; Owen</li>
+                    <li>Kyla &amp; Jessica</li>
+                </ul>
+            </div>
+        </div>
+
+        <p class="muted">Tip: Start by Defining the rules, then Prepare by grouping the "together" pairs first. Write your attempt below — each table holds exactly 5 guests.</p>
+
+        <div class="field">
+            <label for="ta-table1">Table 1 (5 guests)</label>
+            <input type="text" class="text-line" id="ta-table1" placeholder="e.g. Name, Name, Name, Name, Name">
+        </div>
+        <div class="field">
+            <label for="ta-table2">Table 2 (5 guests)</label>
+            <input type="text" class="text-line" id="ta-table2" placeholder="e.g. Name, Name, Name, Name, Name">
+        </div>
+        <div class="field">
+            <label for="ta-table3">Table 3 (5 guests)</label>
+            <input type="text" class="text-line" id="ta-table3" placeholder="e.g. Name, Name, Name, Name, Name">
+        </div>
+
+        <details class="check">
+            <summary>Check your thinking</summary>
+            <div class="reveal">
+                <p>Here's one valid solution:</p>
+                <div class="sol-table">
+                    <h4>Table 1</h4>
+                    <p>Nazek, Laila, Max, Isaias, Kyla</p>
+                </div>
+                <div class="sol-table">
+                    <h4>Table 2</h4>
+                    <p>Owen, Genaro, Eric, Hannah, Fan</p>
+                </div>
+                <div class="sol-table">
+                    <h4>Table 3</h4>
+                    <p>Ben, Jessica, Aysha, Damien, Carla</p>
+                </div>
+                <p>Check it: all six "together" pairs share a table, and all six "apart" pairs are split up. The tricky part is that both <strong>Hannah</strong> and <strong>Kyla</strong> have to sit away from Ben &amp; Jessica's table — that's what forces the rest of the arrangement into place.</p>
+                <p><strong>There's more than one right answer</strong> — if all your rules are satisfied, you solved it!</p>
+            </div>
+        </details>
+
+        <label class="step-check" data-check="puzzle">
+            <input type="checkbox" id="chk-puzzle">
+            <span>I tried the Birthday Guests puzzle</span>
+        </label>
+    </section>
+
+    <!-- ─── 8. REFLECT: PURPOSE OF EACH STEP ─── -->
+    <section class="card" aria-label="The purpose of each step">
+        <div class="kicker">Reflect</div>
+        <h2>The Purpose of Each Step</h2>
+        <p>You've seen the steps and used them. Now put it in your own words: <strong>why does each step exist?</strong> What would go wrong if you skipped it?</p>
+
+        <div class="field">
+            <label for="ta-why-define"><span class="field-tag define">Define</span> Why do we start by defining the problem?</label>
+            <textarea id="ta-why-define" placeholder="In your own words..."></textarea>
+        </div>
+        <div class="field">
+            <label for="ta-why-prepare"><span class="field-tag prepare">Prepare</span> Why prepare a plan before jumping in?</label>
+            <textarea id="ta-why-prepare" placeholder="In your own words..."></textarea>
+        </div>
+        <div class="field">
+            <label for="ta-why-try"><span class="field-tag try">Try</span> Why does the plan need to be actually tried?</label>
+            <textarea id="ta-why-try" placeholder="In your own words..."></textarea>
+        </div>
+        <div class="field">
+            <label for="ta-why-reflect"><span class="field-tag reflect">Reflect</span> Why reflect at the end (the step people skip most)?</label>
+            <textarea id="ta-why-reflect" placeholder="In your own words..."></textarea>
+        </div>
+
+        <label class="step-check" data-check="purpose">
+            <input type="checkbox" id="chk-purpose">
+            <span>I explained the purpose of each step</span>
+        </label>
+    </section>
+
+    <!-- ─── COMPLETION BANNER ─── -->
+    <div class="completion" id="completion" role="status">
+        <h2>You finished Week 1! 🎉</h2>
+        <p>You've learned the whole problem solving process and put it to work. That's a skill you'll carry into every week ahead.</p>
+    </div>
+
+    <!-- ─── 9. WRAP-UP ─── -->
+    <section class="card" aria-label="Wrap up">
+        <div class="kicker">Wrap-Up</div>
+        <h2>The Big Idea</h2>
+        <p><strong>One process works for every kind of problem.</strong> Whether you're planning a party, seating party guests, or building a drone delivery system, the same four steps — Define, Prepare, Try, Reflect — help you cross the gap from where you are to where you want to be. And because it's a cycle, you get a little better every time you loop through it.</p>
+        <p class="muted"><strong>Next week:</strong> What is a computer? — and how you can use this same process to design an app.</p>
+    </section>
+
+    <div class="reset-row">
+        <button class="reset-btn" id="resetBtn" type="button">Reset this lesson</button>
+    </div>
+
+</div>
+
+<!-- ─── SAVED INDICATOR ─── -->
+<div class="saved-indicator" id="savedIndicator">Saved ✓</div>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+    Masterpiece Labs · Problem Solving &amp; Computing · Week 1 · Middle School · Self-Study
+</footer>
+
+<script>
+    (function () {
+        'use strict';
+
+        var STORAGE_PREFIX = 'ps-week1-selfstudy-mid:';
+
+        // All text/input fields to autosave (unique ids)
+        var TEXT_IDS = [
+            'ta-video',
+            'ta-map-define', 'ta-map-prepare', 'ta-map-try', 'ta-map-reflect',
+            'ta-table1', 'ta-table2', 'ta-table3',
+            'ta-why-define', 'ta-why-prepare', 'ta-why-try', 'ta-why-reflect'
+        ];
+
+        // All checkbox ids (the lesson steps that fill the progress bar)
+        var CHECK_IDS = [
+            'chk-ready', 'chk-fourstep', 'chk-watched',
+            'chk-mapped', 'chk-puzzle', 'chk-purpose'
+        ];
+        var TOTAL = CHECK_IDS.length;
+
+        var savedIndicator = document.getElementById('savedIndicator');
+        var savedTimer = null;
+
+        // ─── localStorage helpers (wrapped in try/catch) ───
+        function save(key, value) {
+            try {
+                localStorage.setItem(STORAGE_PREFIX + key, value);
+            } catch (e) { /* storage unavailable; fail silently */ }
+        }
+
+        function load(key) {
+            try {
+                return localStorage.getItem(STORAGE_PREFIX + key);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function remove(key) {
+            try {
+                localStorage.removeItem(STORAGE_PREFIX + key);
+            } catch (e) { /* ignore */ }
+        }
+
+        function flashSaved() {
+            if (!savedIndicator) return;
+            savedIndicator.classList.add('show');
+            if (savedTimer) clearTimeout(savedTimer);
+            savedTimer = setTimeout(function () {
+                savedIndicator.classList.remove('show');
+            }, 1200);
+        }
+
+        // ─── Progress bar ───
+        function updateProgress() {
+            var done = 0;
+            CHECK_IDS.forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el && el.checked) done++;
+            });
+
+            var pct = TOTAL > 0 ? Math.round((done / TOTAL) * 100) : 0;
+            var fill = document.getElementById('progressFill');
+            var label = document.getElementById('progressLabel');
+            var wrap = document.querySelector('.progress-wrap');
+
+            if (fill) fill.style.width = pct + '%';
+            if (label) label.textContent = done + ' of ' + TOTAL + ' complete';
+            if (wrap) wrap.setAttribute('aria-valuenow', String(pct));
+
+            // Completion banner when everything is checked
+            var completion = document.getElementById('completion');
+            if (completion) {
+                if (done === TOTAL && TOTAL > 0) {
+                    completion.classList.add('show');
+                } else {
+                    completion.classList.remove('show');
+                }
+            }
+        }
+
+        // ─── Wire up text fields ───
+        TEXT_IDS.forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+
+            var stored = load(id);
+            if (stored !== null) el.value = stored;
+
+            el.addEventListener('input', function () {
+                save(id, el.value);
+                flashSaved();
+            });
+        });
+
+        // ─── Wire up checkboxes ───
+        CHECK_IDS.forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+
+            var stored = load(id);
+            if (stored === 'true') el.checked = true;
+
+            // Reflect checked state on the wrapping label
+            var labelWrap = el.closest('.step-check');
+            function syncLabel() {
+                if (!labelWrap) return;
+                if (el.checked) labelWrap.classList.add('done');
+                else labelWrap.classList.remove('done');
+            }
+            syncLabel();
+
+            el.addEventListener('change', function () {
+                save(id, el.checked ? 'true' : 'false');
+                syncLabel();
+                updateProgress();
+                flashSaved();
+            });
+        });
+
+        // ─── Reset ───
+        var resetBtn = document.getElementById('resetBtn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function () {
+                var ok = window.confirm('Reset this lesson? This clears all your saved answers and checkmarks on this page. This cannot be undone.');
+                if (!ok) return;
+
+                TEXT_IDS.forEach(function (id) {
+                    remove(id);
+                    var el = document.getElementById(id);
+                    if (el) el.value = '';
+                });
+                CHECK_IDS.forEach(function (id) {
+                    remove(id);
+                    var el = document.getElementById(id);
+                    if (el) {
+                        el.checked = false;
+                        var labelWrap = el.closest('.step-check');
+                        if (labelWrap) labelWrap.classList.remove('done');
+                    }
+                });
+                updateProgress();
+                flashSaved();
+            });
+        }
+
+        // ─── Initial paint ───
+        updateProgress();
+    })();
+</script>
+
+</body>
+</html>

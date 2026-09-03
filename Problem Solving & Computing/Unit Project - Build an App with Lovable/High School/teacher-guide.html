@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Project Teacher Guide — Build an App with Lovable (High School)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --purple: #2d1b69;
+            --purple-light: #3d2b7a;
+            --purple-lighter: #f4f0ff;
+            --teal: #2bb5a0;
+            --teal-light: #e6f9f6;
+            --coral: #e8553d;
+            --coral-light: #fef0ed;
+            --text: #1a1a2e;
+            --text-light: #555;
+            --border: #e0e0e0;
+            --bg: #fafafa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            padding-top: 64px;
+        }
+
+        /* ─── STICKY NAV ─── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--purple);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+        }
+
+        .nav-brand {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-badge {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.95);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            padding: 80px 32px 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ─── AT A GLANCE ─── */
+        .at-a-glance {
+            max-width: 900px;
+            margin: -30px auto 40px;
+            padding: 32px 40px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .at-a-glance h2 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 20px;
+        }
+
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .glance-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .glance-item:last-child,
+        .glance-item:nth-last-child(2) {
+            border-bottom: none;
+        }
+
+        .glance-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .glance-value {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        /* ─── TABS ─── */
+        .tabs-container {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 4px;
+            background: var(--white);
+            border-radius: 12px 12px 0 0;
+            padding: 8px 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: var(--purple-lighter);
+            color: var(--purple);
+        }
+
+        .tab-btn.active {
+            background: var(--purple);
+            color: white;
+            font-weight: 600;
+        }
+
+        .tab-btn .tab-duration {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 2px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tab-btn.active .tab-duration {
+            opacity: 0.85;
+        }
+
+        .tab-content {
+            background: var(--white);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ─── DAY HEADER ─── */
+        .day-header {
+            margin-bottom: 32px;
+        }
+
+        .day-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .day-header .day-subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ─── TIMING TABLE ─── */
+        .timing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0 36px;
+            font-size: 0.9rem;
+        }
+
+        .timing-table th {
+            background: var(--purple-lighter);
+            color: var(--purple);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--purple);
+        }
+
+        .timing-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .timing-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .timing-table .time-col {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--purple);
+            white-space: nowrap;
+            width: 100px;
+        }
+
+        /* ─── SECTION HEADERS ─── */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 36px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--purple-lighter);
+        }
+
+        /* ─── SAY BLOCKS ─── */
+        .say-block {
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .say-block::before {
+            content: 'SAY';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            background: rgba(45, 27, 105, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .say-block p {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        /* ─── TIP BLOCKS ─── */
+        .tip-block {
+            background: var(--teal-light);
+            border-left: 4px solid var(--teal);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .tip-block::before {
+            content: 'TIP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.12);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .tip-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── WARNING BLOCKS ─── */
+        .warning-block {
+            background: var(--coral-light);
+            border-left: 4px solid var(--coral);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .warning-block::before {
+            content: 'HEADS UP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--coral);
+            background: rgba(232, 85, 61, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .warning-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── CHECKPOINT ─── */
+        .checkpoint {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 36px 0;
+            color: white;
+        }
+
+        .checkpoint::before {
+            content: '✓ CHECKPOINT';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            opacity: 0.85;
+        }
+
+        .checkpoint p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        /* ─── CONTENT HELPERS ─── */
+        .facilitation-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .facilitation-list li {
+            padding: 8px 0 8px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .facilitation-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        .discussion-questions {
+            list-style: none;
+            counter-reset: question;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .discussion-questions li {
+            counter-increment: question;
+            padding: 10px 0 10px 36px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .discussion-questions li::before {
+            content: counter(question);
+            position: absolute;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--purple-lighter);
+            color: var(--purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            top: 10px;
+        }
+
+        .exit-ticket {
+            background: #f8f7ff;
+            border: 2px dashed var(--purple);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+
+        .exit-ticket::before {
+            content: 'EXIT TICKET';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .exit-ticket p {
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* ─── ADDITIONAL NOTES ─── */
+        .additional-notes {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .notes-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .notes-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 24px;
+        }
+
+        .notes-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .notes-card h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .notes-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notes-card ul li {
+            padding: 6px 0 6px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .notes-card ul li::before {
+            content: '•';
+            position: absolute;
+            left: 4px;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .dashboard-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.green { background: #4caf50; }
+        .legend-dot.yellow { background: #ff9800; }
+        .legend-dot.gray { background: #bdbdbd; }
+
+        /* ─── DPTR STEP LIST (reuses existing color vars) ─── */
+        .dptr-list, .iosp-list {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .dptr-list li, .iosp-list li {
+            padding: 14px 18px;
+            margin: 10px 0;
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .dptr-list li strong, .iosp-list li strong {
+            color: var(--purple);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── CONSTRAINT REFERENCE (two-column, reuses vars) ─── */
+        .constraint-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .constraint-card {
+            border-radius: 8px;
+            padding: 18px 20px;
+        }
+
+        .constraint-card.together {
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+        }
+
+        .constraint-card.apart {
+            background: var(--coral-light);
+            border: 1px solid rgba(232, 85, 61, 0.35);
+        }
+
+        .constraint-card h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .constraint-card.together h4 { color: var(--teal); }
+        .constraint-card.apart h4 { color: var(--coral); }
+
+        .constraint-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .constraint-card li {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            line-height: 1.5;
+        }
+
+        /* ─── TEACHER ANSWER KEY BLOCK (teal-tinted, reuses vars) ─── */
+        .answer-key {
+            background: var(--teal-light);
+            border: 2px solid var(--teal);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+
+        .answer-key::before {
+            content: 'TEACHER ANSWER KEY';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.15);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+
+        .answer-key .ak-table {
+            background: var(--white);
+            border: 1px solid rgba(43, 181, 160, 0.4);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+
+        .answer-key .ak-table h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .answer-key .ak-table p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .answer-key .ak-note {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        /* ─── RUBRIC TABLE (reuses existing color vars) ─── */
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 32px;
+            font-size: 0.82rem;
+        }
+
+        .rubric-table th {
+            background: var(--purple);
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .rubric-table th:first-child {
+            background: var(--purple-light);
+        }
+
+        .rubric-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.45;
+        }
+
+        .rubric-table td:first-child {
+            font-weight: 600;
+            color: var(--purple);
+            background: var(--purple-lighter);
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ─── RESOURCE LINK (optional enrichment, reuses vars) ─── */
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--teal);
+            text-decoration: none;
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin: 6px 0;
+        }
+
+        .resource-link::before {
+            content: '↗';
+            font-weight: 700;
+        }
+
+        .resource-link:hover {
+            background: rgba(43, 181, 160, 0.18);
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            background: var(--purple);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 32px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .nav { padding: 0 16px; }
+            .hero h1 { font-size: 2rem; }
+            .at-a-glance { margin: -20px 16px 30px; padding: 24px; }
+            .glance-grid { grid-template-columns: 1fr; }
+            .tabs-container { padding: 0 12px; }
+            .tab-content { padding: 24px; }
+            .tabs-nav { flex-direction: column; gap: 2px; }
+            .tab-btn { border-radius: 8px; }
+            .constraint-grid { grid-template-columns: 1fr; }
+            .rubric-table { font-size: 0.72rem; }
+            .rubric-table th, .rubric-table td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <span class="nav-brand">masterpiece labs</span>
+    <span class="nav-badge">PROBLEM SOLVING &amp; COMPUTING · UNIT PROJECT · HIGH SCHOOL</span>
+</nav>
+
+<!-- ─── HERO ─── -->
+<header class="hero">
+    <div class="hero-eyebrow">Unit Project · High School</div>
+    <h1>Build an App with Lovable</h1>
+    <p class="hero-sub">Specify, build, iterate, and ship a real web app — from an IOSP spec to a deployed URL</p>
+</header>
+
+<!-- ─── AT A GLANCE ─── -->
+<section class="at-a-glance" aria-label="Project at a glance">
+    <h2>At a Glance</h2>
+    <div class="glance-grid">
+        <div class="glance-item">
+            <div class="glance-label">Driving Question</div>
+            <div class="glance-value">Can you specify a real problem precisely enough that an AI builds the app you intended — and then iterate it to something people actually use?</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Big Idea</div>
+            <div class="glance-value">Prompt-writing is specification. The IOSP model you learned becomes a precise spec; an AI builder turns it into a deployed app; and your judgment — testing, iterating, evaluating what the AI got right and wrong — is what makes it good.</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Format</div>
+            <div class="glance-value">Project — ~4–5 sessions (phase tabs). Individual or pairs, each driving lovable directly.</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Deliverable</div>
+            <div class="glance-value">A deployed, shareable app + a completed Project Guide + a build reflection comparing spec vs. output + a showcase</div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── LEARNING OBJECTIVES ─── -->
+<section class="at-a-glance" aria-label="Learning objectives" style="margin-top:0;">
+    <h2>Learning Objectives</h2>
+    <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:12px;">Students will be able to:</p>
+    <ul class="facilitation-list">
+        <li>Apply DPTR to define and scope a real problem with clear success criteria</li>
+        <li>Translate an app design into a precise IOSP specification</li>
+        <li>Use precise natural-language prompts to build and iterate an app with an AI builder, spending limited credits strategically</li>
+        <li>Critically evaluate AI-generated output (what matched the spec, what didn't, what to change) and ship a working, shared app</li>
+    </ul>
+</section>
+
+<!-- ─── TABBED PHASES ─── -->
+<section class="tabs-container">
+    <div class="tabs-nav" role="tablist" aria-label="Project phases">
+        <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="setup" id="tab-setup" onclick="switchTab('setup')">
+            Setup
+            <span class="tab-duration">~30 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="plan" id="tab-plan" onclick="switchTab('plan')">
+            Define &amp; Spec
+            <span class="tab-duration">1–2 sessions</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="build" id="tab-build" onclick="switchTab('build')">
+            Build &amp; Iterate
+            <span class="tab-duration">1–2 sessions</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="share" id="tab-share" onclick="switchTab('share')">
+            Ship &amp; Reflect
+            <span class="tab-duration">1 session</span>
+        </button>
+    </div>
+
+    <div class="tab-content">
+
+        <!-- ═══════════ SETUP ═══════════ -->
+        <div class="tab-panel active" id="setup" role="tabpanel" aria-labelledby="tab-setup">
+            <div class="day-header">
+                <h2>Setup — Before You Start</h2>
+                <p class="day-subtitle">Accounts, credit budget, and prompting = specification</p>
+            </div>
+
+            <div class="say-block">
+                <p>"In Week 2 you built an input→process→output app by hand in real JavaScript. lovable.dev is that same IOSP idea at full scale — but instead of typing the code, you SPECIFY the app in precise language and an AI writes real React code for you. Your leverage is the quality of your specification and your judgment about what it produces."</p>
+            </div>
+
+            <h3 class="section-title">What Is lovable.dev?</h3>
+
+            <ul class="iosp-list">
+                <li><strong>AI APP BUILDER</strong> — lovable.dev is an AI app builder: you describe the app you want and it generates a working full-stack web app for you.</li>
+                <li><strong>REAL CODE UNDERNEATH</strong> — it writes real React/TypeScript under the hood and deploys it to a public URL. It's not a mockup — it's the same kind of code you glimpsed in StackBlitz, just AI-generated and at app scale.</li>
+                <li><strong>SMALL LOOPS</strong> — you refine the app by prompting in small, targeted loops: read what it built, test it, then ask for one precise change at a time.</li>
+            </ul>
+
+            <div class="warning-block">
+                <p>The free plan gives about 5 build credits per day — they don't roll over, so you get roughly 30 a month. Every prompt you send the AI costs a credit. Plan the full spec on paper FIRST: one precise prompt beats many vague ones. Vague prompting is how you burn a day's credits with nothing to show.</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Run this individually or in pairs, each driving lovable directly. Pairs stretch credits and enable pair-spec review. Before anyone spends a credit, require a "spec review": a peer checks that the spec is complete — all four IOSP parts (Inputs, Outputs, Storage, Processing) present and specific enough to build from.</p>
+            </div>
+
+            <a class="resource-link" href="https://lovable.dev">lovable.dev</a>
+            <a class="resource-link" href="https://docs.lovable.dev/introduction/getting-started">lovable docs · Getting Started</a>
+
+            <div class="checkpoint">
+                <p>Each student/pair has account access (accounts are already approved), a Project Guide, and understands that prompting = specification under a credit budget.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DEFINE & SPEC ═══════════ -->
+        <div class="tab-panel" id="plan" role="tabpanel" aria-labelledby="tab-plan">
+            <div class="day-header">
+                <h2>Define &amp; Spec</h2>
+                <p class="day-subtitle">DPTR + a precise IOSP spec — all on paper, no credits spent</p>
+            </div>
+
+            <div class="say-block">
+                <p>"No credits spent yet. A precise spec is the whole game. Everything you get right here saves you credits and rework later — and everything you leave vague, the AI will guess at."</p>
+            </div>
+
+            <h3 class="section-title">Define (DPTR)</h3>
+
+            <div class="say-block">
+                <p>"Pick a real problem with genuine stakes — in your own life, a team or club you're in, a job you have, or your community. In your Project Guide, write a clear problem statement, name a specific target user (who exactly has this problem?), and define success criteria: how will you know the app actually works?"</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Push students to name a specific user, not "everyone." "Students on my robotics team who forget which parts we've ordered" is a spec you can build for. "People who are busy" is not. The tighter the audience, the tighter the app.</p>
+            </div>
+
+            <h3 class="section-title">Specify (IOSP → spec)</h3>
+
+            <div class="say-block">
+                <p>"Now translate your design into a precise IOSP spec. This is engineering, not a wish list — name the data, the controls, and the exact logic, specifically enough that a builder could act on it without guessing."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>INPUTS</strong> — the fields and controls, with their types (text, number, date, dropdown, checkbox, button).</li>
+                <li><strong>OUTPUTS</strong> — exactly what gets rendered on screen (a list, a total, a message, a chart).</li>
+                <li><strong>STORAGE</strong> — what data persists between visits, and in what shape.</li>
+                <li><strong>PROCESSING</strong> — the logic: which of the four kinds (if/then, comparing, finding a match, counting) plus any rules that combine them.</li>
+            </ul>
+
+            <h3 class="section-title">Draft the Build Prompt</h3>
+
+            <div class="say-block">
+                <p>"Your IOSP spec becomes a structured first prompt. Write it in order — Inputs, Outputs, Storage, Processing — plus a note on the audience and vibe. Treat this like a spec you're handing an engineer: precise language, no ambiguity."</p>
+            </div>
+
+            <div class="say-block">
+                <p>"Here's a strong example for a study-session planner: <em>Build a study-session planner web app. INPUTS: a form to add a subject, a due date, and estimated hours. OUTPUTS: a prioritized list of sessions sorted by due date, and total hours this week. STORAGE: persist the sessions. PROCESSING: sort by due date (comparing), flag anything due within 2 days (if/then), and sum weekly hours (counting). Clean, minimal UI suitable for a high-school student. Use simple local persistence.</em>"</p>
+            </div>
+
+            <div class="tip-block">
+                <p>A good spec names the data, the controls, the logic, and the audience/vibe. Vague specs waste credits and force the AI to guess; precise specs build right the first time.</p>
+            </div>
+
+            <ul class="discussion-questions">
+                <li>What's the ONE core feature that must work for this to solve the problem?</li>
+                <li>What data does the app need to remember between visits?</li>
+                <li>Which of the four kinds of processing does your logic use?</li>
+            </ul>
+
+            <div class="checkpoint">
+                <p>Each student/pair has a scoped problem, a complete IOSP spec, and a peer-reviewed first build prompt — before opening lovable.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ BUILD & ITERATE ═══════════ -->
+        <div class="tab-panel" id="build" role="tabpanel" aria-labelledby="tab-build">
+            <div class="day-header">
+                <h2>Build &amp; Iterate</h2>
+                <p class="day-subtitle">Direct the AI; evaluate its output critically; iterate in small loops</p>
+            </div>
+
+            <div class="say-block">
+                <p>"Paste your first prompt, then evaluate critically and iterate in small, specific loops. You are the engineer directing the AI, not a spectator — the AI produces, you judge and steer."</p>
+            </div>
+
+            <h3 class="section-title">Facilitating the Build</h3>
+
+            <ul class="facilitation-list">
+                <li>Have students READ and TEST what was built before prompting again</li>
+                <li>Make one targeted change per prompt — not a list of five things</li>
+                <li>When the AI's output diverges from the spec, name the gap precisely in the next prompt</li>
+                <li>Use lovable's Fix option when the app throws an error</li>
+                <li>Keep a build log: prompt → result → credits spent</li>
+            </ul>
+
+            <h3 class="section-title">Evaluating AI Output (teach this)</h3>
+
+            <ul class="iosp-list">
+                <li><strong>MATCH THE SPEC?</strong> — Does what it built actually match what you specified?</li>
+                <li><strong>ADDED / MISSED</strong> — What did the AI add that you didn't ask for, and what did it miss?</li>
+                <li><strong>LOGIC CORRECT?</strong> — Is the processing logic actually right? Test it with real inputs — try edge cases, not just the happy path.</li>
+                <li><strong>VERIFY, DON'T TRUST</strong> — Don't accept output uncritically. Confirm the behavior yourself before you call it done.</li>
+            </ul>
+
+            <div class="warning-block">
+                <p>Out of credits for the day? Switch to planning the next iteration precisely on paper so tomorrow's credits land instantly. Track credits in the build log so no one is surprised. Running out is a planning day, not a failure.</p>
+            </div>
+
+            <h3 class="section-title">Publish</h3>
+
+            <div class="say-block">
+                <p>"When your app works, use lovable's Publish button to deploy it to a shareable URL. Paste that link into your Project Guide — that's your real, deployed app on the internet."</p>
+            </div>
+
+            <a class="resource-link" href="https://docs.lovable.dev/features/publish">lovable docs · Publish</a>
+
+            <div class="checkpoint">
+                <p>Each student/pair has a working, published app and a build log showing prompt → result → credits, with at least one iteration driven by evaluating the AI's output.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ SHIP & REFLECT ═══════════ -->
+        <div class="tab-panel" id="share" role="tabpanel" aria-labelledby="tab-share">
+            <div class="day-header">
+                <h2>Ship &amp; Reflect</h2>
+                <p class="day-subtitle">User-test with real people, showcase, and reflect on spec vs. output</p>
+            </div>
+
+            <div class="say-block">
+                <p>"You shipped something real. Now put it in front of the people who actually have the problem, defend your design choices, and reflect on the gap between what you specified and what the AI produced."</p>
+            </div>
+
+            <h3 class="section-title">User Testing (Extend Beyond the Classroom)</h3>
+
+            <div class="say-block">
+                <p>"Share your deployed link with REAL target users — the actual people who have this problem, whether that's your teammates, family, coworkers, or community. Collect specific feedback, then make at least one improvement based on it (credits permitting), or document exactly the change you'd make."</p>
+            </div>
+
+            <h3 class="section-title">Showcase / Defend</h3>
+
+            <div class="say-block">
+                <p>"Each student or pair demos the app, states the problem and the IOSP spec behind it, and answers one question about a design or logic decision — why did you build it that way?"</p>
+            </div>
+
+            <ul class="facilitation-list">
+                <li>Keep demos tight — the app, the problem, the spec, one defended decision</li>
+                <li>Ask each presenter to point to their app's inputs, processing, storage, and outputs in the running app</li>
+                <li>Have the audience surface one thing they'd extend or challenge</li>
+            </ul>
+
+            <h3 class="section-title">Build Reflection (the key HS deliverable)</h3>
+
+            <ul class="discussion-questions">
+                <li>What did you specify vs. what did the AI actually produce?</li>
+                <li>Where did it diverge from your spec, and how did you correct it?</li>
+                <li>What did precise specification get you that a vague prompt wouldn't have?</li>
+                <li>Why does this problem matter to you?</li>
+                <li>What would you build next, or how would you extend this app?</li>
+            </ul>
+
+            <div class="exit-ticket">
+                <p>"In one sentence: what problem does your app solve, who is it for, and what's the one thing the AI got wrong that you had to fix?"</p>
+            </div>
+
+            <h3 class="section-title">Unit Project Rubric</h3>
+
+            <table class="rubric-table" aria-label="Unit project rubric">
+                <thead>
+                    <tr>
+                        <th>Criterion</th>
+                        <th>Beginning</th>
+                        <th>Proficient</th>
+                        <th>Exemplary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Scopes a real problem with clear success criteria + specific target user</td>
+                        <td>Vague problem; no clear user or success criteria</td>
+                        <td>Real problem, specific user, stated success criteria</td>
+                        <td>Tightly scoped problem with genuine stakes, a precise user, and measurable success criteria</td>
+                    </tr>
+                    <tr>
+                        <td>IOSP spec is precise and complete enough to build from</td>
+                        <td>Names 1–2 parts; too vague to build</td>
+                        <td>All four parts present and specific</td>
+                        <td>All four precise, with data, controls, and logic a builder could act on without guessing</td>
+                    </tr>
+                    <tr>
+                        <td>App works, logic correct, published; iterated from real evaluation/feedback</td>
+                        <td>Incomplete, not published, or logic untested</td>
+                        <td>Working app, correct logic, published URL, at least one iteration</td>
+                        <td>Working app with verified logic, published, iterated from real user feedback</td>
+                    </tr>
+                    <tr>
+                        <td>Build reflection critically compares spec vs. AI output + shows ownership</td>
+                        <td>Little reflection; no spec-vs-output analysis</td>
+                        <td>Compares spec vs. output and describes corrections</td>
+                        <td>Sharp analysis of divergences and fixes, plus clear personal ownership and next steps</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="checkpoint">
+                <p>Each student/pair shipped a working app, tested it with a real user, and completed the build reflection.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ─── ADDITIONAL NOTES ─── -->
+<section class="additional-notes" aria-label="Additional notes for teachers">
+    <div class="notes-card">
+        <h2>Additional Notes for the Teacher</h2>
+
+        <h3>Managing the Free Tier</h3>
+        <ul>
+            <li>About 5 build credits per day, no rollover, roughly 30 per month</li>
+            <li>Spec fully on paper first — every prompt costs a credit</li>
+            <li>Precise prompts beat many vague ones</li>
+            <li>Pairs stretch credits and enable spec review</li>
+            <li>A no-credit day is a spec/iteration-planning day, not a lost day</li>
+        </ul>
+
+        <h3>Connecting to Week 2 (StackBlitz → Lovable)</h3>
+        <ul>
+            <li>Week 2's hand-coded input→process→output shows what's happening under the hood</li>
+            <li>lovable is the same IOSP model — AI-generated and at full app scale</li>
+            <li>Students should be able to point to their app's inputs, processing, storage, and outputs in the running app</li>
+        </ul>
+
+        <h3>Good Project Scopes</h3>
+        <ul>
+            <li>Trackers and planners; quiz/flashcard tools</li>
+            <li>Sign-up or directory pages; decision helpers; simple dashboards</li>
+            <li>One core feature done well</li>
+            <li>Avoid payments, third-party OAuth, or large datasets on the free tier</li>
+        </ul>
+
+        <h3>Evaluating AI Output</h3>
+        <ul>
+            <li>Teach students to verify behavior with real test inputs — not to trust that generated code is correct</li>
+            <li>Correctness of the processing logic is graded</li>
+            <li>Model this: run an edge case live and show the AI got it subtly wrong</li>
+        </ul>
+
+        <h3>Differentiation</h3>
+        <ul>
+            <li><strong>Support:</strong> Provide a spec template plus a strong example prompt to adapt rather than start from scratch</li>
+            <li><strong>Advanced:</strong> Add a second feature, use multiple processing types, run a real user-feedback iteration, or critique the AI's generated structure/UX</li>
+        </ul>
+
+        <h3>Safety &amp; Ethics</h3>
+        <ul>
+            <li>No real personal data in apps — use made-up test data</li>
+            <li>Review the app before sharing it widely</li>
+            <li>Be mindful of what the app collects if others use it</li>
+        </ul>
+
+        <h3>If You're Running Behind</h3>
+        <ul>
+            <li>Define &amp; Spec is the priority — the spec is most of the learning</li>
+            <li>A single strong prompt + publish is a valid minimum</li>
+            <li>User testing and reflection can be assigned as homework</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+    Masterpiece Labs · Problem Solving &amp; Computing · Unit Project · High School
+</footer>
+
+<script>
+    function switchTab(dayId) {
+        // Deactivate all tabs and panels
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+
+        // Activate selected tab and panel
+        document.getElementById('tab-' + dayId).classList.add('active');
+        document.getElementById('tab-' + dayId).setAttribute('aria-selected', 'true');
+        document.getElementById(dayId).classList.add('active');
+    }
+
+    // Keyboard navigation for tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('keydown', (e) => {
+            const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+            const index = tabs.indexOf(e.target);
+            let newIndex;
+
+            if (e.key === 'ArrowRight') {
+                newIndex = (index + 1) % tabs.length;
+            } else if (e.key === 'ArrowLeft') {
+                newIndex = (index - 1 + tabs.length) % tabs.length;
+            } else {
+                return;
+            }
+
+            e.preventDefault();
+            tabs[newIndex].focus();
+            tabs[newIndex].click();
+        });
+    });
+</script>
+
+</body>
+</html>

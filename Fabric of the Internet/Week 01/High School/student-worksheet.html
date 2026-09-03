@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 1 Student Worksheet — Building a Reliable Network (High School)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --purple: #2d1b69;
+  --purple-light: #3d2b7a;
+  --purple-lighter: #f4f0ff;
+  --teal: #2bb5a0;
+  --teal-light: #e6f9f6;
+  --coral: #e8553d;
+  --coral-light: #fef0ed;
+  --sand: #f5f0e8;
+  --text: #1a1a2e;
+  --border: #e0e0e0;
+  --white: #ffffff;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text);
+  background: var(--sand);
+  line-height: 1.6;
+  padding: 40px 20px 80px;
+}
+
+.page {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+/* ─── PRINT BUTTON / CONTROLS ─── */
+.controls {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(45, 27, 105, 0.25);
+  transition: transform 0.1s ease, opacity 0.15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-print { background: var(--purple); color: #fff; }
+.btn-clear { background: var(--coral); color: #fff; font-size: 0.78rem; padding: 7px 13px; }
+
+.save-indicator {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--teal);
+  background: var(--white);
+  border: 1px solid var(--teal);
+  border-radius: 20px;
+  padding: 5px 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.save-indicator.show { opacity: 1; }
+
+/* ─── HEADER BAND ─── */
+.header {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+  color: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 36px 44px 32px;
+}
+
+.wordmark {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 1.05rem;
+  letter-spacing: 1px;
+  opacity: 0.85;
+  margin-bottom: 18px;
+}
+.wordmark span { font-weight: 600; }
+
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2.6rem;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.header .subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+  margin-bottom: 26px;
+}
+
+.namebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 28px;
+  align-items: flex-end;
+}
+.namebar .field { display: flex; align-items: flex-end; gap: 8px; flex: 1 1 auto; }
+.namebar .field.name { flex: 2 1 260px; }
+.namebar label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+.namebar input {
+  flex: 1;
+  min-width: 60px;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid rgba(255,255,255,0.55);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  padding: 2px 4px 4px;
+  outline: none;
+}
+.namebar input:focus { border-bottom-color: var(--teal); }
+
+/* ─── BODY WRAPPER ─── */
+.body-wrap {
+  background: var(--white);
+  border-radius: 0 0 16px 16px;
+  padding: 8px 0 4px;
+  box-shadow: 0 8px 34px rgba(45, 27, 105, 0.12);
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 30px 34px;
+  margin: 26px 24px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+
+.card-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.card h2 {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.7rem;
+  color: var(--purple);
+  margin-bottom: 14px;
+}
+
+.card h3 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--purple);
+  margin: 24px 0 10px;
+}
+
+.instructions {
+  background: var(--purple-lighter);
+  border-left: 3px solid var(--purple);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  margin-bottom: 18px;
+}
+.overview {
+  font-size: 0.98rem;
+  margin-bottom: 16px;
+}
+
+/* ─── CHIPS ─── */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  background: var(--teal-light);
+  color: var(--purple);
+  border: 1px solid var(--teal);
+  border-radius: 20px;
+  padding: 5px 13px;
+}
+
+/* ─── DEFINITION LIST (vocab) ─── */
+.deflist { list-style: none; margin-bottom: 6px; }
+.deflist li {
+  display: flex;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.96rem;
+  align-items: baseline;
+}
+.deflist li:last-child { border-bottom: none; }
+.deflist .term {
+  font-weight: 600;
+  color: var(--purple);
+  min-width: 118px;
+  flex-shrink: 0;
+}
+.deflist .term .mono {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  color: var(--teal);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.deflist.processing .term { min-width: 138px; }
+
+/* ─── CODE / NOTATION ─── */
+.code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.86rem;
+  color: var(--purple);
+  background: var(--purple-lighter);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  line-height: 2;
+  letter-spacing: 0.3px;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+.code .ip { color: #1a8a78; font-weight: 500; }
+.code .rt { color: var(--coral); font-weight: 500; }
+span.code {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: 5px;
+  line-height: 1.4;
+}
+
+/* ─── GENERIC TEXTAREA / INPUT BLOCKS ─── */
+.write-box {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  padding: 14px 16px;
+  resize: vertical;
+  outline: none;
+  background: var(--white);
+  line-height: 1.9;
+}
+.write-box:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-light); }
+
+.box-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--purple);
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* ─── SINGLE-LINE FIELD ─── */
+.field-line { margin-bottom: 18px; }
+.field-line input.line-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1.5px solid var(--border);
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: var(--text);
+  padding: 6px 4px;
+  outline: none;
+  background: transparent;
+}
+.field-line input.line-input:focus { border-bottom-color: var(--teal); }
+
+/* ─── DRAW BOX ─── */
+.draw-box {
+  border: 2px dashed var(--purple);
+  border-radius: 12px;
+  background: var(--purple-lighter);
+  min-height: 260px;
+  padding: 14px;
+}
+.draw-box textarea {
+  width: 100%;
+  min-height: 232px;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  resize: vertical;
+  line-height: 1.9;
+}
+
+/* ─── FILL-IN PROMPTS ─── */
+.prompt { margin-bottom: 18px; }
+.prompt .plabel {
+  font-weight: 600;
+  color: var(--purple);
+  margin-bottom: 6px;
+  display: block;
+}
+.prompt .plabel .mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  color: var(--teal);
+  text-transform: uppercase;
+  margin-left: 6px;
+}
+.prompt .phint { font-weight: 400; color: var(--text); opacity: 0.7; font-size: 0.9rem; }
+
+/* ─── NOTE / HELPER ─── */
+.note {
+  background: var(--teal-light);
+  border: 1px solid var(--teal);
+  border-radius: 8px;
+  padding: 11px 15px;
+  font-size: 0.88rem;
+  margin: 14px 0;
+}
+.note .mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #1a8a78;
+  display: block;
+  margin-bottom: 5px;
+}
+.note .bytes {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  color: var(--purple);
+  line-height: 2.1;
+}
+
+.criteria-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--purple);
+  margin-top: 12px;
+}
+.criteria-note .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+.criteria-note .pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  background: var(--coral-light);
+  border: 1px solid var(--coral);
+  color: var(--coral);
+  border-radius: 20px;
+  padding: 3px 11px;
+}
+
+/* ─── DATA TABLES ─── */
+table.grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+}
+table.grid-table th {
+  background: var(--purple);
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid var(--purple);
+}
+table.grid-table td {
+  border: 1px solid var(--border);
+  padding: 0;
+  vertical-align: top;
+}
+table.grid-table td .cell-fixed {
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  background: var(--purple-lighter);
+  min-height: 46px;
+}
+table.grid-table td .cell-fixed .mono-ip {
+  font-family: 'JetBrains Mono', monospace;
+  color: #1a8a78;
+}
+table.grid-table td input.cell,
+table.grid-table td textarea.cell {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  color: var(--text);
+  padding: 10px 12px;
+  resize: vertical;
+  line-height: 1.6;
+}
+table.grid-table td textarea.cell { min-height: 52px; }
+table.grid-table td input.cell:focus,
+table.grid-table td textarea.cell:focus { background: var(--teal-light); }
+
+/* ─── CHECKLIST ─── */
+.checklist { list-style: none; }
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-size: 0.98rem;
+  background: var(--white);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.checklist li:hover { border-color: var(--teal); }
+.checklist input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--teal);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.checklist label { cursor: pointer; }
+.checklist input[type="checkbox"]:checked + label { color: var(--purple); font-weight: 500; }
+
+.footer {
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  color: var(--purple);
+  opacity: 0.6;
+  margin: 30px 0 0;
+}
+
+@media (max-width: 640px) {
+  .header { padding: 28px 22px; }
+  .card { padding: 24px 20px; margin: 20px 12px; }
+  .deflist li { flex-direction: column; gap: 2px; }
+  .deflist .term { min-width: 0; }
+}
+
+/* ─── PRINT ─── */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  body { background: #fff; padding: 0; }
+  .controls { display: none !important; }
+  .page { max-width: 100%; }
+  .body-wrap { box-shadow: none; }
+  .header { border-radius: 0; }
+  .card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-shadow: none;
+    margin: 16px 0;
+  }
+  .header, .chip, .instructions, .note, .criteria-note .pill, .code,
+  table.grid-table th, .draw-box, .cell-fixed, .checklist li {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  input, textarea { border-color: #999 !important; }
+  .write-box, .draw-box textarea, textarea.cell { overflow: visible; }
+  a { text-decoration: none; color: inherit; }
+}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <button class="btn btn-print" onclick="window.print()">&#128424; Print / Save as PDF</button>
+  <button class="btn btn-clear" onclick="clearAnswers()">Clear my answers</button>
+  <span class="save-indicator" id="saveIndicator">Saved &#10003;</span>
+</div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="wordmark">masterpiece <span>labs</span></div>
+    <h1>Building a Reliable Network</h1>
+    <div class="subtitle">Week 1 Student Worksheet &middot; The Fabric of the Internet &middot; High School</div>
+    <div class="namebar">
+      <div class="field name">
+        <label>Name(s)</label>
+        <input type="text" id="f_names" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Period</label>
+        <input type="text" id="f_period" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input type="text" id="f_date" autocomplete="off">
+      </div>
+    </div>
+  </header>
+
+  <div class="body-wrap">
+
+    <!-- 1. KEY VOCABULARY -->
+    <section class="card">
+      <div class="card-eyebrow">Reference</div>
+      <h2>Key Vocabulary</h2>
+      <ul class="deflist">
+        <li><span class="term">Internet</span><span>A decentralized global network of networks.</span></li>
+        <li><span class="term">Router</span><span>Forwards packets between networks, choosing a next hop for each one.</span></li>
+        <li><span class="term">Topology</span><span>How devices are arranged and connected to each other.</span></li>
+        <li><span class="term">Scalability</span><span>How well a design holds up as it grows.</span></li>
+        <li><span class="term">IP Address</span><span>A unique numeric identifier for a device on a network.</span></li>
+        <li><span class="term">Next Hop</span><span>The next router a packet is forwarded to on its way to a destination.</span></li>
+        <li><span class="term">Redundancy</span><span>Multiple paths so the network tolerates failures.</span></li>
+        <li><span class="term">Single Point of Failure</span><span>A component whose failure disconnects part of the network.</span></li>
+        <li><span class="term">Packet</span><span>A small numbered unit of data.</span></li>
+        <li><span class="term">TCP</span><span>Guarantees delivery and order &mdash; at the cost of speed.</span></li>
+        <li><span class="term">UDP</span><span>Fast, with no delivery or order guarantee.</span></li>
+      </ul>
+    </section>
+
+    <!-- 2. THE COST OF CONNECTING EVERYONE -->
+    <section class="card">
+      <div class="card-eyebrow">Analyze</div>
+      <h2>The Cost of Connecting Everyone</h2>
+      <p class="overview">To <strong>FULLY</strong> connect <span class="code">n</span> devices, you need a link between every pair: <span class="code">n(n&minus;1)&divide;2</span> links. Compute the values below and see why full connection is impossible at scale.</p>
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th style="width:40%;">Devices (n)</th>
+            <th>Links to fully connect &nbsp;<span class="mono-ip">[n(n&minus;1)&divide;2]</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="cell-fixed">5</div></td>
+            <td><input type="text" class="cell" id="scale_n5" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <td><div class="cell-fixed">10</div></td>
+            <td><input type="text" class="cell" id="scale_n10" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <td><div class="cell-fixed">50</div></td>
+            <td><input type="text" class="cell" id="scale_n50" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <td><div class="cell-fixed">1000</div></td>
+            <td><input type="text" class="cell" id="scale_n1000" autocomplete="off"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="prompt" style="margin-top:22px;">
+        <span class="plabel">What does this tell you about why the Internet uses shared routing through routers instead of connecting everyone directly?</span>
+        <textarea class="write-box" id="scale_reasoning" rows="4"></textarea>
+      </div>
+    </section>
+
+    <!-- 3. ADDRESSING & ROUTING -->
+    <section class="card">
+      <div class="card-eyebrow">Routing Lab</div>
+      <h2>Addressing &amp; Routing</h2>
+      <p class="overview">Routers use the destination <strong>IP address</strong> and a <strong>routing table</strong> to choose the next hop. Use the table below to trace paths.</p>
+      <div class="note" style="background:var(--purple-lighter); border-color:var(--purple);">
+        <span class="mono" style="color:var(--purple);">Routing table &mdash; reference (do not edit)</span>
+        <div class="code" style="margin-top:8px; border:none; background:transparent; padding:0;">Jordan's Laptop            <span class="ip">192.168.1.1</span>   &rarr; <span class="rt">Router A</span>
+Mia's Tablet               <span class="ip">192.168.1.2</span>   &rarr; <span class="rt">Router A</span>
+Ava's Phone                <span class="ip">192.168.2.2</span>   &rarr; <span class="rt">Router C</span>
+Liam's Laptop              <span class="ip">192.168.4.1</span>   &rarr; <span class="rt">Router A</span>
+Emily's Streaming Device   <span class="ip">192.168.1.5</span>   &rarr; <span class="rt">Router D</span>
+Ryan's Laptop              <span class="ip">192.168.2.1</span>   &rarr; <span class="rt">Router D</span></div>
+      </div>
+      <div class="prompt" style="margin-top:22px;">
+        <span class="plabel">Which router is the next hop for data addressed to Ava's Phone (<span class="code">192.168.2.2</span>)?</span>
+        <input type="text" class="line-input" id="route_q1" autocomplete="off">
+      </div>
+      <div class="prompt">
+        <span class="plabel">Two devices share Router A as their next hop. Besides Jordan's Laptop, name them.</span>
+        <input type="text" class="line-input" id="route_q2" autocomplete="off">
+      </div>
+      <div class="prompt">
+        <span class="plabel">Why must every device on the network have a UNIQUE IP address? What breaks if two share one?</span>
+        <textarea class="write-box" id="route_q3" rows="3"></textarea>
+      </div>
+    </section>
+
+    <!-- 4. REDUNDANCY & SINGLE POINTS OF FAILURE -->
+    <section class="card">
+      <div class="card-eyebrow">Design</div>
+      <h2>Redundancy &amp; Single Points of Failure</h2>
+      <p class="overview">A resilient network has more than one path between important points. A single missing link shouldn't be able to cut off a whole section.</p>
+      <div class="draw-box">
+        <span class="box-label" style="color:var(--purple);">Sketch a small network (4&ndash;6 devices + 2&ndash;3 routers). Circle a SINGLE POINT OF FAILURE.</span>
+        <textarea id="redundancy_diagram" placeholder="Draw devices, routers, and the links between them. Circle the one spot where a single failure disconnects part of the network."></textarea>
+      </div>
+      <div class="prompt" style="margin-top:20px;">
+        <span class="plabel">Where is the single point of failure in your sketch?</span>
+        <textarea class="write-box" id="spof_location" rows="3"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">Add a link that removes it. Describe the backup path a packet would take if that component failed.</span>
+        <textarea class="write-box" id="spof_backup" rows="3"></textarea>
+      </div>
+    </section>
+
+    <!-- 5. PACKETS -->
+    <section class="card">
+      <div class="card-eyebrow">Unplugged Simulation</div>
+      <h2>Packets</h2>
+      <div class="instructions">Write a sentence, then split it into 4 numbered packets. Your teacher will have you deliver them out of order with one missing.</div>
+      <div class="prompt">
+        <span class="box-label">Your sentence</span>
+        <textarea class="write-box" id="packet_msg" rows="3"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">How does numbering let the receiver reassemble packets that arrive out of order?</span>
+        <textarea class="write-box" id="packet_reorder" rows="3"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">What should the receiver do about the missing packet &mdash; and which protocol (TCP or UDP) does that?</span>
+        <textarea class="write-box" id="packet_missing" rows="3"></textarea>
+      </div>
+    </section>
+
+    <!-- 6. TCP vs UDP -->
+    <section class="card">
+      <div class="card-eyebrow">Tradeoffs</div>
+      <h2>TCP vs UDP</h2>
+      <div class="note">
+        <span class="mono">The tradeoff</span>
+        <div><strong>TCP</strong> = reliable + ordered, but slower (it confirms and resends).<br>
+        <strong>UDP</strong> = fast, but no guarantees (packets may arrive out of order or not at all).</div>
+      </div>
+      <h3>Pick the Protocol</h3>
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th style="width:34%;">Use Case</th>
+            <th style="width:22%;">TCP or UDP?</th>
+            <th>Why?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="cell-fixed">Live esports stream</div></td>
+            <td><input type="text" class="cell" id="proto_stream_pick" autocomplete="off"></td>
+            <td><textarea class="cell" id="proto_stream_why"></textarea></td>
+          </tr>
+          <tr>
+            <td><div class="cell-fixed">Downloading a game update</div></td>
+            <td><input type="text" class="cell" id="proto_download_pick" autocomplete="off"></td>
+            <td><textarea class="cell" id="proto_download_why"></textarea></td>
+          </tr>
+          <tr>
+            <td><div class="cell-fixed">Video call</div></td>
+            <td><input type="text" class="cell" id="proto_call_pick" autocomplete="off"></td>
+            <td><textarea class="cell" id="proto_call_why"></textarea></td>
+          </tr>
+          <tr>
+            <td><div class="cell-fixed">Bank transfer</div></td>
+            <td><input type="text" class="cell" id="proto_bank_pick" autocomplete="off"></td>
+            <td><textarea class="cell" id="proto_bank_why"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 7. MAKE IT YOURS: DESIGN A RELIABLE NETWORK -->
+    <section class="card">
+      <div class="card-eyebrow">Make It Yours &middot; Deliverable</div>
+      <h2>Design a Reliable Network</h2>
+      <p class="overview">Design a network for a context <strong>YOU</strong> choose &mdash; your home, your school's lab, a business you'd start, an esports team spread across cities. Make it real to you.</p>
+      <div class="field-line">
+        <span class="box-label">My context</span>
+        <input type="text" class="line-input" id="design_context" autocomplete="off" placeholder="e.g. my home, my esports team across 3 cities, a coffee shop I'd open...">
+      </div>
+      <div class="draw-box" style="margin-top:6px;">
+        <span class="box-label" style="color:var(--purple);">Draw your network</span>
+        <textarea id="network_design" placeholder="Devices with IP addresses, routers, and connections. Include REDUNDANCY (no single point of failure). Label where you'd use TCP vs UDP."></textarea>
+      </div>
+      <div class="prompt" style="margin-top:20px;">
+        <span class="plabel">What did you optimize for (speed / reliability / cost)?</span>
+        <textarea class="write-box" id="design_optimize" rows="3"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">What did you trade away?</span>
+        <textarea class="write-box" id="design_tradeoff" rows="3"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">Where did you choose TCP vs UDP, and why?</span>
+        <textarea class="write-box" id="design_protocols" rows="3"></textarea>
+      </div>
+    </section>
+
+    <!-- 8. REFLECTION -->
+    <section class="card">
+      <div class="card-eyebrow">Reflection</div>
+      <h2>What Do You See Differently?</h2>
+      <div class="prompt">
+        <span class="plabel">Now that you understand how the Internet is engineered for reliability, what's one system in your own life (home WiFi, your phone's connection, a game you play) you understand differently &mdash; and what would you change about it?</span>
+        <textarea class="write-box" id="reflection" rows="4"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">Take it home <span class="mono">Beyond the classroom</span></span>
+        <span class="phint">At home: diagram your actual network (devices &rarr; router &rarr; ISP) and find its single point of failure. Optionally run a <span class="code">traceroute</span> / <span class="code">tracert</span> to a favorite site and note how many hops it takes.</span>
+        <textarea class="write-box" id="home_investigation" rows="4"></textarea>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="footer">masterpiece labs &middot; Week 1 &middot; Building a Reliable Network</div>
+
+</div>
+
+<script>
+(function () {
+  var STORAGE_PREFIX = 'foti_w1_hs_worksheet:';
+  var indicator = document.getElementById('saveIndicator');
+  var indicatorTimer = null;
+
+  function textFields() {
+    return document.querySelectorAll('input[id]:not([type=checkbox]), textarea[id]');
+  }
+  function checkFields() {
+    return document.querySelectorAll('input[type=checkbox][id]');
+  }
+
+  function showSaved() {
+    if (!indicator) return;
+    indicator.classList.add('show');
+    if (indicatorTimer) clearTimeout(indicatorTimer);
+    indicatorTimer = setTimeout(function () {
+      indicator.classList.remove('show');
+    }, 1200);
+  }
+
+  function saveText(el) {
+    try {
+      localStorage.setItem(STORAGE_PREFIX + el.id, el.value);
+      showSaved();
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function saveCheck(el) {
+    try {
+      localStorage.setItem(STORAGE_PREFIX + el.id, el.checked ? '1' : '0');
+      showSaved();
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function restore() {
+    try {
+      textFields().forEach(function (el) {
+        var v = localStorage.getItem(STORAGE_PREFIX + el.id);
+        if (v !== null) {
+          el.value = v;
+          autoGrow(el);
+        }
+      });
+      checkFields().forEach(function (el) {
+        var v = localStorage.getItem(STORAGE_PREFIX + el.id);
+        if (v !== null) el.checked = (v === '1');
+      });
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function autoGrow(el) {
+    if (el.tagName.toLowerCase() !== 'textarea') return;
+    el.style.height = 'auto';
+    el.style.height = (el.scrollHeight) + 'px';
+  }
+
+  function init() {
+    textFields().forEach(function (el) {
+      el.addEventListener('input', function () {
+        autoGrow(el);
+        saveText(el);
+      });
+    });
+    checkFields().forEach(function (el) {
+      el.addEventListener('change', function () {
+        saveCheck(el);
+      });
+    });
+    restore();
+  }
+
+  window.clearAnswers = function () {
+    if (!window.confirm('Clear all your answers on this worksheet? This cannot be undone.')) return;
+    try {
+      textFields().forEach(function (el) {
+        localStorage.removeItem(STORAGE_PREFIX + el.id);
+        el.value = '';
+        autoGrow(el);
+      });
+      checkFields().forEach(function (el) {
+        localStorage.removeItem(STORAGE_PREFIX + el.id);
+        el.checked = false;
+      });
+      showSaved();
+    } catch (e) { /* storage unavailable */ }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>

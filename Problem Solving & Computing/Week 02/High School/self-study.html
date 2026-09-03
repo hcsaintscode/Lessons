@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 2 Self-Study — What Is a Computer? (High School)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #2d1b69;
+    --purple-light: #3d2b7a;
+    --purple-lighter: #f4f0ff;
+    --teal: #2bb5a0;
+    --teal-light: #e6f9f6;
+    --coral: #e8553d;
+    --coral-light: #fef0ed;
+    --sand: #f5f0e8;
+    --olive: #7a8450;
+    --olive-light: #f0f2e6;
+    --text: #1a1a2e;
+    --text-light: #555;
+    --border: #e0e0e0;
+    --bg: #fafafa;
+    --white: #ffffff;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+
+  /* ─── STICKY NAV ─── */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: var(--purple);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1000;
+    box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+  }
+  .nav-brand {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.5px;
+  }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.95);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .nav-progress-track {
+    width: 120px; height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px; overflow: hidden;
+  }
+  .nav-progress-fill {
+    height: 100%; width: 0%;
+    background: var(--teal);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+  }
+  .nav-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.85);
+    white-space: nowrap;
+  }
+
+  /* ─── SPLIT LAYOUT ─── */
+  .split {
+    display: flex;
+    height: 100vh;
+    padding-top: 60px;
+  }
+  .left-panel {
+    width: 46%;
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+    background: var(--bg);
+  }
+  .right-panel {
+    width: 54%;
+    height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    background: #16132b;
+    position: sticky;
+    top: 60px;
+  }
+  .right-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: #201a3d;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .right-header .rh-label {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  .right-header .rh-sub { font-size: 0.62rem; color: rgba(255,255,255,0.4); font-weight: 400; }
+  .right-body { flex: 1; position: relative; }
+  #editorFrame { width: 100%; height: 100%; border: 0; }
+  .editor-fallback {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.85rem;
+    padding: 24px;
+    text-align: center;
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+  }
+  .editor-fallback a { color: var(--teal); }
+
+  /* ─── LESSON CONTENT ─── */
+  .hero {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    padding: 40px 36px 34px;
+    color: white;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 2.1rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+  .hero-sub { font-size: 0.98rem; opacity: 0.85; }
+
+  .content { padding: 0 36px 60px; }
+
+  section.block {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section.block:last-of-type { border-bottom: none; }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+  section.block h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: var(--purple);
+    margin-bottom: 10px;
+  }
+  section.block p { font-size: 0.95rem; margin: 10px 0; }
+  section.block p.muted { color: var(--text-light); font-size: 0.9rem; }
+
+  .examples { list-style: none; padding: 0; margin: 12px 0; }
+  .examples li { padding: 6px 0 6px 22px; position: relative; font-size: 0.92rem; }
+  .examples li::before { content: '→'; position: absolute; left: 0; color: var(--teal); font-weight: 700; }
+
+  /* IOSP step blocks */
+  .step { border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 12px 0; }
+  .step h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 5px;
+  }
+  .step .tag {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 1rem;
+  }
+  .step p { font-size: 0.9rem; margin: 4px 0 0; }
+  .step.input   { background: var(--teal-light);   border-left: 4px solid var(--teal); }
+  .step.input h3 { color: var(--teal); }
+  .step.process { background: var(--purple-lighter); border-left: 4px solid var(--purple); }
+  .step.process h3 { color: var(--purple); }
+  .step.output  { background: var(--coral-light);  border-left: 4px solid var(--coral); }
+  .step.output h3 { color: var(--coral); }
+  .step.storage { background: var(--olive-light);  border-left: 4px solid var(--olive); }
+  .step.storage h3 { color: var(--olive); }
+
+  .callout {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    color: white; border-radius: 10px; padding: 18px 22px; margin: 18px 0;
+  }
+  .callout::before {
+    content: 'THE PATTERN';
+    display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; font-weight: 600; letter-spacing: 1.5px;
+    opacity: 0.85; margin-bottom: 6px;
+  }
+  .callout p { color: white; font-size: 0.92rem; margin: 0; }
+
+  /* code */
+  code.ci {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem; background: var(--purple-lighter);
+    border: 1px solid #ddd4f5; border-radius: 5px;
+    padding: 1px 6px; color: var(--purple);
+  }
+  pre.cb {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; line-height: 1.6;
+    background: #1f1a3a; color: #d7c9ff;
+    border-left: 3px solid var(--teal);
+    border-radius: 8px; padding: 14px 16px;
+    overflow-x: auto; white-space: pre; margin: 8px 0 6px;
+    tab-size: 2;
+  }
+  .code-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--teal); font-weight: 500; margin: 14px 0 3px;
+  }
+
+  /* video buttons */
+  .video-btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: var(--coral); color: white; text-decoration: none;
+    font-weight: 600; font-size: 0.92rem; padding: 12px 20px;
+    border-radius: 9px; margin: 6px 8px 6px 0;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 4px 12px rgba(232, 85, 61, 0.28);
+  }
+  .video-btn:hover { transform: translateY(-2px); }
+
+  /* fields */
+  .field { margin: 14px 0; }
+  .field label {
+    display: block; font-size: 0.88rem; font-weight: 600;
+    color: var(--purple); margin-bottom: 6px;
+  }
+  .field label .hint {
+    display: block; font-weight: 400; font-size: 0.82rem;
+    color: var(--text-light); font-style: italic; margin-top: 2px;
+  }
+  textarea, input.text-line {
+    width: 100%; font-family: 'Inter', sans-serif; font-size: 0.92rem;
+    color: var(--text); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 10px 12px; background: #fcfcfd;
+    resize: vertical; transition: border-color 0.2s ease;
+  }
+  textarea { min-height: 74px; line-height: 1.55; }
+  textarea:focus, input.text-line:focus { outline: none; border-color: var(--teal); background: var(--white); }
+
+  .tag-chip {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px;
+    margin-right: 8px; vertical-align: middle;
+  }
+  .tag-chip.input { background: var(--teal-light); color: var(--teal); }
+  .tag-chip.process { background: var(--purple-lighter); color: var(--purple); }
+  .tag-chip.output { background: var(--coral-light); color: var(--coral); }
+  .tag-chip.storage { background: var(--olive-light); color: var(--olive); }
+
+  /* checkbox step */
+  .step-check {
+    display: flex; align-items: flex-start; gap: 11px;
+    background: var(--sand); border-radius: 10px; padding: 14px 18px;
+    margin: 18px 0 6px; cursor: pointer; border: 1.5px solid transparent;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .step-check:hover { border-color: var(--teal); }
+  .step-check input { width: 21px; height: 21px; margin-top: 1px; accent-color: var(--teal); cursor: pointer; flex-shrink: 0; }
+  .step-check span { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+  .step-check.done { background: var(--teal-light); border-color: var(--teal); }
+
+  /* details */
+  details.check {
+    background: var(--olive-light); border: 2px solid var(--olive);
+    border-radius: 10px; padding: 2px; margin: 18px 0;
+  }
+  details.check summary {
+    cursor: pointer; list-style: none; padding: 14px 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.76rem;
+    font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--olive); display: flex; align-items: center; gap: 9px;
+  }
+  details.check summary::-webkit-details-marker { display: none; }
+  details.check summary::before { content: '▸'; transition: transform 0.2s ease; }
+  details.check[open] summary::before { transform: rotate(90deg); }
+  details.check .reveal { padding: 0 18px 18px; }
+  details.check .reveal p { font-size: 0.9rem; line-height: 1.6; }
+
+  /* completion */
+  .completion {
+    display: none;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--purple) 100%);
+    color: white; border-radius: 12px; padding: 26px 30px; margin: 24px 0; text-align: center;
+  }
+  .completion.show { display: block; animation: pop 0.5s ease; }
+  @keyframes pop { 0% { transform: scale(0.96); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .completion h2 { font-family: 'Playfair Display', serif; font-style: italic; color: white; font-size: 1.5rem; margin-bottom: 6px; }
+  .completion p { color: rgba(255,255,255,0.9); margin: 0; font-size: 0.92rem; }
+
+  /* saved + reset */
+  .saved-indicator {
+    position: fixed; bottom: 20px; left: 20px;
+    background: var(--teal); color: white;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; font-weight: 500;
+    padding: 9px 16px; border-radius: 22px;
+    box-shadow: 0 4px 14px rgba(43, 181, 160, 0.4);
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; z-index: 1001;
+  }
+  .saved-indicator.show { opacity: 1; transform: translateY(0); }
+  .reset-row { text-align: center; margin: 24px 0 12px; }
+  .reset-btn {
+    font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500;
+    color: var(--coral); background: transparent; border: 1.5px solid var(--coral);
+    border-radius: 8px; padding: 9px 18px; cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .reset-btn:hover { background: var(--coral); color: white; }
+
+  /* mobile toggle button (hidden on desktop) */
+  .mobile-toggle {
+    display: none;
+    position: fixed; bottom: 18px; right: 18px; z-index: 1002;
+    background: var(--purple); color: white; border: none;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem;
+    padding: 12px 20px; border-radius: 24px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(45, 27, 105, 0.4);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 860px) {
+    .split { flex-direction: column; height: auto; }
+    .left-panel, .right-panel { width: 100%; }
+    .left-panel { height: auto; overflow: visible; }
+    .right-panel {
+      position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+      height: auto; width: 100%; z-index: 900;
+      transform: translateX(100%); transition: transform 0.3s ease;
+    }
+    .right-panel.mobile-show { transform: translateX(0); }
+    .left-panel.mobile-hide { display: none; }
+    .mobile-toggle { display: block; }
+    .nav-progress-track { width: 70px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <span class="nav-brand">masterpiece labs</span>
+  <div class="nav-right">
+    <span class="nav-badge">SELF-STUDY · WEEK 02 · HS</span>
+    <div class="nav-progress-track"><div class="nav-progress-fill" id="progressFill"></div></div>
+    <span class="nav-progress-label" id="progressLabel">0 / 6</span>
+  </div>
+</nav>
+
+<div class="split">
+
+  <!-- ═══════════ LEFT: LESSON ═══════════ -->
+  <div class="left-panel" id="lessonPanel">
+
+    <header class="hero">
+      <div class="hero-eyebrow">Self-Study · Problem Solving &amp; Computing</div>
+      <h1>What Is a Computer?</h1>
+      <p class="hero-sub">Learn the IOSP model — then build a real, working app in the editor on the right.</p>
+    </header>
+
+    <div class="content">
+
+      <!-- 1. HOW THIS WORKS -->
+      <section class="block">
+        <div class="kicker">Start Here</div>
+        <h2>How This Works</h2>
+        <p>This week you learn what every computer does — and then you <strong>build a working app</strong> in the live editor to your right. No installs, no setup: the code is already running.</p>
+        <ul class="examples">
+          <li><strong>Read</strong> the lesson on the left; <strong>edit code</strong> on the right.</li>
+          <li>The editor updates live as you type — change something and watch the preview.</li>
+          <li>Your written answers save automatically. Check off each milestone to fill the progress bar.</li>
+        </ul>
+        <p class="muted">On a tablet or phone? Use the <strong>Switch to Editor</strong> button (bottom-right) to flip between the lesson and the code.</p>
+        <label class="step-check" data-check="ready">
+          <input type="checkbox" id="chk-ready">
+          <span>I'm ready to start</span>
+        </label>
+      </section>
+
+      <!-- 2. WHAT IS A COMPUTER -->
+      <section class="block">
+        <div class="kicker">Lesson 1</div>
+        <h2>A Programmable Machine</h2>
+        <p>A computer is a <strong>programmable machine that processes information</strong>. A calculator only calculates; a typewriter only types. A computer is different because it can be <em>reprogrammed</em> to do almost any job you can describe precisely.</p>
+        <p>And no matter the job, every program has the same shape — four parts we call <strong>IOSP</strong>.</p>
+      </section>
+
+      <!-- 3. IOSP -->
+      <section class="block">
+        <div class="kicker">Lesson 2</div>
+        <h2>IOSP — The Shape of Every Program</h2>
+        <div class="step input">
+          <h3>Input <span class="tag">— data in</span></h3>
+          <p>Data that flows into the system: form fields, sensors, files, or another program.</p>
+        </div>
+        <div class="step process">
+          <h3>Processing <span class="tag">— transform it</span></h3>
+          <p>The work that turns input into output. This is where the problem actually gets solved.</p>
+        </div>
+        <div class="step output">
+          <h3>Output <span class="tag">— results out</span></h3>
+          <p>The results the system produces: text on screen, a rendered list, a sound, a file.</p>
+        </div>
+        <div class="step storage">
+          <h3>Storage <span class="tag">— remember it</span></h3>
+          <p>Data the system keeps between runs: settings, history, saved progress.</p>
+        </div>
+        <div class="callout">
+          <p>Input → Processing (+ Storage) → Output. Model a problem in these four parts and you've written your code outline. That's what you'll do next.</p>
+        </div>
+        <label class="step-check" data-check="iosp">
+          <input type="checkbox" id="chk-iosp">
+          <span>I can explain IOSP</span>
+        </label>
+      </section>
+
+      <!-- 4. FOUR KINDS OF PROCESSING -->
+      <section class="block">
+        <div class="kicker">Lesson 3</div>
+        <h2>Processing, in Code</h2>
+        <p>"Processing" is built from four simple moves — and each maps straight to JavaScript:</p>
+        <ul class="examples">
+          <li><strong>If / Then</strong> &nbsp;<code class="ci">if (age &gt;= 13) { show(); }</code></li>
+          <li><strong>Comparing</strong> &nbsp;<code class="ci">if (score &gt; best) { best = score; }</code></li>
+          <li><strong>Finding a Match</strong> &nbsp;<code class="ci">list.find(x =&gt; x === target)</code></li>
+          <li><strong>Counting</strong> &nbsp;<code class="ci">count = count + 1;</code></li>
+        </ul>
+        <p class="muted">The app in your editor uses <strong>If/Then</strong> and <strong>Comparing</strong> to pick a study break. Find those lines in <code class="ci">index.js</code>.</p>
+      </section>
+
+      <!-- 5. WATCH -->
+      <section class="block">
+        <div class="kicker">Watch</div>
+        <h2>See It in Action</h2>
+        <p>Two short videos on what's really happening inside the machines you use. Watch for the four IOSP parts.</p>
+        <div>
+          <a class="video-btn" href="https://youtu.be/Qa64pdWtBqA" target="_blank" rel="noopener">▶ Hardware &amp; Software</a>
+          <a class="video-btn" href="https://youtu.be/mCq8-xTH7jA" target="_blank" rel="noopener">▶ What Makes a Computer?</a>
+        </div>
+        <div class="field">
+          <label for="ta-video">Analyze one system you use:
+            <span class="hint">Name its Input, Processing (which of the four kinds?), Storage, and Output.</span>
+          </label>
+          <textarea id="ta-video" placeholder="Type your analysis — it saves automatically."></textarea>
+        </div>
+        <label class="step-check" data-check="watched">
+          <input type="checkbox" id="chk-watched">
+          <span>I watched and analyzed a real system</span>
+        </label>
+      </section>
+
+      <!-- 6. RUN IT -->
+      <section class="block">
+        <div class="kicker">Try It · Part 1</div>
+        <h2>Run the Study Break Picker</h2>
+        <p>The editor on the right is already running a small, complete app: the <strong>Study Break Picker</strong>. It reads two dropdowns (INPUT), decides on a suggestion with if/then + comparing (PROCESSING), and writes it to the page (OUTPUT).</p>
+        <p>In the preview pane, choose a time and energy level, then click <strong>Pick my break</strong>. Try a few combinations.</p>
+        <div class="field">
+          <label for="ta-trace">Trace the IOSP:
+            <span class="hint">In this app, what exactly is the Input, the Processing, and the Output? (Look at index.js.)</span>
+          </label>
+          <textarea id="ta-trace" placeholder="Input = ... / Processing = ... / Output = ..."></textarea>
+        </div>
+        <label class="step-check" data-check="ran">
+          <input type="checkbox" id="chk-ran">
+          <span>I ran the app and traced its IOSP</span>
+        </label>
+      </section>
+
+      <!-- 7. MODIFY IT -->
+      <section class="block">
+        <div class="kicker">Try It · Part 2</div>
+        <h2>Make It Yours</h2>
+        <p>Now change the code on the right. Start small — each of these is a real edit developers make every day:</p>
+        <ul class="examples">
+          <li><strong>Change an output:</strong> edit one of the suggestion strings in <code class="ci">index.js</code>.</li>
+          <li><strong>Add an input option:</strong> add <code class="ci">&lt;option value="60"&gt;60 minutes&lt;/option&gt;</code> to the time dropdown in <code class="ci">index.html</code>.</li>
+          <li><strong>Add processing:</strong> add another <code class="ci">else if</code> branch for your new option.</li>
+        </ul>
+        <details class="check">
+          <summary>Stuck? See an example edit</summary>
+          <div class="reveal">
+            <p>Add a 60-minute option in <code class="ci">index.html</code>:</p>
+            <pre class="cb">&lt;option value="60"&gt;60 minutes&lt;/option&gt;</pre>
+            <p>Then handle it in <code class="ci">index.js</code> — put this as the first branch inside the click handler:</p>
+            <pre class="cb">if (energy === "high" &amp;&amp; minutes &gt;= 60) {
+  idea = "Take a proper workout break.";
+} else if (energy === "high" &amp;&amp; minutes &gt;= 30) {
+  idea = "Go for a walk outside.";
+}</pre>
+            <p>Save, then pick 60 minutes + High energy in the preview to see your new branch run.</p>
+          </div>
+        </details>
+        <label class="step-check" data-check="modified">
+          <input type="checkbox" id="chk-modified">
+          <span>I changed the app and saw it update</span>
+        </label>
+      </section>
+
+      <!-- 8. BUILD YOUR OWN -->
+      <section class="block">
+        <div class="kicker">Build</div>
+        <h2>Design &amp; Build Your Own</h2>
+        <p>Turn the picker into <em>your</em> app. Plan it as IOSP first, then edit the code to match. Keep scope small: a few inputs, one processing step, one clear output.</p>
+        <div class="field">
+          <label for="ta-app-name"><span class="tag-chip process">App</span> Name + one sentence on what it does</label>
+          <input type="text" class="text-line" id="ta-app-name" placeholder="e.g. Snack Picker — suggests a snack based on time and mood">
+        </div>
+        <div class="field">
+          <label for="ta-plan-input"><span class="tag-chip input">Input</span> What will the user choose or type? (which HTML inputs?)</label>
+          <textarea id="ta-plan-input" placeholder="e.g. two dropdowns: mood, time of day"></textarea>
+        </div>
+        <div class="field">
+          <label for="ta-plan-process"><span class="tag-chip process">Processing</span> What decides the output? (which of the four kinds?)</label>
+          <textarea id="ta-plan-process" placeholder="e.g. if/then on mood + comparing time"></textarea>
+        </div>
+        <div class="field">
+          <label for="ta-plan-output"><span class="tag-chip output">Output</span> What does the app show?</label>
+          <textarea id="ta-plan-output" placeholder="e.g. a snack suggestion in #result"></textarea>
+        </div>
+        <p class="muted">Now make those changes in the editor. Rename the headings, swap the dropdown options, and rewrite the if/then logic to fit your app.</p>
+        <label class="step-check" data-check="built">
+          <input type="checkbox" id="chk-built">
+          <span>I built my own working app</span>
+        </label>
+      </section>
+
+      <!-- 9. STRETCH: STORAGE -->
+      <section class="block">
+        <div class="kicker">Stretch · Storage</div>
+        <h2>Remember the Last Result</h2>
+        <p>Right now the app forgets everything when it reloads — it has no <strong>Storage</strong>. Add two lines to give it memory using <code class="ci">localStorage</code>.</p>
+        <div class="code-caption">save the result (end of the click handler)</div>
+        <pre class="cb">localStorage.setItem("lastIdea", idea);</pre>
+        <div class="code-caption">show it again on load (top of index.js)</div>
+        <pre class="cb">document.getElementById("result").textContent =
+  localStorage.getItem("lastIdea") || "";</pre>
+        <p class="muted">Now reload the preview — your last suggestion is still there. That's the S in IOSP.</p>
+        <label class="step-check" data-check="storage">
+          <input type="checkbox" id="chk-storage">
+          <span>(Stretch) I added storage</span>
+        </label>
+      </section>
+
+      <!-- COMPLETION -->
+      <div class="completion" id="completion" role="status">
+        <h2>Week 2 complete. You built a working app! 🎉</h2>
+        <p>You turned an IOSP model into running code — input, processing, output, and even storage. That's exactly what programming is, and it's where the next phase of the course begins.</p>
+      </div>
+
+      <!-- WRAP-UP -->
+      <section class="block">
+        <div class="kicker">Wrap-Up</div>
+        <h2>The Big Idea</h2>
+        <p><strong>Model a problem as IOSP and it becomes buildable.</strong> Input, Processing, Storage, Output isn't just how you describe a computer — it's the outline of every app you'll ever write. You just proved it by shipping one.</p>
+        <p class="muted"><strong>Next, in the Programming phase,</strong> you'll go deeper into JavaScript and build bigger projects from exactly this foundation.</p>
+      </section>
+
+      <div class="reset-row">
+        <button class="reset-btn" id="resetBtn" type="button">Reset this lesson</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════ RIGHT: EDITOR ═══════════ -->
+  <div class="right-panel" id="editorPanel">
+    <div class="right-header">
+      <span class="rh-label">Live Code Editor</span>
+      <span class="rh-sub">powered by StackBlitz</span>
+    </div>
+    <div class="right-body">
+      <div id="editorFrame">
+        <div class="editor-fallback">
+          Loading the code editor…<br><br>
+          If it doesn't appear, make sure you're online, or
+          <a href="https://stackblitz.com/fork/js" target="_blank" rel="noopener">open a blank JavaScript project on StackBlitz</a>
+          and paste the Study Break Picker code from your worksheet.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- mobile flip button -->
+<button class="mobile-toggle" id="mobileToggle" type="button">Switch to Editor</button>
+
+<!-- saved indicator -->
+<div class="saved-indicator" id="savedIndicator">Saved ✓</div>
+
+<script src="https://unpkg.com/@stackblitz/sdk/bundles/sdk.umd.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_PREFIX = 'ps-week2-selfstudy-high:';
+
+  var TEXT_IDS = [
+    'ta-video', 'ta-trace',
+    'ta-app-name', 'ta-plan-input', 'ta-plan-process', 'ta-plan-output'
+  ];
+  var CHECK_IDS = [
+    'chk-ready', 'chk-iosp', 'chk-watched', 'chk-ran', 'chk-modified', 'chk-built'
+  ];
+  // chk-storage is a stretch goal and is NOT counted toward the 6 required milestones
+  var TOTAL = CHECK_IDS.length;
+
+  var savedIndicator = document.getElementById('savedIndicator');
+  var savedTimer = null;
+
+  function save(k, v) { try { localStorage.setItem(STORAGE_PREFIX + k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(STORAGE_PREFIX + k); } catch (e) { return null; } }
+  function remove(k) { try { localStorage.removeItem(STORAGE_PREFIX + k); } catch (e) {} }
+
+  function flashSaved() {
+    if (!savedIndicator) return;
+    savedIndicator.classList.add('show');
+    if (savedTimer) clearTimeout(savedTimer);
+    savedTimer = setTimeout(function () { savedIndicator.classList.remove('show'); }, 1200);
+  }
+
+  function updateProgress() {
+    var done = 0;
+    CHECK_IDS.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.checked) done++;
+    });
+    var pct = TOTAL > 0 ? Math.round((done / TOTAL) * 100) : 0;
+    var fill = document.getElementById('progressFill');
+    var label = document.getElementById('progressLabel');
+    if (fill) fill.style.width = pct + '%';
+    if (label) label.textContent = done + ' / ' + TOTAL;
+    var completion = document.getElementById('completion');
+    if (completion) {
+      if (done === TOTAL && TOTAL > 0) completion.classList.add('show');
+      else completion.classList.remove('show');
+    }
+  }
+
+  // text fields
+  TEXT_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var stored = load(id);
+    if (stored !== null) el.value = stored;
+    el.addEventListener('input', function () { save(id, el.value); flashSaved(); });
+  });
+
+  // checkboxes (all, including stretch — persisted; only required ones count for progress)
+  var ALL_CHECKS = CHECK_IDS.concat(['chk-storage']);
+  ALL_CHECKS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var stored = load(id);
+    if (stored === 'true') el.checked = true;
+    var labelWrap = el.closest('.step-check');
+    function sync() { if (labelWrap) labelWrap.classList.toggle('done', el.checked); }
+    sync();
+    el.addEventListener('change', function () {
+      save(id, el.checked ? 'true' : 'false');
+      sync();
+      updateProgress();
+      flashSaved();
+    });
+  });
+
+  // reset
+  var resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function () {
+      if (!window.confirm('Reset this lesson? This clears your saved answers and checkmarks on this page. This cannot be undone.')) return;
+      TEXT_IDS.forEach(function (id) { remove(id); var el = document.getElementById(id); if (el) el.value = ''; });
+      ALL_CHECKS.forEach(function (id) {
+        remove(id);
+        var el = document.getElementById(id);
+        if (el) { el.checked = false; var w = el.closest('.step-check'); if (w) w.classList.remove('done'); }
+      });
+      updateProgress();
+      flashSaved();
+    });
+  }
+
+  // mobile toggle
+  var showingEditor = false;
+  var mobileToggle = document.getElementById('mobileToggle');
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', function () {
+      showingEditor = !showingEditor;
+      document.getElementById('lessonPanel').classList.toggle('mobile-hide', showingEditor);
+      document.getElementById('editorPanel').classList.toggle('mobile-show', showingEditor);
+      mobileToggle.textContent = showingEditor ? 'Switch to Lesson' : 'Switch to Editor';
+    });
+  }
+
+  updateProgress();
+
+  // ─── StackBlitz embed: Study Break Picker (input → processing → output) ───
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof StackBlitzSDK === 'undefined') return;
+    StackBlitzSDK.embedProject('editorFrame', {
+      title: 'Study Break Picker',
+      description: 'Week 2 — Input → Processing → Output in real JavaScript',
+      template: 'javascript',
+      files: {
+        'index.html': '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>Study Break Picker</title>\n  <style>\n    body { font-family: system-ui, sans-serif; max-width: 460px;\n           margin: 40px auto; padding: 0 16px; color: #1a1a2e; }\n    h1 { color: #2d1b69; }\n    label { display: block; margin: 14px 0 4px; font-weight: 600; }\n    select, button { font-size: 1rem; padding: 8px 10px; border-radius: 8px;\n                     border: 1.5px solid #ccc; }\n    button { background: #2bb5a0; color: #fff; border: none; cursor: pointer;\n             margin-top: 18px; padding: 10px 18px; }\n    #result { margin-top: 22px; font-size: 1.25rem; color: #e8553d;\n              font-weight: 600; min-height: 1.5em; }\n  </style>\n</head>\n<body>\n  <h1>Study Break Picker</h1>\n\n  <!-- INPUT: two dropdowns -->\n  <label for="time">How much time do you have?</label>\n  <select id="time">\n    <option value="5">5 minutes</option>\n    <option value="15">15 minutes</option>\n    <option value="30">30 minutes</option>\n  </select>\n\n  <label for="energy">Energy level?</label>\n  <select id="energy">\n    <option value="low">Low</option>\n    <option value="high">High</option>\n  </select>\n\n  <button id="go">Pick my break</button>\n\n  <!-- OUTPUT: the suggestion appears here -->\n  <p id="result"></p>\n\n  <script src="index.js"><\/script>\n</body>\n</html>',
+        'index.js': '// Study Break Picker\n// A tiny app that shows the shape of every program: INPUT -> PROCESSING -> OUTPUT\n\ndocument.getElementById("go").addEventListener("click", function () {\n  // 1) INPUT: read the two dropdowns when the button is clicked\n  var minutes = Number(document.getElementById("time").value);\n  var energy = document.getElementById("energy").value;\n\n  // 2) PROCESSING: if/then + comparing decide the suggestion\n  var idea;\n  if (energy === "high" && minutes >= 30) {\n    idea = "Go for a walk outside.";\n  } else if (energy === "high") {\n    idea = "Do 20 jumping jacks.";\n  } else if (minutes >= 15) {\n    idea = "Rest your eyes and stretch.";\n  } else {\n    idea = "Drink some water and take a breath.";\n  }\n\n  // 3) OUTPUT: write the result to the page\n  document.getElementById("result").textContent = idea;\n\n  // 4) STORAGE (stretch): uncomment to remember the last idea\n  // localStorage.setItem("lastIdea", idea);\n});\n\n// STORAGE (stretch): uncomment to show the last idea when the page loads\n// document.getElementById("result").textContent =\n//   localStorage.getItem("lastIdea") || "";\n'
+      }
+    }, {
+      openFile: 'index.js',
+      view: 'default',
+      hideDevTools: true,
+      height: '100%'
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
