@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 4 Self-Study — Functions &amp; a Real App: Putting It All Together (Middle School)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #2d1b69;
+    --purple-light: #3d2b7a;
+    --purple-lighter: #f4f0ff;
+    --teal: #2bb5a0;
+    --teal-light: #e6f9f6;
+    --coral: #e8553d;
+    --coral-light: #fef0ed;
+    --sand: #f5f0e8;
+    --olive: #7a8450;
+    --olive-light: #f0f2e6;
+    --text: #1a1a2e;
+    --text-light: #555;
+    --border: #e0e0e0;
+    --bg: #fafafa;
+    --white: #ffffff;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+
+  /* ─── STICKY NAV ─── */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: var(--purple);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1000;
+    box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+  }
+  .nav-brand {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.5px;
+  }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.95);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .nav-progress-track {
+    width: 120px; height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px; overflow: hidden;
+  }
+  .nav-progress-fill {
+    height: 100%; width: 0%;
+    background: var(--teal);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+  }
+  .nav-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.85);
+    white-space: nowrap;
+  }
+
+  /* ─── SPLIT LAYOUT ─── */
+  .split {
+    display: flex;
+    height: 100vh;
+    padding-top: 60px;
+  }
+  .left-panel {
+    width: 46%;
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+    background: var(--bg);
+  }
+  .right-panel {
+    width: 54%;
+    height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    background: #16132b;
+    position: sticky;
+    top: 60px;
+  }
+  .right-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: #201a3d;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .right-header .rh-label {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  .right-header .rh-sub { font-size: 0.62rem; color: rgba(255,255,255,0.4); font-weight: 400; }
+  .right-body { flex: 1; position: relative; }
+  #editorFrame { width: 100%; height: 100%; border: 0; }
+  .editor-fallback {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.85rem;
+    padding: 24px;
+    text-align: center;
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+  }
+  .editor-fallback a { color: var(--teal); }
+
+  /* ─── LESSON CONTENT ─── */
+  .hero {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    padding: 40px 36px 34px;
+    color: white;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 2.1rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+  .hero-sub { font-size: 0.98rem; opacity: 0.85; }
+
+  .content { padding: 0 36px 60px; }
+
+  section.block {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section.block:last-of-type { border-bottom: none; }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+  section.block h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: var(--purple);
+    margin-bottom: 10px;
+  }
+  section.block p { font-size: 0.95rem; margin: 10px 0; }
+  section.block p.muted { color: var(--text-light); font-size: 0.9rem; }
+
+  .examples { list-style: none; padding: 0; margin: 12px 0; }
+  .examples li { padding: 6px 0 6px 22px; position: relative; font-size: 0.92rem; }
+  .examples li::before { content: '→'; position: absolute; left: 0; color: var(--teal); font-weight: 700; }
+
+  /* IOSP step blocks */
+  .step { border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 12px 0; }
+  .step h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 5px;
+  }
+  .step .tag {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 1rem;
+  }
+  .step p { font-size: 0.9rem; margin: 4px 0 0; }
+  .step.input   { background: var(--teal-light);   border-left: 4px solid var(--teal); }
+  .step.input h3 { color: var(--teal); }
+  .step.process { background: var(--purple-lighter); border-left: 4px solid var(--purple); }
+  .step.process h3 { color: var(--purple); }
+  .step.output  { background: var(--coral-light);  border-left: 4px solid var(--coral); }
+  .step.output h3 { color: var(--coral); }
+  .step.storage { background: var(--olive-light);  border-left: 4px solid var(--olive); }
+  .step.storage h3 { color: var(--olive); }
+
+  /* capstone step variants (define / prepare / try) */
+  .step.define  { background: var(--teal-light);    border-left: 4px solid var(--teal); }
+  .step.define h3 { color: var(--teal); }
+  .step.prepare { background: var(--purple-lighter); border-left: 4px solid var(--purple); }
+  .step.prepare h3 { color: var(--purple); }
+  .step.try     { background: var(--coral-light);   border-left: 4px solid var(--coral); }
+  .step.try h3 { color: var(--coral); }
+
+  .callout {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    color: white; border-radius: 10px; padding: 18px 22px; margin: 18px 0;
+  }
+  .callout::before {
+    content: 'THE PATTERN';
+    display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; font-weight: 600; letter-spacing: 1.5px;
+    opacity: 0.85; margin-bottom: 6px;
+  }
+  .callout p { color: white; font-size: 0.92rem; margin: 0; }
+
+  /* code */
+  code.ci {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem; background: var(--purple-lighter);
+    border: 1px solid #ddd4f5; border-radius: 5px;
+    padding: 1px 6px; color: var(--purple);
+  }
+  pre.cb {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; line-height: 1.6;
+    background: #1f1a3a; color: #d7c9ff;
+    border-left: 3px solid var(--teal);
+    border-radius: 8px; padding: 14px 16px;
+    overflow-x: auto; white-space: pre; margin: 8px 0 6px;
+    tab-size: 2;
+  }
+  .code-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--teal); font-weight: 500; margin: 14px 0 3px;
+  }
+
+  /* video buttons */
+  .video-btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: var(--coral); color: white; text-decoration: none;
+    font-weight: 600; font-size: 0.92rem; padding: 12px 20px;
+    border-radius: 9px; margin: 6px 8px 6px 0;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 4px 12px rgba(232, 85, 61, 0.28);
+  }
+  .video-btn:hover { transform: translateY(-2px); }
+
+  /* fields */
+  .field { margin: 14px 0; }
+  .field label {
+    display: block; font-size: 0.88rem; font-weight: 600;
+    color: var(--purple); margin-bottom: 6px;
+  }
+  .field label .hint {
+    display: block; font-weight: 400; font-size: 0.82rem;
+    color: var(--text-light); font-style: italic; margin-top: 2px;
+  }
+  textarea, input.text-line {
+    width: 100%; font-family: 'Inter', sans-serif; font-size: 0.92rem;
+    color: var(--text); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 10px 12px; background: #fcfcfd;
+    resize: vertical; transition: border-color 0.2s ease;
+  }
+  textarea { min-height: 74px; line-height: 1.55; }
+  textarea:focus, input.text-line:focus { outline: none; border-color: var(--teal); background: var(--white); }
+
+  .tag-chip {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px;
+    margin-right: 8px; vertical-align: middle;
+  }
+  .tag-chip.input { background: var(--teal-light); color: var(--teal); }
+  .tag-chip.process { background: var(--purple-lighter); color: var(--purple); }
+  .tag-chip.output { background: var(--coral-light); color: var(--coral); }
+  .tag-chip.storage { background: var(--olive-light); color: var(--olive); }
+
+  /* checkbox step */
+  .step-check {
+    display: flex; align-items: flex-start; gap: 11px;
+    background: var(--sand); border-radius: 10px; padding: 14px 18px;
+    margin: 18px 0 6px; cursor: pointer; border: 1.5px solid transparent;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .step-check:hover { border-color: var(--teal); }
+  .step-check input { width: 21px; height: 21px; margin-top: 1px; accent-color: var(--teal); cursor: pointer; flex-shrink: 0; }
+  .step-check span { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+  .step-check.done { background: var(--teal-light); border-color: var(--teal); }
+
+  /* details */
+  details.check {
+    background: var(--olive-light); border: 2px solid var(--olive);
+    border-radius: 10px; padding: 2px; margin: 18px 0;
+  }
+  details.check summary {
+    cursor: pointer; list-style: none; padding: 14px 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.76rem;
+    font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--olive); display: flex; align-items: center; gap: 9px;
+  }
+  details.check summary::-webkit-details-marker { display: none; }
+  details.check summary::before { content: '▸'; transition: transform 0.2s ease; }
+  details.check[open] summary::before { transform: rotate(90deg); }
+  details.check .reveal { padding: 0 18px 18px; }
+  details.check .reveal p { font-size: 0.9rem; line-height: 1.6; }
+
+  /* completion */
+  .completion {
+    display: none;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--purple) 100%);
+    color: white; border-radius: 12px; padding: 26px 30px; margin: 24px 0; text-align: center;
+  }
+  .completion.show { display: block; animation: pop 0.5s ease; }
+  @keyframes pop { 0% { transform: scale(0.96); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .completion h2 { font-family: 'Playfair Display', serif; font-style: italic; color: white; font-size: 1.5rem; margin-bottom: 6px; }
+  .completion p { color: rgba(255,255,255,0.9); margin: 0; font-size: 0.92rem; }
+
+  /* saved + reset */
+  .saved-indicator {
+    position: fixed; bottom: 20px; left: 20px;
+    background: var(--teal); color: white;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; font-weight: 500;
+    padding: 9px 16px; border-radius: 22px;
+    box-shadow: 0 4px 14px rgba(43, 181, 160, 0.4);
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; z-index: 1001;
+  }
+  .saved-indicator.show { opacity: 1; transform: translateY(0); }
+  .reset-row { text-align: center; margin: 24px 0 12px; }
+  .reset-btn {
+    font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500;
+    color: var(--coral); background: transparent; border: 1.5px solid var(--coral);
+    border-radius: 8px; padding: 9px 18px; cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .reset-btn:hover { background: var(--coral); color: white; }
+
+  /* mobile toggle button (hidden on desktop) */
+  .mobile-toggle {
+    display: none;
+    position: fixed; bottom: 18px; right: 18px; z-index: 1002;
+    background: var(--purple); color: white; border: none;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem;
+    padding: 12px 20px; border-radius: 24px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(45, 27, 105, 0.4);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 860px) {
+    .split { flex-direction: column; height: auto; }
+    .left-panel, .right-panel { width: 100%; }
+    .left-panel { height: auto; overflow: visible; }
+    .right-panel {
+      position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+      height: auto; width: 100%; z-index: 900;
+      transform: translateX(100%); transition: transform 0.3s ease;
+    }
+    .right-panel.mobile-show { transform: translateX(0); }
+    .left-panel.mobile-hide { display: none; }
+    .mobile-toggle { display: block; }
+    .nav-progress-track { width: 70px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <span class="nav-brand">masterpiece labs</span>
+  <div class="nav-right">
+    <span class="nav-badge">SELF-STUDY · WEEK 04</span>
+    <div class="nav-progress-track"><div class="nav-progress-fill" id="progressFill"></div></div>
+    <span class="nav-progress-label" id="progressLabel">0 / 6</span>
+  </div>
+</nav>
+
+<div class="split">
+
+  <!-- ═══════════ LEFT: LESSON ═══════════ -->
+  <div class="left-panel" id="lessonPanel">
+
+    <header class="hero">
+      <div class="hero-eyebrow">Self-Study · Programming in App Lab</div>
+      <h1>Functions &amp; a Real App</h1>
+      <p class="hero-sub">Package code into functions, build a real app — and see how it connects to AI builders.</p>
+    </header>
+
+    <div class="content">
+
+      <!-- 1. HOW THIS WORKS -->
+      <section class="block">
+        <div class="kicker">Start Here</div>
+        <h2>How This Works</h2>
+        <p>This is the <strong>capstone</strong> — the week everything you've learned comes together into a real, working app. You'll <strong>read the lesson on the left</strong> and <strong>run and edit code on the right</strong>, no installs and no logins: the code is already running.</p>
+        <ul class="examples">
+          <li><strong>Read</strong> the lesson on the left; <strong>run and edit code</strong> on the right.</li>
+          <li>The editor updates live — change something, refresh the preview, and see what happens.</li>
+          <li>Your written answers save automatically. Check off each milestone to fill the progress bar.</li>
+        </ul>
+        <p class="muted">In class you'll build this in <strong>App Lab</strong>. Here you use a simple code editor to learn the exact same idea, so you're never stuck waiting on a login.</p>
+        <p class="muted">On a tablet or phone? Use the <strong>Switch to Editor</strong> button (bottom-right) to flip between the lesson and the code.</p>
+        <label class="step-check" data-check="ready">
+          <input type="checkbox" id="chk-ready">
+          <span>I'm ready to start</span>
+        </label>
+      </section>
+
+      <!-- 2. FUNCTIONS ARE REUSABLE RECIPES -->
+      <section class="block">
+        <div class="kicker">Lesson 1</div>
+        <h2>Functions Are Reusable Recipes</h2>
+        <p>A <strong>function</strong> is a named recipe for a job. You <strong>define it once</strong>, then <strong>call it by name</strong> anytime you need that job done — even a hundred times. Without functions, you'd copy the same steps over and over; with them, you write the steps in <em>one</em> place.</p>
+        <p>That means <strong>less repeated code</strong>, and when something needs to change, there's <strong>one place to fix</strong> instead of ten. Fix the recipe, and every call to it gets the fix for free.</p>
+        <div class="step define">
+          <h3>Define <span class="tag">— write the recipe once</span></h3>
+          <p><code class="ci">function sayHi() { ... }</code> creates the recipe. It doesn't run yet — it's just written down, ready to use.</p>
+        </div>
+        <div class="step prepare">
+          <h3>Call It <span class="tag">— run it by name</span></h3>
+          <p><code class="ci">sayHi();</code> runs the recipe. The <code class="ci">()</code> means "do it now."</p>
+        </div>
+        <div class="step try">
+          <h3>Reuse <span class="tag">— use it anywhere</span></h3>
+          <p>Call the same function from a button click, another function, or ten different spots — one recipe, used everywhere.</p>
+        </div>
+        <div class="code-caption">Define once, call by name</div>
+        <pre class="cb">function sayHi() {
+  console.log("Hi there!");
+}
+
+sayHi();   // runs the recipe
+sayHi();   // runs it again — no copy-paste needed</pre>
+        <p>Define the steps once inside the function; then each <code class="ci">sayHi()</code> re-runs them. Change the message in one place and every call updates.</p>
+        <label class="step-check" data-check="function">
+          <input type="checkbox" id="chk-function">
+          <span>I understand functions</span>
+        </label>
+      </section>
+
+      <!-- 3. EVERYTHING TOGETHER -->
+      <section class="block">
+        <div class="kicker">Lesson 2</div>
+        <h2>Everything Together</h2>
+        <p>Look at everything you've built up over this unit — each piece does one job, and together they make a real app:</p>
+        <ul class="examples">
+          <li><strong>Events</strong> let the app <em>react</em> — a click, a tap, a keypress.</li>
+          <li><strong>Variables</strong> let it <em>remember</em> — a name, a score, a count.</li>
+          <li><strong>Conditionals</strong> let it <em>decide</em> — if this, then that.</li>
+          <li><strong>Functions</strong> let it <em>reuse</em> — package a job and call it anytime.</li>
+        </ul>
+        <p>Put them together and you don't have four separate ideas anymore — you have <strong>a real app</strong>. That's the whole point of the capstone.</p>
+        <div class="callout">
+          <p>The Lucky Color app on the right uses an <strong>event</strong>, a <strong>function</strong>, and a <strong>variable</strong> — all at once.</p>
+        </div>
+        <label class="step-check" data-check="together">
+          <input type="checkbox" id="chk-together">
+          <span>I see how it all connects</span>
+        </label>
+      </section>
+
+      <!-- 4. RUN IT -->
+      <section class="block">
+        <div class="kicker">Run It</div>
+        <h2>Run the Lucky Color App</h2>
+        <p>The editor on the right is running the <strong>Lucky Color</strong> app. Click the <strong>Get Lucky Color</strong> button and three things happen at once: an <strong>event</strong> fires the click, a <strong>function</strong> picks a random color, and the app <strong>paints the box</strong> that color, <strong>shows its name</strong>, and bumps a <strong>counter</strong> up by one.</p>
+        <p>Click <strong>Run</strong> (or refresh the preview), then <strong>click the button several times</strong> and watch the color, the name, and the count change.</p>
+        <div class="field">
+          <label for="ta-trace">Trace the app:
+            <span class="hint">Click the button several times. What does the function do each time? Where's the event, the function, and the variable?</span>
+          </label>
+          <textarea id="ta-trace" placeholder="Type your answer — it saves automatically."></textarea>
+        </div>
+        <label class="step-check" data-check="ran">
+          <input type="checkbox" id="chk-ran">
+          <span>I ran the app</span>
+        </label>
+      </section>
+
+      <!-- 5. MODIFY IT -->
+      <section class="block">
+        <div class="kicker">Make It Yours</div>
+        <h2>Make It Yours</h2>
+        <p>Now make the Lucky Color app <em>yours</em>. You decide the colors it can pick and how it looks:</p>
+        <ul class="examples">
+          <li><strong>Add your own color:</strong> add a new <code class="ci">{ name: "...", value: "..." }</code> to the <code class="ci">colors</code> list the function picks from.</li>
+          <li><strong>Change the button label:</strong> edit the text inside the <code class="ci">&lt;button&gt;</code> in <code class="ci">index.html</code>.</li>
+          <li><strong>Stretch:</strong> add a SECOND button that resets the counter back to <code class="ci">0</code>.</li>
+        </ul>
+        <details class="check">
+          <summary>Stuck? example edit</summary>
+          <div class="reveal">
+            <p>Add your own color to the <code class="ci">colors</code> list in <code class="ci">index.js</code>:</p>
+            <pre class="cb">var colors = [
+  { name: "Sunset Orange", value: "#e8553d" },
+  { name: "Teal", value: "#2bb5a0" },
+  { name: "Royal Purple", value: "#2d1b69" },
+  { name: "Sunshine", value: "#f4c430" },
+  { name: "My Blue", value: "#2b7ab5" }   // your color!
+];</pre>
+            <p>For the stretch, add a reset button in <code class="ci">index.html</code>:</p>
+            <pre class="cb">&lt;button id="resetBtn"&gt;Reset counter&lt;/button&gt;</pre>
+            <p>Then wire it up in <code class="ci">index.js</code>:</p>
+            <pre class="cb">document.getElementById("resetBtn").addEventListener("click", function () {
+  count = 0;
+  document.getElementById("count").textContent = count;
+});</pre>
+            <p>New color in the list, a new button and its handler — the app now does more, and you decided what.</p>
+          </div>
+        </details>
+        <label class="step-check" data-check="modified">
+          <input type="checkbox" id="chk-modified">
+          <span>I changed the app</span>
+        </label>
+      </section>
+
+      <!-- 6. THE BRIDGE -->
+      <section class="block">
+        <div class="kicker">The Bridge</div>
+        <h2>You Can Direct AI Now</h2>
+        <p>Soon you'll use AI tools (like <strong>Lovable</strong>) that build a whole app from a description you type. Here's the thing: because you understand <strong>events</strong>, <strong>variables</strong>, and <strong>functions</strong>, you can tell the AI <em>exactly</em> what to build — and just as importantly, you can <strong>read and fix what it makes</strong>.</p>
+        <p>Someone who's never seen code just hopes the AI got it right. You'll know the pieces underneath, so you can direct it like a pro and catch the mistakes.</p>
+        <div class="field">
+          <label for="ta-bridge">Direct an AI builder:
+            <span class="hint">Describe an app you'd want an AI to build for you. Name one event, one thing it should remember (variable), and one function it would need.</span>
+          </label>
+          <textarea id="ta-bridge" placeholder="Type your answer — it saves automatically."></textarea>
+        </div>
+        <label class="step-check" data-check="bridge">
+          <input type="checkbox" id="chk-bridge">
+          <span>I connected it to AI builders</span>
+        </label>
+      </section>
+
+      <!-- COMPLETION -->
+      <div class="completion" id="completion" role="status">
+        <h2>You're a programmer — and an AI director! 🎉</h2>
+        <p>You've finished the <strong>Programming in App Lab</strong> unit. You learned how <strong>functions</strong> package code into reusable recipes, and you saw <strong>events</strong>, <strong>variables</strong>, <strong>conditionals</strong>, and <strong>functions</strong> come together into a real Lucky Color app. You ran it, made it yours, and crossed the bridge to AI. You're ready to build apps with AI tools like <strong>Lovable</strong> — and understand exactly what they make.</p>
+      </div>
+
+      <!-- WRAP-UP -->
+      <section class="block">
+        <div class="kicker">Wrap-Up</div>
+        <h2>The Big Idea</h2>
+        <p><strong>Events, variables, conditionals, functions — that's the toolkit behind every app. Now you can build them yourself AND direct an AI to build bigger ones.</strong> Every app you'll ever use is made of these same pieces, arranged in different ways. You know the pieces now.</p>
+        <p class="muted"><strong>That's a wrap on the unit.</strong> Next, you'll put this to work directing AI builders — telling them what to make and fixing what they build.</p>
+      </section>
+
+      <div class="reset-row">
+        <button class="reset-btn" id="resetBtn" type="button">Reset this lesson</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════ RIGHT: EDITOR ═══════════ -->
+  <div class="right-panel" id="editorPanel">
+    <div class="right-header">
+      <span class="rh-label">Live Code Editor</span>
+      <span class="rh-sub">powered by StackBlitz</span>
+    </div>
+    <div class="right-body">
+      <div id="editorFrame">
+        <div class="editor-fallback">
+          Loading the code editor…<br><br>
+          If it doesn't appear, make sure you're online, or
+          <a href="https://stackblitz.com/fork/js" target="_blank" rel="noopener">open a blank JavaScript project on StackBlitz</a>
+          and paste the Lucky Color code from your worksheet.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- mobile flip button -->
+<button class="mobile-toggle" id="mobileToggle" type="button">Switch to Editor</button>
+
+<!-- saved indicator -->
+<div class="saved-indicator" id="savedIndicator">Saved ✓</div>
+
+<script src="https://unpkg.com/@stackblitz/sdk/bundles/sdk.umd.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_PREFIX = 'prog-week4-selfstudy-mid:';
+
+  var TEXT_IDS = [
+    'ta-trace', 'ta-bridge'
+  ];
+  var CHECK_IDS = [
+    'chk-ready', 'chk-function', 'chk-together', 'chk-ran', 'chk-modified', 'chk-bridge'
+  ];
+  var TOTAL = CHECK_IDS.length;
+
+  var savedIndicator = document.getElementById('savedIndicator');
+  var savedTimer = null;
+
+  function save(k, v) { try { localStorage.setItem(STORAGE_PREFIX + k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(STORAGE_PREFIX + k); } catch (e) { return null; } }
+  function remove(k) { try { localStorage.removeItem(STORAGE_PREFIX + k); } catch (e) {} }
+
+  function flashSaved() {
+    if (!savedIndicator) return;
+    savedIndicator.classList.add('show');
+    if (savedTimer) clearTimeout(savedTimer);
+    savedTimer = setTimeout(function () { savedIndicator.classList.remove('show'); }, 1200);
+  }
+
+  function updateProgress() {
+    var done = 0;
+    CHECK_IDS.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.checked) done++;
+    });
+    var pct = TOTAL > 0 ? Math.round((done / TOTAL) * 100) : 0;
+    var fill = document.getElementById('progressFill');
+    var label = document.getElementById('progressLabel');
+    if (fill) fill.style.width = pct + '%';
+    if (label) label.textContent = done + ' / ' + TOTAL;
+    var completion = document.getElementById('completion');
+    if (completion) {
+      if (done === TOTAL && TOTAL > 0) completion.classList.add('show');
+      else completion.classList.remove('show');
+    }
+  }
+
+  // text fields
+  TEXT_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var stored = load(id);
+    if (stored !== null) el.value = stored;
+    el.addEventListener('input', function () { save(id, el.value); flashSaved(); });
+  });
+
+  // checkboxes
+  CHECK_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var stored = load(id);
+    if (stored === 'true') el.checked = true;
+    var labelWrap = el.closest('.step-check');
+    function sync() { if (labelWrap) labelWrap.classList.toggle('done', el.checked); }
+    sync();
+    el.addEventListener('change', function () {
+      save(id, el.checked ? 'true' : 'false');
+      sync();
+      updateProgress();
+      flashSaved();
+    });
+  });
+
+  // reset
+  var resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function () {
+      if (!window.confirm('Reset this lesson? This clears your saved answers and checkmarks on this page. This cannot be undone.')) return;
+      TEXT_IDS.forEach(function (id) { remove(id); var el = document.getElementById(id); if (el) el.value = ''; });
+      CHECK_IDS.forEach(function (id) {
+        remove(id);
+        var el = document.getElementById(id);
+        if (el) { el.checked = false; var w = el.closest('.step-check'); if (w) w.classList.remove('done'); }
+      });
+      updateProgress();
+      flashSaved();
+    });
+  }
+
+  // mobile toggle
+  var showingEditor = false;
+  var mobileToggle = document.getElementById('mobileToggle');
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', function () {
+      showingEditor = !showingEditor;
+      document.getElementById('lessonPanel').classList.toggle('mobile-hide', showingEditor);
+      document.getElementById('editorPanel').classList.toggle('mobile-show', showingEditor);
+      mobileToggle.textContent = showingEditor ? 'Switch to Lesson' : 'Switch to Editor';
+    });
+  }
+
+  updateProgress();
+
+  // ─── StackBlitz embed: Lucky Color (event + function + variable, all together) ───
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof StackBlitzSDK === 'undefined') return;
+    StackBlitzSDK.embedProject('editorFrame', {
+      title: 'Lucky Color',
+      description: 'Week 4 — a function picks a random color on click, and a variable counts them',
+      template: 'javascript',
+      files: {
+        'index.html': '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>Lucky Color</title>\n  <style>\n    body { font-family: system-ui, sans-serif; max-width: 520px;\n           margin: 60px auto; padding: 0 16px; text-align: center;\n           color: #1a1a2e; }\n    h1 { color: #2d1b69; font-size: 1.8rem; }\n    button { font-size: 1.1rem; font-weight: 600; color: #fff;\n             background: #2bb5a0; border: none; border-radius: 10px;\n             padding: 14px 28px; cursor: pointer; margin: 10px 6px; }\n    button:hover { background: #229b89; }\n    #colorName { font-size: 1.3rem; font-weight: 600; color: #e8553d; min-height: 1.5em; }\n    #box { margin-left: auto; margin-right: auto; }\n  </style>\n</head>\n<body>\n  <h1>Lucky Color</h1>\n  <div id="box" style="width:120px;height:120px;border:2px solid #333;margin:12px 0;"></div>\n  <p id="colorName"></p>\n  <p>Colors generated: <span id="count">0</span></p>\n  <button id="luckyBtn">Get Lucky Color</button>\n  <script src="index.js"><\/script>\n</body>\n</html>',
+        'index.js': '// A list of colors the function can pick from\nvar colors = [\n  { name: "Sunset Orange", value: "#e8553d" },\n  { name: "Teal", value: "#2bb5a0" },\n  { name: "Royal Purple", value: "#2d1b69" },\n  { name: "Sunshine", value: "#f4c430" }\n];\nvar count = 0; // variable: how many we\'ve generated\n\n// FUNCTION: define the reusable recipe once\nfunction pickLuckyColor() {\n  // PROCESSING: choose a random color from the list\n  var i = Math.floor(Math.random() * colors.length);\n  var chosen = colors[i];\n  // OUTPUT: paint the box, show the name, update the count\n  document.getElementById("box").style.background = chosen.value;\n  document.getElementById("colorName").textContent = chosen.name;\n  count = count + 1;\n  document.getElementById("count").textContent = count;\n}\n\n// INPUT: click the button -> CALL the function\ndocument.getElementById("luckyBtn").addEventListener("click", function () {\n  pickLuckyColor();\n});\n'
+      }
+    }, {
+      openFile: 'index.js',
+      view: 'default',
+      hideDevTools: true,
+      height: '100%'
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 3 Self-Study — Input &amp; Decisions: Apps That Respond to You (Middle School)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #2d1b69;
+    --purple-light: #3d2b7a;
+    --purple-lighter: #f4f0ff;
+    --teal: #2bb5a0;
+    --teal-light: #e6f9f6;
+    --coral: #e8553d;
+    --coral-light: #fef0ed;
+    --sand: #f5f0e8;
+    --olive: #7a8450;
+    --olive-light: #f0f2e6;
+    --text: #1a1a2e;
+    --text-light: #555;
+    --border: #e0e0e0;
+    --bg: #fafafa;
+    --white: #ffffff;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+
+  /* ─── STICKY NAV ─── */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: var(--purple);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1000;
+    box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+  }
+  .nav-brand {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.5px;
+  }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.95);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .nav-progress-track {
+    width: 120px; height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px; overflow: hidden;
+  }
+  .nav-progress-fill {
+    height: 100%; width: 0%;
+    background: var(--teal);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+  }
+  .nav-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.85);
+    white-space: nowrap;
+  }
+
+  /* ─── SPLIT LAYOUT ─── */
+  .split {
+    display: flex;
+    height: 100vh;
+    padding-top: 60px;
+  }
+  .left-panel {
+    width: 46%;
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+    background: var(--bg);
+  }
+  .right-panel {
+    width: 54%;
+    height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    background: #16132b;
+    position: sticky;
+    top: 60px;
+  }
+  .right-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: #201a3d;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .right-header .rh-label {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  .right-header .rh-sub { font-size: 0.62rem; color: rgba(255,255,255,0.4); font-weight: 400; }
+  .right-body { flex: 1; position: relative; }
+  #editorFrame { width: 100%; height: 100%; border: 0; }
+  .editor-fallback {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.85rem;
+    padding: 24px;
+    text-align: center;
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+  }
+  .editor-fallback a { color: var(--teal); }
+
+  /* ─── LESSON CONTENT ─── */
+  .hero {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    padding: 40px 36px 34px;
+    color: white;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 2.1rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+  .hero-sub { font-size: 0.98rem; opacity: 0.85; }
+
+  .content { padding: 0 36px 60px; }
+
+  section.block {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section.block:last-of-type { border-bottom: none; }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+  section.block h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: var(--purple);
+    margin-bottom: 10px;
+  }
+  section.block p { font-size: 0.95rem; margin: 10px 0; }
+  section.block p.muted { color: var(--text-light); font-size: 0.9rem; }
+
+  .examples { list-style: none; padding: 0; margin: 12px 0; }
+  .examples li { padding: 6px 0 6px 22px; position: relative; font-size: 0.92rem; }
+  .examples li::before { content: '→'; position: absolute; left: 0; color: var(--teal); font-weight: 700; }
+
+  /* IOSP step blocks */
+  .step { border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 12px 0; }
+  .step h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 5px;
+  }
+  .step .tag {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 1rem;
+  }
+  .step p { font-size: 0.9rem; margin: 4px 0 0; }
+  .step.input   { background: var(--teal-light);   border-left: 4px solid var(--teal); }
+  .step.input h3 { color: var(--teal); }
+  .step.process { background: var(--purple-lighter); border-left: 4px solid var(--purple); }
+  .step.process h3 { color: var(--purple); }
+  .step.output  { background: var(--coral-light);  border-left: 4px solid var(--coral); }
+  .step.output h3 { color: var(--coral); }
+  .step.storage { background: var(--olive-light);  border-left: 4px solid var(--olive); }
+  .step.storage h3 { color: var(--olive); }
+
+  .callout {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    color: white; border-radius: 10px; padding: 18px 22px; margin: 18px 0;
+  }
+  .callout::before {
+    content: 'THE PATTERN';
+    display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; font-weight: 600; letter-spacing: 1.5px;
+    opacity: 0.85; margin-bottom: 6px;
+  }
+  .callout p { color: white; font-size: 0.92rem; margin: 0; }
+
+  /* code */
+  code.ci {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem; background: var(--purple-lighter);
+    border: 1px solid #ddd4f5; border-radius: 5px;
+    padding: 1px 6px; color: var(--purple);
+  }
+  pre.cb {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; line-height: 1.6;
+    background: #1f1a3a; color: #d7c9ff;
+    border-left: 3px solid var(--teal);
+    border-radius: 8px; padding: 14px 16px;
+    overflow-x: auto; white-space: pre; margin: 8px 0 6px;
+    tab-size: 2;
+  }
+  .code-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--teal); font-weight: 500; margin: 14px 0 3px;
+  }
+
+  /* video buttons */
+  .video-btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: var(--coral); color: white; text-decoration: none;
+    font-weight: 600; font-size: 0.92rem; padding: 12px 20px;
+    border-radius: 9px; margin: 6px 8px 6px 0;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 4px 12px rgba(232, 85, 61, 0.28);
+  }
+  .video-btn:hover { transform: translateY(-2px); }
+
+  /* fields */
+  .field { margin: 14px 0; }
+  .field label {
+    display: block; font-size: 0.88rem; font-weight: 600;
+    color: var(--purple); margin-bottom: 6px;
+  }
+  .field label .hint {
+    display: block; font-weight: 400; font-size: 0.82rem;
+    color: var(--text-light); font-style: italic; margin-top: 2px;
+  }
+  textarea, input.text-line {
+    width: 100%; font-family: 'Inter', sans-serif; font-size: 0.92rem;
+    color: var(--text); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 10px 12px; background: #fcfcfd;
+    resize: vertical; transition: border-color 0.2s ease;
+  }
+  textarea { min-height: 74px; line-height: 1.55; }
+  textarea:focus, input.text-line:focus { outline: none; border-color: var(--teal); background: var(--white); }
+
+  .tag-chip {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px;
+    margin-right: 8px; vertical-align: middle;
+  }
+  .tag-chip.input { background: var(--teal-light); color: var(--teal); }
+  .tag-chip.process { background: var(--purple-lighter); color: var(--purple); }
+  .tag-chip.output { background: var(--coral-light); color: var(--coral); }
+  .tag-chip.storage { background: var(--olive-light); color: var(--olive); }
+
+  /* checkbox step */
+  .step-check {
+    display: flex; align-items: flex-start; gap: 11px;
+    background: var(--sand); border-radius: 10px; padding: 14px 18px;
+    margin: 18px 0 6px; cursor: pointer; border: 1.5px solid transparent;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .step-check:hover { border-color: var(--teal); }
+  .step-check input { width: 21px; height: 21px; margin-top: 1px; accent-color: var(--teal); cursor: pointer; flex-shrink: 0; }
+  .step-check span { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+  .step-check.done { background: var(--teal-light); border-color: var(--teal); }
+
+  /* details */
+  details.check {
+    background: var(--olive-light); border: 2px solid var(--olive);
+    border-radius: 10px; padding: 2px; margin: 18px 0;
+  }
+  details.check summary {
+    cursor: pointer; list-style: none; padding: 14px 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.76rem;
+    font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--olive); display: flex; align-items: center; gap: 9px;
+  }
+  details.check summary::-webkit-details-marker { display: none; }
+  details.check summary::before { content: '▸'; transition: transform 0.2s ease; }
+  details.check[open] summary::before { transform: rotate(90deg); }
+  details.check .reveal { padding: 0 18px 18px; }
+  details.check .reveal p { font-size: 0.9rem; line-height: 1.6; }
+
+  /* completion */
+  .completion {
+    display: none;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--purple) 100%);
+    color: white; border-radius: 12px; padding: 26px 30px; margin: 24px 0; text-align: center;
+  }
+  .completion.show { display: block; animation: pop 0.5s ease; }
+  @keyframes pop { 0% { transform: scale(0.96); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .completion h2 { font-family: 'Playfair Display', serif; font-style: italic; color: white; font-size: 1.5rem; margin-bottom: 6px; }
+  .completion p { color: rgba(255,255,255,0.9); margin: 0; font-size: 0.92rem; }
+
+  /* saved + reset */
+  .saved-indicator {
+    position: fixed; bottom: 20px; left: 20px;
+    background: var(--teal); color: white;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; font-weight: 500;
+    padding: 9px 16px; border-radius: 22px;
+    box-shadow: 0 4px 14px rgba(43, 181, 160, 0.4);
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; z-index: 1001;
+  }
+  .saved-indicator.show { opacity: 1; transform: translateY(0); }
+  .reset-row { text-align: center; margin: 24px 0 12px; }
+  .reset-btn {
+    font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500;
+    color: var(--coral); background: transparent; border: 1.5px solid var(--coral);
+    border-radius: 8px; padding: 9px 18px; cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .reset-btn:hover { background: var(--coral); color: white; }
+
+  /* mobile toggle button (hidden on desktop) */
+  .mobile-toggle {
+    display: none;
+    position: fixed; bottom: 18px; right: 18px; z-index: 1002;
+    background: var(--purple); color: white; border: none;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem;
+    padding: 12px 20px; border-radius: 24px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(45, 27, 105, 0.4);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 860px) {
+    .split { flex-direction: column; height: auto; }
+    .left-panel, .right-panel { width: 100%; }
+    .left-panel { height: auto; overflow: visible; }
+    .right-panel {
+      position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+      height: auto; width: 100%; z-index: 900;
+      transform: translateX(100%); transition: transform 0.3s ease;
+    }
+    .right-panel.mobile-show { transform: translateX(0); }
+    .left-panel.mobile-hide { display: none; }
+    .mobile-toggle { display: block; }
+    .nav-progress-track { width: 70px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <span class="nav-brand">masterpiece labs</span>
+  <div class="nav-right">
+    <span class="nav-badge">SELF-STUDY · WEEK 03</span>
+    <div class="nav-progress-track"><div class="nav-progress-fill" id="progressFill"></div></div>
+    <span class="nav-progress-label" id="progressLabel">0 / 6</span>
+  </div>
+</nav>
+
+<div class="split">
+
+  <!-- ═══════════ LEFT: LESSON ═══════════ -->
+  <div class="left-panel" id="lessonPanel">
+
+    <header class="hero">
+      <div class="hero-eyebrow">Self-Study · Programming in App Lab</div>
+      <h1>Input &amp; Decisions: Apps That Respond to You</h1>
+      <p class="hero-sub">Read what the user picks, then make the app decide — in real code.</p>
+    </header>
+
+    <div class="content">
+
+      <!-- 1. HOW THIS WORKS -->
+      <section class="block">
+        <div class="kicker">Start Here</div>
+        <h2>How This Works</h2>
+        <p>This week you learn how an app <strong>reads what the user picks and types</strong>, then <strong>makes a decision</strong> about what to do — and you build it in the live editor to your right. No installs, no logins: the code is already running.</p>
+        <ul class="examples">
+          <li><strong>Read</strong> the lesson on the left; <strong>run and edit code</strong> on the right.</li>
+          <li>The editor updates live — change something, refresh the preview, and see what happens.</li>
+          <li>Your written answers save automatically. Check off each milestone to fill the progress bar.</li>
+        </ul>
+        <p class="muted">In class you'll build this in <strong>App Lab</strong>. Here you use a simple code editor to learn the exact same idea, so you're never stuck waiting on a login.</p>
+        <p class="muted">On a tablet or phone? Use the <strong>Switch to Editor</strong> button (bottom-right) to flip between the lesson and the code.</p>
+        <label class="step-check" data-check="ready">
+          <input type="checkbox" id="chk-ready">
+          <span>I'm ready to start</span>
+        </label>
+      </section>
+
+      <!-- 2. READING INPUT & STRINGS -->
+      <section class="block">
+        <div class="kicker">Lesson 1</div>
+        <h2>Reading Input &amp; Strings</h2>
+        <p>An app can't decide anything until it <strong>reads what you gave it</strong>. When you type in a box or pick from a menu, the app reads that value with something like <code class="ci">.value</code> — grabbing whatever's currently in the field.</p>
+        <p>Text in code is called a <strong>string</strong>. A string is any run of characters wrapped in quotes, like <code class="ci">"popcorn"</code> or <code class="ci">"Try "</code>. You can glue strings together with <code class="ci">+</code> — that's called <strong>concatenation</strong>.</p>
+        <div class="step input">
+          <h3>Read Input <span class="tag">— grab the value</span></h3>
+          <p><code class="ci">var name = document.getElementById("nameInput").value;</code> reads whatever's typed in the box into a variable.</p>
+        </div>
+        <div class="step process">
+          <h3>Build a String <span class="tag">— glue text together</span></h3>
+          <p><code class="ci">+</code> joins strings. <code class="ci">"Hi " + name</code> makes one new string out of two pieces.</p>
+        </div>
+        <div class="step output">
+          <h3>Show It <span class="tag">— put it on screen</span></h3>
+          <p>Set the built string as an element's <code class="ci">.textContent</code> so the user can read it.</p>
+        </div>
+        <div class="code-caption">Combine a name into a greeting</div>
+        <pre class="cb">var name = "Jordan";
+var greeting = "Hi " + name + ", welcome!";
+// greeting is now: "Hi Jordan, welcome!"</pre>
+        <p>Notice the space inside the quotes: <code class="ci">"Hi "</code>. If you leave it out, you get <code class="ci">"HiJordan"</code> squished together — the space has to be <em>inside</em> the string.</p>
+        <label class="step-check" data-check="input">
+          <input type="checkbox" id="chk-input">
+          <span>I can read input &amp; join strings</span>
+        </label>
+      </section>
+
+      <!-- 3. MAKING DECISIONS (if / if-else) -->
+      <section class="block">
+        <div class="kicker">Lesson 2</div>
+        <h2>Making Decisions (if / if-else)</h2>
+        <p>An <strong>if</strong> statement runs a block of code <strong>only when a condition is true</strong>. Add an <strong>else</strong> and you get two paths: one when the condition is true, another when it's false. Chain them with <strong>else if</strong> to check several options in a row.</p>
+        <p>To <em>compare</em> two values, use <code class="ci">==</code> (or <code class="ci">===</code>) — for example <code class="ci">craving == "sweet"</code> asks "are these the same?" A single <code class="ci">=</code> is different: it <strong>assigns</strong> a value into a variable.</p>
+        <div class="code-caption">Watch out — == compares, = assigns</div>
+        <pre class="cb">if (craving == "sweet") { ... }   // CORRECT: compares
+if (craving = "sweet") { ... }    // BUG: this ASSIGNS, not compares</pre>
+        <p>That single-<code class="ci">=</code> line doesn't ask a question at all — it jams <code class="ci">"sweet"</code> into <code class="ci">craving</code> and then always runs. Use <code class="ci">==</code> (or <code class="ci">===</code>) whenever you're checking a condition.</p>
+        <div class="callout">
+          <p>The Snack Picker on the right uses <strong>if-else-if</strong> to pick a different snack from your choice.</p>
+        </div>
+        <label class="step-check" data-check="if">
+          <input type="checkbox" id="chk-if">
+          <span>I understand if / if-else</span>
+        </label>
+      </section>
+
+      <!-- 4. RUN IT -->
+      <section class="block">
+        <div class="kicker">Run It</div>
+        <h2>Run the Snack Picker</h2>
+        <p>The editor on the right is running a <strong>Snack Picker</strong> app. There's a box to type your <strong>name</strong>, a dropdown to pick a <strong>craving</strong> (sweet, salty, or healthy), and a <strong>Pick my snack</strong> button. When you click, the code <em>reads your inputs</em>, runs an <strong>if-else-if</strong> to choose a snack, and shows a personalized suggestion.</p>
+        <p>Click <strong>Run</strong> (or refresh the preview), type your name, and <strong>try every option</strong> in the dropdown. Watch how the suggestion changes based on what you pick.</p>
+        <div class="field">
+          <label for="ta-trace">Trace the decision:
+            <span class="hint">Pick two different options. What output does each give, and which part of the code decided?</span>
+          </label>
+          <textarea id="ta-trace" placeholder="Type your answer — it saves automatically."></textarea>
+        </div>
+        <label class="step-check" data-check="ran">
+          <input type="checkbox" id="chk-ran">
+          <span>I ran the picker</span>
+        </label>
+      </section>
+
+      <!-- 5. MODIFY IT -->
+      <section class="block">
+        <div class="kicker">Make It Yours</div>
+        <h2>Make It Yours</h2>
+        <p>Now change the code on the right so the Snack Picker suggests <em>your</em> favorites and knows <em>your</em> cravings. You decide what it offers:</p>
+        <ul class="examples">
+          <li><strong>Change a suggestion:</strong> edit one of the <code class="ci">snack = "..."</code> lines to a snack you actually like.</li>
+          <li><strong>Add an option:</strong> add a NEW choice to the dropdown in <code class="ci">index.html</code> AND a matching <code class="ci">else if</code> branch in <code class="ci">index.js</code>.</li>
+          <li><strong>Stretch:</strong> change the greeting string so it sounds like you — like <code class="ci">"Yo " + name + ", grab "</code>.</li>
+        </ul>
+        <details class="check">
+          <summary>Stuck? example edit</summary>
+          <div class="reveal">
+            <p>Add a new <strong>spicy</strong> option to the dropdown in <code class="ci">index.html</code>:</p>
+            <pre class="cb">&lt;option value="spicy"&gt;Spicy&lt;/option&gt;</pre>
+            <p>Then add a matching branch in <code class="ci">index.js</code>, before the final <code class="ci">else</code>:</p>
+            <pre class="cb">} else if (craving === "spicy") {
+  snack = "spicy trail mix 🌶️";
+}</pre>
+            <p>New option in, matching branch to handle it — now the app can decide about spicy too.</p>
+          </div>
+        </details>
+        <label class="step-check" data-check="modified">
+          <input type="checkbox" id="chk-modified">
+          <span>I changed the picker</span>
+        </label>
+      </section>
+
+      <!-- 6. REFLECT -->
+      <section class="block">
+        <div class="kicker">Reflect</div>
+        <h2>Decisions in Your Life</h2>
+        <p>You make dozens of small choices every day, and most of them follow rules — <em>if</em> it's raining, <em>then</em> grab a hoodie; <em>if</em> you're tired, <em>then</em> pick an easy show. That's exactly how an app decides: read the input, then follow the rules.</p>
+        <div class="field">
+          <label for="ta-reflect">Connect it to your own life:
+            <span class="hint">Think of a choice you make a lot (what to eat, watch, wear, do). If you built an app to help decide, what input would it read and what rules (if → then) would it use?</span>
+          </label>
+          <textarea id="ta-reflect" placeholder="Type your reflection — it saves automatically."></textarea>
+        </div>
+        <label class="step-check" data-check="reflect">
+          <input type="checkbox" id="chk-reflect">
+          <span>I connected it to my life</span>
+        </label>
+      </section>
+
+      <!-- COMPLETION -->
+      <div class="completion" id="completion" role="status">
+        <h2>You built an app that decides! 🎉</h2>
+        <p>You learned how an app <strong>reads input</strong>, joins <strong>strings</strong>, and uses <strong>if-else-if</strong> to choose what to do. You ran a real Snack Picker, made it yours, and connected it to a decision from your own life. Next week (Week 4) you'll add <strong>functions</strong>, put it all together into a <strong>full app</strong>, and see the <strong>bridge to AI</strong> — apps that decide in smarter, more flexible ways.</p>
+      </div>
+
+      <!-- WRAP-UP -->
+      <section class="block">
+        <div class="kicker">Wrap-Up</div>
+        <h2>The Big Idea</h2>
+        <p><strong>Apps feel smart because they read your input and use conditionals to choose what to do.</strong> Different input → different output. Read the value, compare it with <code class="ci">==</code>, and let <code class="ci">if</code> / <code class="ci">else if</code> / <code class="ci">else</code> pick the path. That's the pattern behind every app that responds to you.</p>
+        <p class="muted"><strong>Next week,</strong> you'll add <strong>functions</strong>, build a <strong>full app</strong>, and cross the <strong>bridge to AI</strong>.</p>
+      </section>
+
+      <div class="reset-row">
+        <button class="reset-btn" id="resetBtn" type="button">Reset this lesson</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════ RIGHT: EDITOR ═══════════ -->
+  <div class="right-panel" id="editorPanel">
+    <div class="right-header">
+      <span class="rh-label">Live Code Editor</span>
+      <span class="rh-sub">powered by StackBlitz</span>
+    </div>
+    <div class="right-body">
+      <div id="editorFrame">
+        <div class="editor-fallback">
+          Loading the code editor…<br><br>
+          If it doesn't appear, make sure you're online, or
+          <a href="https://stackblitz.com/fork/js" target="_blank" rel="noopener">open a blank JavaScript project on StackBlitz</a>
+          and paste the Snack Picker code from your worksheet.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- mobile flip button -->
+<button class="mobile-toggle" id="mobileToggle" type="button">Switch to Editor</button>
+
+<!-- saved indicator -->
+<div class="saved-indicator" id="savedIndicator">Saved ✓</div>
+
+<script src="https://unpkg.com/@stackblitz/sdk/bundles/sdk.umd.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_PREFIX = 'prog-week3-selfstudy-mid:';
+
+  var TEXT_IDS = [
+    'ta-trace', 'ta-reflect'
+  ];
+  var CHECK_IDS = [
+    'chk-ready', 'chk-input', 'chk-if', 'chk-ran', 'chk-modified', 'chk-reflect'
+  ];
+  var TOTAL = CHECK_IDS.length;
+
+  var savedIndicator = document.getElementById('savedIndicator');
+  var savedTimer = null;
+
+  function save(k, v) { try { localStorage.setItem(STORAGE_PREFIX + k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(STORAGE_PREFIX + k); } catch (e) { return null; } }
+  function remove(k) { try { localStorage.removeItem(STORAGE_PREFIX + k); } catch (e) {} }
+
+  function flashSaved() {
+    if (!savedIndicator) return;
+    savedIndicator.classList.add('show');
+    if (savedTimer) clearTimeout(savedTimer);
+    savedTimer = setTimeout(function () { savedIndicator.classList.remove('show'); }, 1200);
+  }
+
+  function updateProgress() {
+    var done = 0;
+    CHECK_IDS.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.checked) done++;
+    });
+    var pct = TOTAL > 0 ? Math.round((done / TOTAL) * 100) : 0;
+    var fill = document.getElementById('progressFill');
+    var label = document.getElementById('progressLabel');
+    if (fill) fill.style.width = pct + '%';
+    if (label) label.textContent = done + ' / ' + TOTAL;
+    var completion = document.getElementById('completion');
+    if (completion) {
+      if (done === TOTAL && TOTAL > 0) completion.classList.add('show');
+      else completion.classList.remove('show');
+    }
+  }
+
+  // text fields
+  TEXT_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var stored = load(id);
+    if (stored !== null) el.value = stored;
+    el.addEventListener('input', function () { save(id, el.value); flashSaved(); });
+  });
+
+  // checkboxes
+  CHECK_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var stored = load(id);
+    if (stored === 'true') el.checked = true;
+    var labelWrap = el.closest('.step-check');
+    function sync() { if (labelWrap) labelWrap.classList.toggle('done', el.checked); }
+    sync();
+    el.addEventListener('change', function () {
+      save(id, el.checked ? 'true' : 'false');
+      sync();
+      updateProgress();
+      flashSaved();
+    });
+  });
+
+  // reset
+  var resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function () {
+      if (!window.confirm('Reset this lesson? This clears your saved answers and checkmarks on this page. This cannot be undone.')) return;
+      TEXT_IDS.forEach(function (id) { remove(id); var el = document.getElementById(id); if (el) el.value = ''; });
+      CHECK_IDS.forEach(function (id) {
+        remove(id);
+        var el = document.getElementById(id);
+        if (el) { el.checked = false; var w = el.closest('.step-check'); if (w) w.classList.remove('done'); }
+      });
+      updateProgress();
+      flashSaved();
+    });
+  }
+
+  // mobile toggle
+  var showingEditor = false;
+  var mobileToggle = document.getElementById('mobileToggle');
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', function () {
+      showingEditor = !showingEditor;
+      document.getElementById('lessonPanel').classList.toggle('mobile-hide', showingEditor);
+      document.getElementById('editorPanel').classList.toggle('mobile-show', showingEditor);
+      mobileToggle.textContent = showingEditor ? 'Switch to Lesson' : 'Switch to Editor';
+    });
+  }
+
+  updateProgress();
+
+  // ─── StackBlitz embed: Snack Picker (read input + if-else-if decision) ───
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof StackBlitzSDK === 'undefined') return;
+    StackBlitzSDK.embedProject('editorFrame', {
+      title: 'Snack Picker',
+      description: 'Week 3 — read input and use if-else-if to decide',
+      template: 'javascript',
+      files: {
+        'index.html': '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>Snack Picker</title>\n  <style>\n    body { font-family: system-ui, sans-serif; max-width: 520px;\n           margin: 60px auto; padding: 0 16px; text-align: center;\n           color: #1a1a2e; }\n    h1 { color: #2d1b69; font-size: 1.8rem; }\n    input, select { font-size: 1rem; padding: 10px 12px; margin: 6px;\n                    border: 1.5px solid #ccc; border-radius: 8px; }\n    button { font-size: 1.1rem; font-weight: 600; color: #fff;\n             background: #2bb5a0; border: none; border-radius: 10px;\n             padding: 14px 28px; cursor: pointer; margin: 10px 6px; }\n    button:hover { background: #229b89; }\n    #result { font-size: 1.4rem; font-weight: 600; color: #e8553d; margin-top: 18px; min-height: 1.6em; }\n  </style>\n</head>\n<body>\n  <h1>Snack Picker</h1>\n  <input id="nameInput" placeholder="Your name">\n  <br>\n  <select id="craving">\n    <option value="sweet">Sweet</option>\n    <option value="salty">Salty</option>\n    <option value="healthy">Healthy</option>\n  </select>\n  <br>\n  <button id="pickBtn">Pick my snack</button>\n  <p id="result"></p>\n  <script src="index.js"><\/script>\n</body>\n</html>',
+        'index.js': 'document.getElementById("pickBtn").addEventListener("click", function () {\n  // INPUT: read the name and the dropdown choice\n  var name = document.getElementById("nameInput").value;\n  var craving = document.getElementById("craving").value;\n\n  // PROCESSING: decide a snack with if-else-if\n  var snack;\n  if (craving === "sweet") {\n    snack = "a bowl of berries \ud83c\udf53";\n  } else if (craving === "salty") {\n    snack = "popcorn \ud83c\udf7f";\n  } else {\n    snack = "apple slices and peanut butter \ud83c\udf4e";\n  }\n\n  // OUTPUT: build a personalized string and show it\n  var hi = name ? (name + ", try ") : "Try ";\n  document.getElementById("result").textContent = hi + snack;\n});\n'
+      }
+    }, {
+      openFile: 'index.js',
+      view: 'default',
+      hideDevTools: true,
+      height: '100%'
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

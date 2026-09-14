@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 4 Capstone Worksheet — Functions &amp; a Real App (High School)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --purple: #2d1b69;
+  --purple-light: #3d2b7a;
+  --purple-lighter: #f4f0ff;
+  --teal: #2bb5a0;
+  --teal-light: #e6f9f6;
+  --coral: #e8553d;
+  --coral-light: #fef0ed;
+  --sand: #f5f0e8;
+  --text: #1a1a2e;
+  --border: #e0e0e0;
+  --white: #ffffff;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text);
+  background: var(--sand);
+  line-height: 1.6;
+  padding: 40px 20px 80px;
+}
+
+.page {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+/* ─── PRINT BUTTON / CONTROLS ─── */
+.controls {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(45, 27, 105, 0.25);
+  transition: transform 0.1s ease, opacity 0.15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-print { background: var(--purple); color: #fff; }
+.btn-clear { background: var(--coral); color: #fff; font-size: 0.78rem; padding: 7px 13px; }
+
+.save-indicator {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--teal);
+  background: var(--white);
+  border: 1px solid var(--teal);
+  border-radius: 20px;
+  padding: 5px 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.save-indicator.show { opacity: 1; }
+
+/* ─── HEADER BAND ─── */
+.header {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+  color: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 36px 44px 32px;
+}
+
+.wordmark {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 1.05rem;
+  letter-spacing: 1px;
+  opacity: 0.85;
+  margin-bottom: 18px;
+}
+.wordmark span { font-weight: 600; }
+
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2.6rem;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.header .subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+  margin-bottom: 26px;
+}
+
+.namebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 28px;
+  align-items: flex-end;
+}
+.namebar .field { display: flex; align-items: flex-end; gap: 8px; flex: 1 1 auto; }
+.namebar .field.name { flex: 2 1 260px; }
+.namebar label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+.namebar input {
+  flex: 1;
+  min-width: 60px;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid rgba(255,255,255,0.55);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  padding: 2px 4px 4px;
+  outline: none;
+}
+.namebar input:focus { border-bottom-color: var(--teal); }
+
+/* ─── BODY WRAPPER ─── */
+.body-wrap {
+  background: var(--white);
+  border-radius: 0 0 16px 16px;
+  padding: 8px 0 4px;
+  box-shadow: 0 8px 34px rgba(45, 27, 105, 0.12);
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 30px 34px;
+  margin: 26px 24px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+
+.card-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.card h2 {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.7rem;
+  color: var(--purple);
+  margin-bottom: 14px;
+}
+
+.card h3 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--purple);
+  margin: 24px 0 10px;
+}
+
+.instructions {
+  background: var(--purple-lighter);
+  border-left: 3px solid var(--purple);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  margin-bottom: 18px;
+}
+.overview {
+  font-size: 0.98rem;
+  margin-bottom: 16px;
+}
+
+/* ─── CHIPS ─── */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  background: var(--teal-light);
+  color: var(--purple);
+  border: 1px solid var(--teal);
+  border-radius: 20px;
+  padding: 5px 13px;
+}
+
+/* ─── DEFINITION LIST (vocab) ─── */
+.deflist { list-style: none; margin-bottom: 6px; }
+.deflist li {
+  display: flex;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.96rem;
+  align-items: baseline;
+}
+.deflist li:last-child { border-bottom: none; }
+.deflist .term {
+  font-weight: 600;
+  color: var(--purple);
+  min-width: 118px;
+  flex-shrink: 0;
+}
+.deflist .term .mono {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  color: var(--teal);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.deflist.processing .term { min-width: 138px; }
+
+/* ─── GENERIC TEXTAREA / INPUT BLOCKS ─── */
+.write-box {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  padding: 14px 16px;
+  resize: vertical;
+  outline: none;
+  background: var(--white);
+  line-height: 1.9;
+}
+.write-box:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-light); }
+
+.box-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--purple);
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* ─── SINGLE-LINE FIELD ─── */
+.field-line { margin-bottom: 18px; }
+.field-line input.line-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1.5px solid var(--border);
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: var(--text);
+  padding: 6px 4px;
+  outline: none;
+  background: transparent;
+}
+.field-line input.line-input:focus { border-bottom-color: var(--teal); }
+
+/* ─── DRAW BOX ─── */
+.draw-box {
+  border: 2px dashed var(--purple);
+  border-radius: 12px;
+  background: var(--purple-lighter);
+  min-height: 260px;
+  padding: 14px;
+}
+.draw-box textarea {
+  width: 100%;
+  min-height: 232px;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  resize: vertical;
+  line-height: 1.9;
+}
+
+/* ─── FILL-IN PROMPTS ─── */
+.prompt { margin-bottom: 18px; }
+.prompt .plabel {
+  font-weight: 600;
+  color: var(--purple);
+  margin-bottom: 6px;
+  display: block;
+}
+.prompt .plabel .mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  color: var(--teal);
+  text-transform: uppercase;
+  margin-left: 6px;
+}
+.prompt .phint { font-weight: 400; color: var(--text); opacity: 0.7; font-size: 0.9rem; }
+
+/* ─── NOTE / HELPER ─── */
+.note {
+  background: var(--teal-light);
+  border: 1px solid var(--teal);
+  border-radius: 8px;
+  padding: 11px 15px;
+  font-size: 0.88rem;
+  margin: 14px 0;
+}
+.note .mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #1a8a78;
+  display: block;
+  margin-bottom: 5px;
+}
+.note .bytes {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  color: var(--purple);
+  line-height: 2.1;
+}
+
+/* ─── CODE BLOCK (event-handler snippets) ─── */
+.code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 1.75;
+  color: var(--purple);
+  background: var(--purple-lighter);
+  border: 1px solid #d8ccf5;
+  border-left: 3px solid var(--purple);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 12px 0 18px;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.criteria-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--purple);
+  margin-top: 12px;
+}
+.criteria-note .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+.criteria-note .pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  background: var(--coral-light);
+  border: 1px solid var(--coral);
+  color: var(--coral);
+  border-radius: 20px;
+  padding: 3px 11px;
+}
+
+/* ─── DATA TABLES ─── */
+table.grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+}
+table.grid-table th {
+  background: var(--purple);
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid var(--purple);
+}
+table.grid-table td {
+  border: 1px solid var(--border);
+  padding: 0;
+  vertical-align: top;
+}
+table.grid-table td .cell-fixed {
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  background: var(--purple-lighter);
+  min-height: 46px;
+}
+table.grid-table td input.cell,
+table.grid-table td textarea.cell {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  color: var(--text);
+  padding: 10px 12px;
+  resize: vertical;
+  line-height: 1.6;
+}
+table.grid-table td textarea.cell { min-height: 52px; }
+table.grid-table td input.cell:focus,
+table.grid-table td textarea.cell:focus { background: var(--teal-light); }
+
+/* ─── CODE CELL (fixed monospace inside table) ─── */
+table.grid-table td .cell-code {
+  padding: 10px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--purple);
+  background: var(--purple-lighter);
+  min-height: 46px;
+  white-space: pre;
+}
+
+/* ─── CHECKLIST ─── */
+.checklist { list-style: none; }
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-size: 0.98rem;
+  background: var(--white);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.checklist li:hover { border-color: var(--teal); }
+.checklist input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--teal);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.checklist label { cursor: pointer; }
+.checklist input[type="checkbox"]:checked + label { color: var(--purple); font-weight: 500; }
+
+.footer {
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  color: var(--purple);
+  opacity: 0.6;
+  margin: 30px 0 0;
+}
+
+@media (max-width: 640px) {
+  .header { padding: 28px 22px; }
+  .card { padding: 24px 20px; margin: 20px 12px; }
+  .deflist li { flex-direction: column; gap: 2px; }
+  .deflist .term { min-width: 0; }
+}
+
+/* ─── PRINT ─── */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  body { background: #fff; padding: 0; }
+  .controls { display: none !important; }
+  .page { max-width: 100%; }
+  .body-wrap { box-shadow: none; }
+  .header { border-radius: 0; }
+  .card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-shadow: none;
+    margin: 16px 0;
+  }
+  .header, .chip, .instructions, .note, .code, .criteria-note .pill,
+  table.grid-table th, .draw-box, .cell-fixed, .cell-code, .checklist li {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  input, textarea { border-color: #999 !important; }
+  .write-box, .draw-box textarea, textarea.cell { overflow: visible; }
+  .code { overflow: visible; white-space: pre-wrap; }
+  a { text-decoration: none; color: inherit; }
+}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <button class="btn btn-print" onclick="window.print()">&#128424; Print / Save as PDF</button>
+  <button class="btn btn-clear" onclick="clearAnswers()">Clear my answers</button>
+  <span class="save-indicator" id="saveIndicator">Saved &#10003;</span>
+</div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="wordmark">masterpiece <span>labs</span></div>
+    <h1>Functions &amp; a Real App</h1>
+    <div class="subtitle">Week 4 Capstone Worksheet &middot; Programming in App Lab &middot; High School</div>
+    <div class="namebar">
+      <div class="field name">
+        <label>Name(s)</label>
+        <input type="text" id="f_names" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Period</label>
+        <input type="text" id="f_period" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input type="text" id="f_date" autocomplete="off">
+      </div>
+    </div>
+  </header>
+
+  <div class="body-wrap">
+
+    <!-- 1. KEY VOCABULARY -->
+    <section class="card">
+      <div class="card-eyebrow">Reference</div>
+      <h2>Key Vocabulary</h2>
+      <ul class="deflist">
+        <li><span class="term">Function</span><span>A named, reusable block of code you can call whenever you need it.</span></li>
+        <li><span class="term">Parameter</span><span>An input a function takes so it can vary its behavior each time it runs.</span></li>
+        <li><span class="term">Argument</span><span>The actual value you pass in when calling the function.</span></li>
+        <li><span class="term">Return Value</span><span>A result a function can hand back to whatever called it.</span></li>
+        <li><span class="term">Decomposition</span><span>Breaking a program into small, single-purpose functions.</span></li>
+        <li><span class="term"><code>Math.random</code></span><span>Produces an unpredictable value &mdash; useful for targets, dice, and surprises.</span></li>
+      </ul>
+      <div class="note">
+        <span class="mono">Quick recap</span>
+        <span><strong>Event</strong> &mdash; something the user does that runs code &nbsp;&middot;&nbsp; <strong>Variable</strong> &mdash; a named box that stores a value &nbsp;&middot;&nbsp; <strong>Conditional</strong> &mdash; code that runs only when a condition is true.</span>
+      </div>
+    </section>
+
+    <!-- 2. FUNCTIONS & PARAMETERS -->
+    <section class="card">
+      <div class="card-eyebrow">Trace It</div>
+      <h2>Functions &amp; Parameters</h2>
+      <p class="overview">A function can take a <strong>parameter</strong> &mdash; an input &mdash; so the same block of code behaves differently depending on the <strong>argument</strong> you pass in. Read this carefully.</p>
+      <div class="code">function updateScore(points) {
+  score = score + points;
+  setText(&quot;scoreLabel&quot;, score);
+}
+updateScore(10);
+updateScore(5);</div>
+      <div class="prompt">
+        <span class="plabel">What is the PARAMETER, and what ARGUMENTS are passed in the two calls?</span>
+        <textarea class="write-box" id="params_id" rows="4"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">After both calls (<code>score</code> started at 0), what is <code>score</code>?</span>
+        <input type="text" class="line-input" id="params_total" autocomplete="off">
+      </div>
+      <div class="prompt">
+        <span class="plabel">Why is a parameterized function better than writing two separate functions?</span>
+        <textarea class="write-box" id="params_why" rows="4"></textarea>
+      </div>
+    </section>
+
+    <!-- 3. DECOMPOSITION DRILL -->
+    <section class="card">
+      <div class="card-eyebrow">Decompose It</div>
+      <h2>Decomposition Drill</h2>
+      <p class="overview">Good apps are broken into small functions that each do ONE job. That makes them easier to build, test, and fix.</p>
+      <div class="prompt">
+        <span class="plabel">Here's an app: <em>&ldquo;a quiz that shows a question, checks the answer, updates the score, and shows the next question.&rdquo;</em> Break it into 3&ndash;4 functions &mdash; name each and its one job.</span>
+      </div>
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th style="width:40%;">Function name</th>
+            <th>Its ONE job</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text" class="cell" id="fn1_name" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="fn1_job" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <td><input type="text" class="cell" id="fn2_name" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="fn2_job" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <td><input type="text" class="cell" id="fn3_name" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="fn3_job" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <td><input type="text" class="cell" id="fn4_name" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="fn4_job" autocomplete="off"></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 4. READ THE CODE -->
+    <section class="card">
+      <div class="card-eyebrow">Trace It</div>
+      <h2>Read the Code</h2>
+      <p class="overview">This mini-app is <strong>decomposed</strong>: <code>makeTarget()</code> picks a secret number, and a parameterized <code>checkGuess(guess, points)</code> reuses it. Trace how the functions call each other.</p>
+      <div class="code">var target = 0;
+
+function makeTarget() {
+  target = randomNumber(1, 10);
+}
+
+function checkGuess(guess, points) {
+  if (guess == target) {
+    score = score + points;
+    setText(&quot;msg&quot;, &quot;Correct! +&quot; + points);
+    makeTarget();
+  } else {
+    setText(&quot;msg&quot;, &quot;Try again&quot;);
+  }
+}
+
+makeTarget();
+onEvent(&quot;guessBtn&quot;, &quot;click&quot;, function() {
+  checkGuess(getNumber(&quot;guessInput&quot;), 5);
+});</div>
+      <div class="prompt">
+        <span class="plabel">Which function CALLS another function (decomposition in action)?</span>
+        <input type="text" class="line-input" id="read_calls" autocomplete="off">
+      </div>
+      <div class="prompt">
+        <span class="plabel">What are the two parameters of <code>checkGuess</code>, and where are they used?</span>
+        <textarea class="write-box" id="read_params" rows="4"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">If <code>checkGuess</code> were defined AFTER the code that calls it, or its name were mistyped, what would happen?</span>
+        <textarea class="write-box" id="read_bug" rows="4"></textarea>
+      </div>
+    </section>
+
+    <!-- 5. MAKE IT YOURS: SPEC & DECOMPOSE -->
+    <section class="card">
+      <div class="card-eyebrow">Make It Yours</div>
+      <h2>Spec &amp; Decompose Your Capstone</h2>
+      <p class="overview">Build a real app of <strong>YOUR</strong> choice &mdash; a scored game, a tool, a tracker, a recommender &mdash; decomposed into functions. Pick something that solves a problem or reflects an interest <em>you</em> care about.</p>
+      <div class="field-line">
+        <span class="box-label">My app concept</span>
+        <input type="text" class="line-input" id="concept" autocomplete="off">
+      </div>
+      <div class="field-line">
+        <span class="box-label">Why this one</span>
+        <input type="text" class="line-input" id="concept_why" autocomplete="off">
+      </div>
+      <h3>My Functions</h3>
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th style="width:30%;">Function name</th>
+            <th style="width:42%;">Its one job</th>
+            <th>Parameters (if any)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text" class="cell" id="f1_name" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="f1_job" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="f1_params" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <td><input type="text" class="cell" id="f2_name" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="f2_job" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="f2_params" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <td><input type="text" class="cell" id="f3_name" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="f3_job" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="f3_params" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <td><input type="text" class="cell" id="f4_name" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="f4_job" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="f4_params" autocomplete="off"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="prompt" style="margin-top:20px;">
+        <span class="plabel">What STATE (variables) does it keep, and what DECISION (conditional) does it make?</span>
+        <textarea class="write-box" id="state_decision" rows="4"></textarea>
+      </div>
+      <div class="draw-box" style="margin-top:22px;">
+        <span class="box-label" style="color:var(--purple);">Sketch your app</span>
+        <textarea id="layout" placeholder=""></textarea>
+      </div>
+    </section>
+
+    <!-- 6. BUILD LOG -->
+    <section class="card">
+      <div class="card-eyebrow">Build Log</div>
+      <h2>As You Build</h2>
+      <div class="instructions">Build in App Lab <strong>code mode</strong>. Track each function or feature and the bugs you hit &mdash; this is your engineering record.</div>
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th style="width:40%;">Function/feature I built</th>
+            <th style="width:20%;">Worked? (Y/N)</th>
+            <th>Bug + fix</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text" class="cell" id="b1_did" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="b1_work" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="b1_fix" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <td><input type="text" class="cell" id="b2_did" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="b2_work" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="b2_fix" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <td><input type="text" class="cell" id="b3_did" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="b3_work" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="b3_fix" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <td><input type="text" class="cell" id="b4_did" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="b4_work" autocomplete="off"></td>
+            <td><input type="text" class="cell" id="b4_fix" autocomplete="off"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="field-line" style="margin-top:22px;">
+        <span class="box-label">My App Lab share link</span>
+        <input type="text" class="line-input" id="app_link" autocomplete="off">
+      </div>
+    </section>
+
+    <!-- 7. REFLECT -->
+    <section class="card">
+      <div class="card-eyebrow">Reflect</div>
+      <h2>Reflect on Your Build</h2>
+      <div class="prompt">
+        <span class="plabel">Describe your app's functions, state, and decisions in plain English.</span>
+        <textarea class="write-box" id="reflect_arch" rows="4"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">Where are input, processing, and output in your app?</span>
+        <textarea class="write-box" id="reflect_iosp" rows="4"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">A bug you found via decomposition or <code>console.log</code>:</span>
+        <textarea class="write-box" id="reflect_bug" rows="3"></textarea>
+      </div>
+      <div class="prompt">
+        <span class="plabel">Why did you choose this app?</span>
+        <input type="text" class="line-input" id="reflect_why" autocomplete="off">
+      </div>
+      <div class="prompt">
+        <span class="plabel">Looking ahead <span class="mono">AI bridge</span></span>
+        <span class="phint">How does understanding functions and decomposition change how you'll DIRECT and DEBUG an AI app builder like Lovable? (Think: specifying what to build, and finding a feature that silently fails.)</span>
+        <textarea class="write-box" id="reflect_ai" rows="4"></textarea>
+      </div>
+    </section>
+
+    <!-- 8. EXTEND BEYOND THE CLASSROOM -->
+    <section class="card">
+      <div class="card-eyebrow">Beyond the Classroom</div>
+      <h2>Extend It</h2>
+      <div class="prompt">
+        <span class="plabel">Share your app with someone outside class.</span>
+        <span class="phint">Did it work as intended? What function would you add or refactor next?</span>
+        <textarea class="write-box" id="extend" rows="4"></textarea>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="footer">masterpiece labs &middot; Week 4 Capstone &middot; Functions &amp; a Real App &middot; High School</div>
+
+</div>
+
+<script>
+(function () {
+  var STORAGE_PREFIX = 'prog_w4_hs_worksheet:';
+  var indicator = document.getElementById('saveIndicator');
+  var indicatorTimer = null;
+
+  function textFields() {
+    return document.querySelectorAll('input[id]:not([type=checkbox]), textarea[id]');
+  }
+  function checkFields() {
+    return document.querySelectorAll('input[type=checkbox][id]');
+  }
+
+  function showSaved() {
+    if (!indicator) return;
+    indicator.classList.add('show');
+    if (indicatorTimer) clearTimeout(indicatorTimer);
+    indicatorTimer = setTimeout(function () {
+      indicator.classList.remove('show');
+    }, 1200);
+  }
+
+  function saveText(el) {
+    try {
+      localStorage.setItem(STORAGE_PREFIX + el.id, el.value);
+      showSaved();
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function saveCheck(el) {
+    try {
+      localStorage.setItem(STORAGE_PREFIX + el.id, el.checked ? '1' : '0');
+      showSaved();
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function restore() {
+    try {
+      textFields().forEach(function (el) {
+        var v = localStorage.getItem(STORAGE_PREFIX + el.id);
+        if (v !== null) {
+          el.value = v;
+          autoGrow(el);
+        }
+      });
+      checkFields().forEach(function (el) {
+        var v = localStorage.getItem(STORAGE_PREFIX + el.id);
+        if (v !== null) el.checked = (v === '1');
+      });
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function autoGrow(el) {
+    if (el.tagName.toLowerCase() !== 'textarea') return;
+    el.style.height = 'auto';
+    el.style.height = (el.scrollHeight) + 'px';
+  }
+
+  function init() {
+    textFields().forEach(function (el) {
+      el.addEventListener('input', function () {
+        autoGrow(el);
+        saveText(el);
+      });
+    });
+    checkFields().forEach(function (el) {
+      el.addEventListener('change', function () {
+        saveCheck(el);
+      });
+    });
+    restore();
+  }
+
+  window.clearAnswers = function () {
+    if (!window.confirm('Clear all your answers on this worksheet? This cannot be undone.')) return;
+    try {
+      textFields().forEach(function (el) {
+        localStorage.removeItem(STORAGE_PREFIX + el.id);
+        el.value = '';
+        autoGrow(el);
+      });
+      checkFields().forEach(function (el) {
+        localStorage.removeItem(STORAGE_PREFIX + el.id);
+        el.checked = false;
+      });
+      showSaved();
+    } catch (e) { /* storage unavailable */ }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>

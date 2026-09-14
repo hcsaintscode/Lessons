@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 4 Self-Study — Functions &amp; a Real App: Putting It All Together (High School)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #2d1b69;
+    --purple-light: #3d2b7a;
+    --purple-lighter: #f4f0ff;
+    --teal: #2bb5a0;
+    --teal-light: #e6f9f6;
+    --coral: #e8553d;
+    --coral-light: #fef0ed;
+    --sand: #f5f0e8;
+    --olive: #7a8450;
+    --olive-light: #f0f2e6;
+    --text: #1a1a2e;
+    --text-light: #555;
+    --border: #e0e0e0;
+    --bg: #fafafa;
+    --white: #ffffff;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+
+  /* ─── STICKY NAV ─── */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: var(--purple);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1000;
+    box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+  }
+  .nav-brand {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.5px;
+  }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.95);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .nav-progress-track {
+    width: 120px; height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px; overflow: hidden;
+  }
+  .nav-progress-fill {
+    height: 100%; width: 0%;
+    background: var(--teal);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+  }
+  .nav-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.85);
+    white-space: nowrap;
+  }
+
+  /* ─── SPLIT LAYOUT ─── */
+  .split {
+    display: flex;
+    height: 100vh;
+    padding-top: 60px;
+  }
+  .left-panel {
+    width: 46%;
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+    background: var(--bg);
+  }
+  .right-panel {
+    width: 54%;
+    height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    background: #16132b;
+    position: sticky;
+    top: 60px;
+  }
+  .right-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: #201a3d;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .right-header .rh-label {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  .right-header .rh-sub { font-size: 0.62rem; color: rgba(255,255,255,0.4); font-weight: 400; }
+  .right-body { flex: 1; position: relative; }
+  #editorFrame { width: 100%; height: 100%; border: 0; }
+  .editor-fallback {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.85rem;
+    padding: 24px;
+    text-align: center;
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+  }
+  .editor-fallback a { color: var(--teal); }
+
+  /* ─── LESSON CONTENT ─── */
+  .hero {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    padding: 40px 36px 34px;
+    color: white;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 2.1rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+  .hero-sub { font-size: 0.98rem; opacity: 0.85; }
+
+  .content { padding: 0 36px 60px; }
+
+  section.block {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section.block:last-of-type { border-bottom: none; }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+  section.block h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: var(--purple);
+    margin-bottom: 10px;
+  }
+  section.block p { font-size: 0.95rem; margin: 10px 0; }
+  section.block p.muted { color: var(--text-light); font-size: 0.9rem; }
+
+  .examples { list-style: none; padding: 0; margin: 12px 0; }
+  .examples li { padding: 6px 0 6px 22px; position: relative; font-size: 0.92rem; }
+  .examples li::before { content: '→'; position: absolute; left: 0; color: var(--teal); font-weight: 700; }
+
+  /* IOSP step blocks */
+  .step { border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 12px 0; }
+  .step h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 5px;
+  }
+  .step .tag {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 1rem;
+  }
+  .step p { font-size: 0.9rem; margin: 4px 0 0; }
+  .step.define   { background: var(--teal-light);   border-left: 4px solid var(--teal); }
+  .step.define h3 { color: var(--teal); }
+  .step.prepare { background: var(--purple-lighter); border-left: 4px solid var(--purple); }
+  .step.prepare h3 { color: var(--purple); }
+  .step.try  { background: var(--coral-light);  border-left: 4px solid var(--coral); }
+  .step.try h3 { color: var(--coral); }
+  .step.storage { background: var(--olive-light);  border-left: 4px solid var(--olive); }
+  .step.storage h3 { color: var(--olive); }
+
+  .callout {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    color: white; border-radius: 10px; padding: 18px 22px; margin: 18px 0;
+  }
+  .callout::before {
+    content: 'THE PATTERN';
+    display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; font-weight: 600; letter-spacing: 1.5px;
+    opacity: 0.85; margin-bottom: 6px;
+  }
+  .callout p { color: white; font-size: 0.92rem; margin: 0; }
+
+  /* code */
+  code.ci {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem; background: var(--purple-lighter);
+    border: 1px solid #ddd4f5; border-radius: 5px;
+    padding: 1px 6px; color: var(--purple);
+  }
+  pre.cb {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; line-height: 1.6;
+    background: #1f1a3a; color: #d7c9ff;
+    border-left: 3px solid var(--teal);
+    border-radius: 8px; padding: 14px 16px;
+    overflow-x: auto; white-space: pre; margin: 8px 0 6px;
+    tab-size: 2;
+  }
+  .code-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--teal); font-weight: 500; margin: 14px 0 3px;
+  }
+
+  /* video buttons */
+  .video-btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: var(--coral); color: white; text-decoration: none;
+    font-weight: 600; font-size: 0.92rem; padding: 12px 20px;
+    border-radius: 9px; margin: 6px 8px 6px 0;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 4px 12px rgba(232, 85, 61, 0.28);
+  }
+  .video-btn:hover { transform: translateY(-2px); }
+
+  /* fields */
+  .field { margin: 14px 0; }
+  .field label {
+    display: block; font-size: 0.88rem; font-weight: 600;
+    color: var(--purple); margin-bottom: 6px;
+  }
+  .field label .hint {
+    display: block; font-weight: 400; font-size: 0.82rem;
+    color: var(--text-light); font-style: italic; margin-top: 2px;
+  }
+  textarea, input.text-line {
+    width: 100%; font-family: 'Inter', sans-serif; font-size: 0.92rem;
+    color: var(--text); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 10px 12px; background: #fcfcfd;
+    resize: vertical; transition: border-color 0.2s ease;
+  }
+  textarea { min-height: 74px; line-height: 1.55; }
+  textarea:focus, input.text-line:focus { outline: none; border-color: var(--teal); background: var(--white); }
+
+  .tag-chip {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px;
+    margin-right: 8px; vertical-align: middle;
+  }
+  .tag-chip.input { background: var(--teal-light); color: var(--teal); }
+  .tag-chip.process { background: var(--purple-lighter); color: var(--purple); }
+  .tag-chip.output { background: var(--coral-light); color: var(--coral); }
+  .tag-chip.storage { background: var(--olive-light); color: var(--olive); }
+
+  /* checkbox step */
+  .step-check {
+    display: flex; align-items: flex-start; gap: 11px;
+    background: var(--sand); border-radius: 10px; padding: 14px 18px;
+    margin: 18px 0 6px; cursor: pointer; border: 1.5px solid transparent;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .step-check:hover { border-color: var(--teal); }
+  .step-check input { width: 21px; height: 21px; margin-top: 1px; accent-color: var(--teal); cursor: pointer; flex-shrink: 0; }
+  .step-check span { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+  .step-check.done { background: var(--teal-light); border-color: var(--teal); }
+
+  /* details */
+  details.check {
+    background: var(--olive-light); border: 2px solid var(--olive);
+    border-radius: 10px; padding: 2px; margin: 18px 0;
+  }
+  details.check summary {
+    cursor: pointer; list-style: none; padding: 14px 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.76rem;
+    font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--olive); display: flex; align-items: center; gap: 9px;
+  }
+  details.check summary::-webkit-details-marker { display: none; }
+  details.check summary::before { content: '▸'; transition: transform 0.2s ease; }
+  details.check[open] summary::before { transform: rotate(90deg); }
+  details.check .reveal { padding: 0 18px 18px; }
+  details.check .reveal p { font-size: 0.9rem; line-height: 1.6; }
+
+  /* completion */
+  .completion {
+    display: none;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--purple) 100%);
+    color: white; border-radius: 12px; padding: 26px 30px; margin: 24px 0; text-align: center;
+  }
+  .completion.show { display: block; animation: pop 0.5s ease; }
+  @keyframes pop { 0% { transform: scale(0.96); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .completion h2 { font-family: 'Playfair Display', serif; font-style: italic; color: white; font-size: 1.5rem; margin-bottom: 6px; }
+  .completion p { color: rgba(255,255,255,0.9); margin: 0; font-size: 0.92rem; }
+
+  /* saved + reset */
+  .saved-indicator {
+    position: fixed; bottom: 20px; left: 20px;
+    background: var(--teal); color: white;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; font-weight: 500;
+    padding: 9px 16px; border-radius: 22px;
+    box-shadow: 0 4px 14px rgba(43, 181, 160, 0.4);
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; z-index: 1001;
+  }
+  .saved-indicator.show { opacity: 1; transform: translateY(0); }
+  .reset-row { text-align: center; margin: 24px 0 12px; }
+  .reset-btn {
+    font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500;
+    color: var(--coral); background: transparent; border: 1.5px solid var(--coral);
+    border-radius: 8px; padding: 9px 18px; cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .reset-btn:hover { background: var(--coral); color: white; }
+
+  /* mobile toggle button (hidden on desktop) */
+  .mobile-toggle {
+    display: none;
+    position: fixed; bottom: 18px; right: 18px; z-index: 1002;
+    background: var(--purple); color: white; border: none;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem;
+    padding: 12px 20px; border-radius: 24px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(45, 27, 105, 0.4);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 860px) {
+    .split { flex-direction: column; height: auto; }
+    .left-panel, .right-panel { width: 100%; }
+    .left-panel { height: auto; overflow: visible; }
+    .right-panel {
+      position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+      height: auto; width: 100%; z-index: 900;
+      transform: translateX(100%); transition: transform 0.3s ease;
+    }
+    .right-panel.mobile-show { transform: translateX(0); }
+    .left-panel.mobile-hide { display: none; }
+    .mobile-toggle { display: block; }
+    .nav-progress-track { width: 70px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <span class="nav-brand">masterpiece labs</span>
+  <div class="nav-right">
+    <span class="nav-badge">SELF-STUDY · WEEK 04 · HS</span>
+    <div class="nav-progress-track"><div class="nav-progress-fill" id="progressFill"></div></div>
+    <span class="nav-progress-label" id="progressLabel">0 / 6</span>
+  </div>
+</nav>
+
+<div class="split">
+
+  <!-- ═══════════ LEFT: LESSON ═══════════ -->
+  <div class="left-panel" id="lessonPanel">
+
+    <header class="hero">
+      <div class="hero-eyebrow">Self-Study · Programming in App Lab</div>
+      <h1>Functions &amp; a Real App</h1>
+      <p class="hero-sub">Decompose an app into functions — the last piece, and the key to directing AI builders.</p>
+    </header>
+
+    <div class="content">
+
+      <!-- 1. HOW THIS WORKS -->
+      <section class="block">
+        <div class="kicker">Start Here</div>
+        <h2>How This Works</h2>
+        <p>This is the <strong>capstone</strong> — everything you've built comes together. You've used <strong>variables</strong> to remember, <strong>events</strong> to respond, and <strong>conditionals</strong> to decide. This week you add <strong>functions</strong> and see how a real app is organized out of small, named pieces. You'll <strong>read</strong> the lesson on the left and <strong>run and edit a real app</strong> on the right. No installs, no logins: the app is already running.</p>
+        <ul class="examples">
+          <li><strong>Read</strong> the lesson on the left; <strong>run and edit a real app</strong> on the right.</li>
+          <li>The editor updates live — change something, refresh the preview, and play the game.</li>
+          <li>Your written answers save automatically. Check off each milestone to fill the progress bar.</li>
+        </ul>
+        <p class="muted">In class you'll build this in <strong>App Lab's code mode</strong>. Here you use plain JavaScript to learn the exact same concept, so you're never stuck waiting on a login.</p>
+        <p class="muted">On a tablet or phone? Use the <strong>Switch to Editor</strong> button (bottom-right) to flip between the lesson and the code.</p>
+        <label class="step-check" data-check="ready">
+          <input type="checkbox" id="chk-ready">
+          <span>I'm ready to start</span>
+        </label>
+      </section>
+
+      <!-- 2. FUNCTIONS & PARAMETERS -->
+      <section class="block">
+        <div class="kicker">Lesson 1</div>
+        <h2>Functions &amp; Parameters</h2>
+        <p>A <strong>function</strong> packages a piece of behavior under a name so you can reuse it whenever you want — write it once, run it as many times as you like. Instead of copying the same lines over and over, you <strong>call</strong> the function by name.</p>
+        <p>A <strong>parameter</strong> is an input a function accepts — a placeholder that lets <em>one</em> function vary its behavior. When you call the function, you hand it an <strong>argument</strong> (the actual value), and the parameter takes that value for that run. One function, many outcomes, depending on what you pass in.</p>
+        <div class="step define">
+          <h3>Define <span class="tag">— write it once, with a parameter</span></h3>
+          <p><code class="ci">function addScore(points) { … }</code> names the behavior and declares a parameter <code class="ci">points</code> — the input that will vary.</p>
+        </div>
+        <div class="step prepare">
+          <h3>Call <span class="tag">— pass an argument</span></h3>
+          <p><code class="ci">addScore(10)</code> runs the function with <code class="ci">points</code> set to <code class="ci">10</code>. Call <code class="ci">addScore(5)</code> and the same function does the job with a different value.</p>
+        </div>
+        <div class="step try">
+          <h3>Reuse <span class="tag">— one function, many cases</span></h3>
+          <p>Because the value comes in through the parameter, you never rewrite the function. Change the argument, not the code.</p>
+        </div>
+        <div class="callout">
+          <p>A function is reusable named behavior. A <strong>parameter</strong> is the input that lets one function handle many cases — pass a different <strong>argument</strong> and you get a different result, no rewrite needed.</p>
+        </div>
+        <div class="code-caption">A tiny parameterized function</div>
+        <pre class="cb">function greet(name) {   // name is the PARAMETER
+  return "Hi, " + name + "!";
+}
+greet("Sam");            // "Sam" is the ARGUMENT -> "Hi, Sam!"
+greet("Alex");           // same function, different result</pre>
+        <label class="step-check" data-check="function">
+          <input type="checkbox" id="chk-function">
+          <span>I understand functions &amp; parameters</span>
+        </label>
+      </section>
+
+      <!-- 3. DECOMPOSITION -->
+      <section class="block">
+        <div class="kicker">Lesson 2</div>
+        <h2>Decomposition</h2>
+        <p><strong>Decomposition</strong> is breaking a big app into small, single-purpose functions — <strong>one job each</strong>. Instead of one giant blob of code that does everything, you get a set of clearly named pieces: one makes a target, one checks a guess, one resets the game. Each piece is short enough to understand at a glance.</p>
+        <p>This is how real software stays <strong>readable</strong> and <strong>debuggable</strong>. When something breaks, you don't hunt through hundreds of tangled lines — you look at the one function whose job that is. And when you want to change behavior, you change one small piece without touching the rest.</p>
+        <div class="callout">
+          <p>The Color Match game on the right is decomposed into <code class="ci">makeTarget()</code> and <code class="ci">checkGuess(id)</code> — each does one job. One makes a random target; the other checks a guess and updates the score.</p>
+        </div>
+        <label class="step-check" data-check="decompose">
+          <input type="checkbox" id="chk-decompose">
+          <span>I understand decomposition</span>
+        </label>
+      </section>
+
+      <!-- 4. RUN IT -->
+      <section class="block">
+        <div class="kicker">Run It</div>
+        <h2>Run the Color Match Game</h2>
+        <p>The editor on the right is running a <strong>Color Match Game</strong> — a small but complete app that pulls together everything you've learned:</p>
+        <ul class="examples">
+          <li>A <strong>function</strong> <code class="ci">makeTarget()</code> picks a random target color and shows it.</li>
+          <li>A <strong>parameterized function</strong> <code class="ci">checkGuess(guess, points)</code> checks your click and adds <code class="ci">points</code> to the score.</li>
+          <li>An <strong>event</strong> on each swatch button calls <code class="ci">checkGuess</code> — plus a <strong>variable</strong> for the score and a <strong>conditional</strong> to decide right vs. wrong.</li>
+        </ul>
+        <p>Click <strong>Run</strong> (or refresh the preview), then <strong>play</strong>: a target color appears, you click the matching swatch, a parameterized function updates the score, and a new target is made. Get a few right and watch the score climb.</p>
+        <div class="field">
+          <label for="ta-trace">Trace the app:
+            <span class="hint">Name the two functions in this app and the ONE job each does. Where does a parameter get used?</span>
+          </label>
+          <textarea id="ta-trace" placeholder="Type your answer — it saves automatically."></textarea>
+        </div>
+        <label class="step-check" data-check="ran">
+          <input type="checkbox" id="chk-ran">
+          <span>I ran and traced the game</span>
+        </label>
+      </section>
+
+      <!-- 5. MODIFY IT -->
+      <section class="block">
+        <div class="kicker">Make It Yours</div>
+        <h2>Make It Yours</h2>
+        <p>Now make the game <em>yours</em>. Pick colors you actually like, tune the scoring the way <strong>you</strong> think it should work, and add a piece of your own:</p>
+        <ul class="examples">
+          <li><strong>Add another color:</strong> add a new <code class="ci">&lt;button class="swatch"&gt;</code> (with a <code class="ci">data-color</code> and background) in <code class="ci">index.html</code> <em>and</em> add that color to the <code class="ci">colors</code> array in <code class="ci">index.js</code>.</li>
+          <li><strong>Change the points:</strong> a correct guess passes <code class="ci">10</code> as the argument to <code class="ci">checkGuess</code>. Change that number and see the score jump by your amount — you're changing the argument, not the function.</li>
+          <li><strong>Stretch:</strong> write a <strong>brand-new function of your own</strong> (one job each) — e.g. <code class="ci">resetGame()</code> that sets the score back to 0 — and call it from a button you add.</li>
+        </ul>
+        <details class="check">
+          <summary>Stuck? Example edit</summary>
+          <div class="reveal">
+            <p>Add a color to the <code class="ci">colors</code> array (and a matching button in <code class="ci">index.html</code>), then write your own single-job function and wire it to a button:</p>
+            <pre class="cb">// in index.js -- add a fifth color
+var colors = ["#e8553d", "#2bb5a0", "#2d1b69", "#f4c430", "#5b8def"];
+
+// your OWN function -- one job: reset the game
+function resetGame() {
+  score = 0;
+  document.getElementById("score").textContent = score;
+  makeTarget();
+}
+
+// wire it to a button (add &lt;button id="resetBtn"&gt;Reset&lt;/button&gt; in index.html)
+document.getElementById("resetBtn").addEventListener("click", resetGame);</pre>
+            <p>Notice <code class="ci">resetGame()</code> does exactly one job and even reuses <code class="ci">makeTarget()</code> — that's decomposition in action.</p>
+          </div>
+        </details>
+        <label class="step-check" data-check="modified">
+          <input type="checkbox" id="chk-modified">
+          <span>I extended the app with my own function</span>
+        </label>
+      </section>
+
+      <!-- 6. THE BRIDGE -->
+      <section class="block">
+        <div class="kicker">The Bridge</div>
+        <h2>Directing &amp; Debugging AI</h2>
+        <p>Next, you'll build apps with an AI tool (<strong>Lovable</strong>) starting from a plain-English description. Here's why this week matters: because you can <strong>decompose</strong> an app into functions, state, and logic, you can specify exactly what you want — "it needs a function that makes a target, another that checks a guess and updates score" — instead of a vague wish. And when the AI hands you code, you can <strong>read and debug it</strong>, because you know what each piece is supposed to do.</p>
+        <div class="field">
+          <label for="ta-bridge">Decompose an app for an AI:
+            <span class="hint">Take an app you'd want an AI to build. Decompose it: name 2-3 functions it would need (one job each), the state it must keep, and one decision rule. Then: if the AI's version had a feature that silently failed, how would you find it?</span>
+          </label>
+          <textarea id="ta-bridge" placeholder="Type your answer — it saves automatically."></textarea>
+        </div>
+        <label class="step-check" data-check="bridge">
+          <input type="checkbox" id="chk-bridge">
+          <span>I decomposed an app for an AI builder</span>
+        </label>
+      </section>
+
+      <!-- COMPLETION -->
+      <div class="completion" id="completion" role="status">
+        <h2>You can build apps — and direct AI to! 🎉</h2>
+        <p>You learned that a <strong>function</strong> packages reusable behavior, that a <strong>parameter</strong> lets one function handle many cases, and that <strong>decomposition</strong> breaks an app into small single-job functions that stay readable and debuggable. You ran the Color Match game, extended it with a function of your own, and decomposed an app for an AI to build. That finishes the <strong>Programming unit</strong> — you're ready for the <strong>Lovable capstone</strong> with real code literacy behind you.</p>
+      </div>
+
+      <!-- WRAP-UP -->
+      <section class="block">
+        <div class="kicker">Wrap-Up</div>
+        <h2>The Big Idea</h2>
+        <p><strong>Functions and decomposition are how real software is organized.</strong> This literacy lets you build apps yourself AND direct, read, and debug the ones an AI builds for you.</p>
+        <p class="muted">You've now got the full toolkit — variables, events, conditionals, and functions. <strong>Next</strong> you'll aim it at a real AI builder and make something you'd actually want to keep.</p>
+      </section>
+
+      <div class="reset-row">
+        <button class="reset-btn" id="resetBtn" type="button">Reset this lesson</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════ RIGHT: EDITOR ═══════════ -->
+  <div class="right-panel" id="editorPanel">
+    <div class="right-header">
+      <span class="rh-label">Live Code Editor</span>
+      <span class="rh-sub">powered by StackBlitz</span>
+    </div>
+    <div class="right-body">
+      <div id="editorFrame">
+        <div class="editor-fallback">
+          Loading the code editor…<br><br>
+          If it doesn't appear, make sure you're online, or
+          <a href="https://stackblitz.com/fork/js" target="_blank" rel="noopener">open a blank JavaScript project on StackBlitz</a>
+          and paste the Color Match Game code from your worksheet.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- mobile flip button -->
+<button class="mobile-toggle" id="mobileToggle" type="button">Switch to Editor</button>
+
+<!-- saved indicator -->
+<div class="saved-indicator" id="savedIndicator">Saved ✓</div>
+
+<script src="https://unpkg.com/@stackblitz/sdk/bundles/sdk.umd.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_PREFIX = 'prog-week4-selfstudy-high:';
+
+  var TEXT_IDS = [
+    'ta-trace', 'ta-bridge'
+  ];
+  var CHECK_IDS = [
+    'chk-ready', 'chk-function', 'chk-decompose', 'chk-ran', 'chk-modified', 'chk-bridge'
+  ];
+  var TOTAL = CHECK_IDS.length;
+
+  var savedIndicator = document.getElementById('savedIndicator');
+  var savedTimer = null;
+
+  function save(k, v) { try { localStorage.setItem(STORAGE_PREFIX + k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(STORAGE_PREFIX + k); } catch (e) { return null; } }
+  function remove(k) { try { localStorage.removeItem(STORAGE_PREFIX + k); } catch (e) {} }
+
+  function flashSaved() {
+    if (!savedIndicator) return;
+    savedIndicator.classList.add('show');
+    if (savedTimer) clearTimeout(savedTimer);
+    savedTimer = setTimeout(function () { savedIndicator.classList.remove('show'); }, 1200);
+  }
+
+  function updateProgress() {
+    var done = 0;
+    CHECK_IDS.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.checked) done++;
+    });
+    var pct = TOTAL > 0 ? Math.round((done / TOTAL) * 100) : 0;
+    var fill = document.getElementById('progressFill');
+    var label = document.getElementById('progressLabel');
+    if (fill) fill.style.width = pct + '%';
+    if (label) label.textContent = done + ' / ' + TOTAL;
+    var completion = document.getElementById('completion');
+    if (completion) {
+      if (done === TOTAL && TOTAL > 0) completion.classList.add('show');
+      else completion.classList.remove('show');
+    }
+  }
+
+  // text fields
+  TEXT_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var stored = load(id);
+    if (stored !== null) el.value = stored;
+    el.addEventListener('input', function () { save(id, el.value); flashSaved(); });
+  });
+
+  // checkboxes
+  CHECK_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var stored = load(id);
+    if (stored === 'true') el.checked = true;
+    var labelWrap = el.closest('.step-check');
+    function sync() { if (labelWrap) labelWrap.classList.toggle('done', el.checked); }
+    sync();
+    el.addEventListener('change', function () {
+      save(id, el.checked ? 'true' : 'false');
+      sync();
+      updateProgress();
+      flashSaved();
+    });
+  });
+
+  // reset
+  var resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function () {
+      if (!window.confirm('Reset this lesson? This clears your saved answers and checkmarks on this page. This cannot be undone.')) return;
+      TEXT_IDS.forEach(function (id) { remove(id); var el = document.getElementById(id); if (el) el.value = ''; });
+      CHECK_IDS.forEach(function (id) {
+        remove(id);
+        var el = document.getElementById(id);
+        if (el) { el.checked = false; var w = el.closest('.step-check'); if (w) w.classList.remove('done'); }
+      });
+      updateProgress();
+      flashSaved();
+    });
+  }
+
+  // mobile toggle
+  var showingEditor = false;
+  var mobileToggle = document.getElementById('mobileToggle');
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', function () {
+      showingEditor = !showingEditor;
+      document.getElementById('lessonPanel').classList.toggle('mobile-hide', showingEditor);
+      document.getElementById('editorPanel').classList.toggle('mobile-show', showingEditor);
+      mobileToggle.textContent = showingEditor ? 'Switch to Lesson' : 'Switch to Editor';
+    });
+  }
+
+  updateProgress();
+
+  // ─── StackBlitz embed: Color Match Game (functions + parameter + decomposition + event) ───
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof StackBlitzSDK === 'undefined') return;
+    StackBlitzSDK.embedProject('editorFrame', {
+      title: 'Color Match Game',
+      description: 'Week 4 capstone — a decomposed app: functions with a parameter, an event, a variable, and a conditional',
+      template: 'javascript',
+      files: {
+        'index.html': '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>Color Match</title>\n  <style>\n    body { font-family: system-ui, sans-serif; max-width: 480px;\n           margin: 50px auto; padding: 0 16px; text-align: center;\n           color: #1a1a2e; }\n    h1 { color: #2d1b69; font-size: 1.9rem; }\n    .swatch { width: 70px; height: 70px; border: 2px solid #333;\n              border-radius: 10px; margin: 6px; cursor: pointer;\n              color: #fff; font-size: 1.1rem; font-weight: 700; }\n    #score { color: #e8553d; font-weight: 700; }\n    #msg { font-size: 1.15rem; font-weight: 600; color: #2bb5a0;\n           min-height: 1.4em; }\n    .row { margin: 10px 0; }\n  </style>\n</head>\n<body>\n  <h1>Color Match</h1>\n  <div id="target" style="width:120px;height:120px;border:2px solid #333;margin:12px auto;"></div>\n  <p>Score: <span id="score">0</span></p>\n  <div class="row">\n    <button class="swatch" data-color="#e8553d" style="background:#e8553d;">A</button>\n    <button class="swatch" data-color="#2bb5a0" style="background:#2bb5a0;">B</button>\n    <button class="swatch" data-color="#2d1b69" style="background:#2d1b69;">C</button>\n    <button class="swatch" data-color="#f4c430" style="background:#f4c430;">D</button>\n  </div>\n  <p id="msg"></p>\n  <script src="index.js"><\/script>\n</body>\n</html>',
+        'index.js': 'var colors = ["#e8553d", "#2bb5a0", "#2d1b69", "#f4c430"];\nvar score = 0;          // state\nvar targetColor = "";   // the color to match this round\n\n// FUNCTION 1 (one job): make a new random target and show it\n// INPUT: none  PROCESSING: pick a random color  OUTPUT: show it on the target swatch\nfunction makeTarget() {\n  var i = Math.floor(Math.random() * colors.length);\n  targetColor = colors[i];\n  document.getElementById("target").style.background = targetColor;\n  document.getElementById("msg").textContent = "Find this color!";\n}\n\n// FUNCTION 2 (one job): check a guess and update the score by `points`\n// INPUT: guess + points (parameters)  PROCESSING: compare & score  OUTPUT: update message + score\nfunction checkGuess(guess, points) {\n  if (guess === targetColor) {          // conditional\n    score = score + points;             // uses the parameter\n    document.getElementById("msg").textContent = "Correct! +" + points;\n    makeTarget();                        // decomposition: reuse function 1\n  } else {\n    document.getElementById("msg").textContent = "Try again!";\n  }\n  document.getElementById("score").textContent = score;\n}\n\n// EVENT: each swatch button calls checkGuess with its color\nvar buttons = document.querySelectorAll(".swatch");\nfor (var b = 0; b < buttons.length; b++) {\n  buttons[b].addEventListener("click", function (e) {\n    checkGuess(e.target.getAttribute("data-color"), 10);\n  });\n}\n\n// start the first round\nmakeTarget();\n'
+      }
+    }, {
+      openFile: 'index.js',
+      view: 'default',
+      hideDevTools: true,
+      height: '100%'
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

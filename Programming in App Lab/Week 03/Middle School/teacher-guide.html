@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 3 Teacher Guide — Programming in App Lab (Middle School)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --purple: #2d1b69;
+            --purple-light: #3d2b7a;
+            --purple-lighter: #f4f0ff;
+            --teal: #2bb5a0;
+            --teal-light: #e6f9f6;
+            --coral: #e8553d;
+            --coral-light: #fef0ed;
+            --text: #1a1a2e;
+            --text-light: #555;
+            --border: #e0e0e0;
+            --bg: #fafafa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            padding-top: 64px;
+        }
+
+        /* ─── STICKY NAV ─── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--purple);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+        }
+
+        .nav-brand {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-badge {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.95);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            padding: 80px 32px 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ─── AT A GLANCE ─── */
+        .at-a-glance {
+            max-width: 900px;
+            margin: -30px auto 40px;
+            padding: 32px 40px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .at-a-glance h2 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 20px;
+        }
+
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .glance-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .glance-item:last-child,
+        .glance-item:nth-last-child(2) {
+            border-bottom: none;
+        }
+
+        .glance-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .glance-value {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        /* ─── TABS ─── */
+        .tabs-container {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 4px;
+            background: var(--white);
+            border-radius: 12px 12px 0 0;
+            padding: 8px 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: var(--purple-lighter);
+            color: var(--purple);
+        }
+
+        .tab-btn.active {
+            background: var(--purple);
+            color: white;
+            font-weight: 600;
+        }
+
+        .tab-btn .tab-duration {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 2px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tab-btn.active .tab-duration {
+            opacity: 0.85;
+        }
+
+        .tab-content {
+            background: var(--white);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ─── DAY HEADER ─── */
+        .day-header {
+            margin-bottom: 32px;
+        }
+
+        .day-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .day-header .day-subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ─── TIMING TABLE ─── */
+        .timing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0 36px;
+            font-size: 0.9rem;
+        }
+
+        .timing-table th {
+            background: var(--purple-lighter);
+            color: var(--purple);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--purple);
+        }
+
+        .timing-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .timing-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .timing-table .time-col {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--purple);
+            white-space: nowrap;
+            width: 100px;
+        }
+
+        /* ─── SECTION HEADERS ─── */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 36px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--purple-lighter);
+        }
+
+        /* ─── SAY BLOCKS ─── */
+        .say-block {
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .say-block::before {
+            content: 'SAY';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            background: rgba(45, 27, 105, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .say-block p {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        /* ─── TIP BLOCKS ─── */
+        .tip-block {
+            background: var(--teal-light);
+            border-left: 4px solid var(--teal);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .tip-block::before {
+            content: 'TIP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.12);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .tip-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── WARNING BLOCKS ─── */
+        .warning-block {
+            background: var(--coral-light);
+            border-left: 4px solid var(--coral);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .warning-block::before {
+            content: 'HEADS UP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--coral);
+            background: rgba(232, 85, 61, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .warning-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── CHECKPOINT ─── */
+        .checkpoint {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 36px 0;
+            color: white;
+        }
+
+        .checkpoint::before {
+            content: '✓ CHECKPOINT';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            opacity: 0.85;
+        }
+
+        .checkpoint p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        /* ─── CONTENT HELPERS ─── */
+        .facilitation-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .facilitation-list li {
+            padding: 8px 0 8px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .facilitation-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        .discussion-questions {
+            list-style: none;
+            counter-reset: question;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .discussion-questions li {
+            counter-increment: question;
+            padding: 10px 0 10px 36px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .discussion-questions li::before {
+            content: counter(question);
+            position: absolute;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--purple-lighter);
+            color: var(--purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            top: 10px;
+        }
+
+        .exit-ticket {
+            background: #f8f7ff;
+            border: 2px dashed var(--purple);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+
+        .exit-ticket::before {
+            content: 'EXIT TICKET';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .exit-ticket p {
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* ─── ADDITIONAL NOTES ─── */
+        .additional-notes {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .notes-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .notes-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 24px;
+        }
+
+        .notes-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .notes-card h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .notes-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notes-card ul li {
+            padding: 6px 0 6px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .notes-card ul li::before {
+            content: '•';
+            position: absolute;
+            left: 4px;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .dashboard-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.green { background: #4caf50; }
+        .legend-dot.yellow { background: #ff9800; }
+        .legend-dot.gray { background: #bdbdbd; }
+
+        /* ─── DPTR STEP LIST (reuses existing color vars) ─── */
+        .dptr-list, .iosp-list {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .dptr-list li, .iosp-list li {
+            padding: 14px 18px;
+            margin: 10px 0;
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .dptr-list li strong, .iosp-list li strong {
+            color: var(--purple);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── CONSTRAINT REFERENCE (two-column, reuses vars) ─── */
+        .constraint-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .constraint-card {
+            border-radius: 8px;
+            padding: 18px 20px;
+        }
+
+        .constraint-card.together {
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+        }
+
+        .constraint-card.apart {
+            background: var(--coral-light);
+            border: 1px solid rgba(232, 85, 61, 0.35);
+        }
+
+        .constraint-card h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .constraint-card.together h4 { color: var(--teal); }
+        .constraint-card.apart h4 { color: var(--coral); }
+
+        .constraint-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .constraint-card li {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            line-height: 1.5;
+        }
+
+        /* ─── TEACHER ANSWER KEY BLOCK (teal-tinted, reuses vars) ─── */
+        .answer-key {
+            background: var(--teal-light);
+            border: 2px solid var(--teal);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+
+        .answer-key::before {
+            content: 'TEACHER ANSWER KEY';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.15);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+
+        .answer-key .ak-table {
+            background: var(--white);
+            border: 1px solid rgba(43, 181, 160, 0.4);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+
+        .answer-key .ak-table h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .answer-key .ak-table p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .answer-key .ak-note {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        /* ─── RUBRIC TABLE (reuses existing color vars) ─── */
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 32px;
+            font-size: 0.82rem;
+        }
+
+        .rubric-table th {
+            background: var(--purple);
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .rubric-table th:first-child {
+            background: var(--purple-light);
+        }
+
+        .rubric-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.45;
+        }
+
+        .rubric-table td:first-child {
+            font-weight: 600;
+            color: var(--purple);
+            background: var(--purple-lighter);
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ─── RESOURCE LINK (optional enrichment, reuses vars) ─── */
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--teal);
+            text-decoration: none;
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin: 6px 0;
+        }
+
+        .resource-link::before {
+            content: '↗';
+            font-weight: 700;
+        }
+
+        .resource-link:hover {
+            background: rgba(43, 181, 160, 0.18);
+        }
+
+        /* ─── CODE BLOCKS (App Lab snippets, reuses existing color vars) ─── */
+        .code-block {
+            background: var(--purple);
+            color: #e9e4ff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            padding: 18px 22px;
+            border-radius: 10px;
+            border-left: 4px solid var(--teal);
+            margin: 16px 0;
+            overflow-x: auto;
+            white-space: pre;
+            tab-size: 2;
+        }
+
+        .code-block::before {
+            content: 'APP LAB CODE';
+            display: block;
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .code-inline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            background: var(--purple-lighter);
+            color: var(--purple);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(45, 27, 105, 0.15);
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            background: var(--purple);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 32px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .nav { padding: 0 16px; }
+            .hero h1 { font-size: 2rem; }
+            .at-a-glance { margin: -20px 16px 30px; padding: 24px; }
+            .glance-grid { grid-template-columns: 1fr; }
+            .tabs-container { padding: 0 12px; }
+            .tab-content { padding: 24px; }
+            .tabs-nav { flex-direction: column; gap: 2px; }
+            .tab-btn { border-radius: 8px; }
+            .constraint-grid { grid-template-columns: 1fr; }
+            .rubric-table { font-size: 0.72rem; }
+            .rubric-table th, .rubric-table td { padding: 8px; }
+            .code-block { font-size: 0.74rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <span class="nav-brand">masterpiece labs</span>
+    <span class="nav-badge">PROGRAMMING IN APP LAB · WEEK 03 · MIDDLE SCHOOL</span>
+</nav>
+
+<!-- ─── HERO ─── -->
+<header class="hero">
+    <div class="hero-eyebrow">Teacher Guide · Middle School</div>
+    <h1>Input &amp; Decisions: Apps That Respond to You</h1>
+    <p class="hero-sub">Week 3 — Read what the user types or picks, then make the app decide</p>
+</header>
+
+<!-- ─── AT A GLANCE ─── -->
+<section class="at-a-glance" aria-label="Week at a glance">
+    <h2>At a Glance</h2>
+    <div class="glance-grid">
+        <div class="glance-item">
+            <div class="glance-label">Driving Question</div>
+            <div class="glance-value">How does an app react differently depending on what the user types or chooses?</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Big Idea</div>
+            <div class="glance-value">Apps read input (text, dropdowns), combine strings, and use IF statements to decide what to do. Different input → different output. That's the app making decisions.</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Schedule</div>
+            <div class="glance-value">Day 1 Learn (45 min) · Day 2 Explore (90 min) · Day 3 Create (90 min)</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Week Deliverable</div>
+            <div class="glance-value">An app that takes input and uses conditionals to produce different outputs — shared via link</div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── LEARNING OBJECTIVES ─── -->
+<section class="at-a-glance" aria-label="Learning objectives" style="margin-top:0;">
+    <h2>Learning Objectives</h2>
+    <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:12px;">Students will be able to:</p>
+    <ul class="facilitation-list">
+        <li>Read user input from a text box and a dropdown (<span class="code-inline">getText</span> / <span class="code-inline">getProperty</span>)</li>
+        <li>Combine strings to build a personalized message</li>
+        <li>Write <span class="code-inline">if</span> / <span class="code-inline">if-else</span> statements using comparison operators to make decisions</li>
+        <li>Explain how different input leads to different output</li>
+    </ul>
+</section>
+
+<!-- ─── TABBED DAYS ─── -->
+<section class="tabs-container">
+    <div class="tabs-nav" role="tablist" aria-label="Daily lesson plans">
+        <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="day1" id="tab-day1" onclick="switchTab('day1')">
+            Day 1
+            <span class="tab-duration">45 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day2" id="tab-day2" onclick="switchTab('day2')">
+            Day 2
+            <span class="tab-duration">90 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day3" id="tab-day3" onclick="switchTab('day3')">
+            Day 3
+            <span class="tab-duration">90 min</span>
+        </button>
+    </div>
+
+    <div class="tab-content">
+
+        <!-- ═══════════ DAY 1 ═══════════ -->
+        <div class="tab-panel active" id="day1" role="tabpanel" aria-labelledby="tab-day1">
+            <div class="day-header">
+                <h2>Day 1 — Learn: Reading Input &amp; Building Strings (Mad Lib)</h2>
+                <p class="day-subtitle">Get what the user types, then talk back</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 1 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–8 min</td>
+                        <td>Hook — "The apps you love react to YOU"</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">8–24 min</td>
+                        <td>Mini-lesson — input elements; <span class="code-inline">getText</span>; strings + joining with <span class="code-inline">+</span></td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">24–38 min</td>
+                        <td>Build a mini Mad Lib together in App Lab</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">38–42 min</td>
+                        <td>App Lab lesson pointer (Code.org Lessons 6–9)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">42–45 min</td>
+                        <td>Exit ticket</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Hook (8 min)</h3>
+
+            <div class="say-block">
+                <p>"The apps you love feel personal because they react to YOU — your name, your choices. Today your app reads what someone types and talks back to them by name."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Ask for a few examples out loud: a game that greets you by name, a quiz that gives you a result, a playlist that fits your mood. All of them do the same thing under the hood — they read something from you (input) and respond to it. Keep that word, input, on the board.</p>
+            </div>
+
+            <h3 class="section-title">Mini-lesson: Reading Input &amp; Joining Text (16 min)</h3>
+
+            <div class="say-block">
+                <p>"Last week our apps could remember a number. This week they start listening. First we read what the user types, then we build a message back to them by gluing pieces of text together. Here are the four words you need."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>INPUT ELEMENT</strong> — a text box or dropdown the user fills in (the app reads what they put there).</li>
+                <li><strong>getText</strong> — reads what's currently in a text box: <span class="code-inline" style="font-style:normal">getText(&quot;nameInput&quot;)</span></li>
+                <li><strong>STRING</strong> — text data, always written inside quotes: <span class="code-inline" style="font-style:normal">&quot;Hello&quot;</span></li>
+                <li><strong>CONCATENATION</strong> — joining strings together with <span class="code-inline" style="font-style:normal">+</span> to build a bigger message.</li>
+            </ul>
+
+            <div class="say-block">
+                <p>"Think of strings like beads on a string. Each piece of text is a bead — the word Hello, a comma, the name someone typed — and the plus sign snaps them together into one message. Read the input, snap it into a sentence, show it on screen."</p>
+            </div>
+
+            <div class="code-block">var name = getText(&quot;nameInput&quot;);
+setText(&quot;output&quot;, &quot;Hello, &quot; + name + &quot;! Welcome.&quot;);</div>
+
+            <div class="tip-block">
+                <p>Strings are just text in quotes; the <span class="code-inline">+</span> glues them together. The Mad Lib is the classic, fun first use — read several inputs (a name, an animal, a silly verb) and drop them into a goofy sentence. When it reads back what a student typed, the whole idea clicks instantly.</p>
+            </div>
+
+            <h3 class="section-title">Build a Mini Mad Lib — Together (14 min)</h3>
+
+            <div class="say-block">
+                <p>"Everyone open App Lab. In Design Mode, drag on two text inputs (rename their ids to <span class='code-inline' style='font-style:normal'>nameInput</span> and <span class='code-inline' style='font-style:normal'>animalInput</span>), a button, and a label called <span class='code-inline' style='font-style:normal'>output</span>. Now switch to Code — we'll read both inputs and build one silly sentence."</p>
+            </div>
+
+            <div class="code-block">onEvent(&quot;goButton&quot;, &quot;click&quot;, function() {
+  var name = getText(&quot;nameInput&quot;);
+  var animal = getText(&quot;animalInput&quot;);
+  setText(&quot;output&quot;, name + &quot; rode a giant &quot; + animal + &quot; to school!&quot;);
+});</div>
+
+            <div class="tip-block">
+                <p>The whole magic is that <span class="code-inline">name</span> and <span class="code-inline">animal</span> hold whatever the user typed. Type different words, press the button, and the sentence changes. That's input driving output.</p>
+            </div>
+
+            <h3 class="section-title">App Lab Lesson Pointer (4 min)</h3>
+
+            <p style="font-size:0.9rem; line-height:1.6;">These skills line up with Code.org's csp5-virtual Unit 1, Lessons 6–9 (If-Statements; User Input &amp; Strings / Mad Lib; Boolean Expressions &amp; Dropdowns; if-else-if). Point students there for extra guided practice.</p>
+            <a class="resource-link" href="https://studio.code.org/courses/csp5-virtual/units/1">studio.code.org/courses/csp5-virtual/units/1</a>
+
+            <div class="exit-ticket">
+                <p>What does <span class="code-inline">getText</span> do? What does the <span class="code-inline">+</span> do when used with strings?</p>
+            </div>
+
+            <div class="checkpoint">
+                <p>Every student read a text input and displayed a personalized string.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 2 ═══════════ -->
+        <div class="tab-panel" id="day2" role="tabpanel" aria-labelledby="tab-day2">
+            <div class="day-header">
+                <h2>Day 2 — Explore: Making Decisions (If-Statements &amp; Dropdowns)</h2>
+                <p class="day-subtitle">Different input, different output</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 2 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Review — <span class="code-inline">getText</span> + joining strings</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–25 min</td>
+                        <td>If-statements — running code only when a condition is true</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">25–50 min</td>
+                        <td>Comparison operators + <span class="code-inline">if-else</span> + dropdowns</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">50–75 min</td>
+                        <td>Build a decider (dropdown → if-else → different output)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">75–90 min</td>
+                        <td>Record vocab + checkpoint</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Review (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Quick recall from yesterday: how do we read what someone typed? (getText.) And how do we build a message from pieces of text? (Join them with the plus sign.) Today we take that input and let the app DECIDE what to do with it."</p>
+            </div>
+
+            <h3 class="section-title">If-Statements: Deciding When to Act (20 min)</h3>
+
+            <div class="say-block">
+                <p>"An IF statement is how an app makes a decision. It runs a chunk of code only WHEN a condition is true. If the condition is false, that code is skipped. That's it — a question, and code that only runs when the answer is yes."</p>
+            </div>
+
+            <div class="code-block">if (age &gt;= 13) {
+  setText(&quot;msg&quot;, &quot;You can sign up.&quot;);
+}</div>
+
+            <div class="tip-block">
+                <p>Read it out loud as a sentence: "IF age is greater than or equal to 13, then show the sign-up message." Everything inside the curly braces only happens when the answer to the question is yes.</p>
+            </div>
+
+            <h3 class="section-title">Comparison Operators, If-Else &amp; Dropdowns (25 min)</h3>
+
+            <div class="say-block">
+                <p>"To ask a question in code we use comparison operators: <span class='code-inline' style='font-style:normal'>==</span> means 'is equal to,' <span class='code-inline' style='font-style:normal'>&gt;</span> means 'greater than,' <span class='code-inline' style='font-style:normal'>&lt;</span> means 'less than.' And <span class='code-inline' style='font-style:normal'>if-else</span> lets us do one thing when the answer is yes and something ELSE when it's no."</p>
+            </div>
+
+            <div class="say-block">
+                <p>"A dropdown is a perfect input for this — the user picks one option, we read it with getText, and the if-else decides what to show. Let's read a mood dropdown and give different advice for different moods."</p>
+            </div>
+
+            <div class="code-block">var mood = getText(&quot;moodDropdown&quot;);
+if (mood == &quot;happy&quot;) {
+  setText(&quot;advice&quot;, &quot;Go share it with a friend!&quot;);
+} else {
+  setText(&quot;advice&quot;, &quot;Take a short walk. 🙂&quot;);
+}</div>
+
+            <div class="tip-block">
+                <p>To compare for equality inside a condition, use <span class="code-inline">==</span> (double equals). A single <span class="code-inline">=</span> is assignment (that's how we put a value in a box last week). Mixing them up is a classic beginner bug — <span class="code-inline">==</span> asks a question, <span class="code-inline">=</span> stores a value.</p>
+            </div>
+
+            <h3 class="section-title">Build a Decider (25 min)</h3>
+
+            <div class="say-block">
+                <p>"Now your turn. Wire up a dropdown (or a text input) to an if-else so that different choices show different output. Start with just two outcomes — the 'if' and the 'else.'"</p>
+            </div>
+
+            <ul class="facilitation-list">
+                <li>Require at least one working <span class="code-inline">if-else</span> that is driven by an input.</li>
+                <li>Watch for <span class="code-inline">=</span> vs <span class="code-inline">==</span> confusion — the single most common conditional bug.</li>
+                <li>Watch for reading the wrong element id (the condition compares against a value that never appears).</li>
+                <li>Encourage a third branch with <span class="code-inline">else if</span> as a stretch for students who finish early.</li>
+            </ul>
+
+            <div class="warning-block">
+                <p><span class="code-inline">==</span> (compare) vs <span class="code-inline">=</span> (assign) is the #1 conditional bug for beginners. If a condition is behaving strangely — or App Lab flags an error — check for a single equals inside the parentheses first.</p>
+            </div>
+
+            <h3 class="section-title">Record Vocab (part of 75–90 min)</h3>
+
+            <p style="font-size:0.9rem; line-height:1.6;">Have students log this week's words in their notebooks or worksheet: <span class="code-inline">input</span>, <span class="code-inline">getText</span>, <span class="code-inline">string</span>, <span class="code-inline">concatenation</span>, <span class="code-inline">if</span>, <span class="code-inline">if-else</span>, and comparison operator (<span class="code-inline">==</span>, <span class="code-inline">&gt;</span>, <span class="code-inline">&lt;</span>).</p>
+
+            <div class="checkpoint">
+                <p>Every student has an app where a dropdown or input drives an if-else that changes the output.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 3 ═══════════ -->
+        <div class="tab-panel" id="day3" role="tabpanel" aria-labelledby="tab-day3">
+            <div class="day-header">
+                <h2>Day 3 — Create: Build a Decision App</h2>
+                <p class="day-subtitle">An app that decides — make it yours</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 3 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Launch — "Build a decision app that's YOURS"</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–20 min</td>
+                        <td>Plan — input, outputs, and the rule</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">20–70 min</td>
+                        <td>Build in App Lab</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">70–82 min</td>
+                        <td>Share &amp; test with a partner</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">82–90 min</td>
+                        <td>Reflection</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Launch (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Build a decision app that's YOURS — a personality quiz, a 'what should I eat/watch/wear' recommender, a mood-advice app, a study-or-break picker. It reads input and shows different output depending on the answer."</p>
+            </div>
+
+            <h3 class="section-title">Make It Yours: Plan Your Decision App (15 min)</h3>
+
+            <p style="font-size:0.9rem; line-height:1.6;">Before touching code, have each student answer three questions on paper. This is where they make real decisions about what they're building.</p>
+
+            <ul class="facilitation-list">
+                <li>What input does it take — a dropdown or a text box? What are the choices?</li>
+                <li>What are the possible outputs — the different messages or results it can show?</li>
+                <li>What's the rule — if this input, then show that output? Write one line for each branch.</li>
+            </ul>
+
+            <div class="tip-block">
+                <p>Push students to pick a topic they actually care about — their sport, their favorite shows, what to do when they're bored, a decision they really face. The more personal the topic, the more they'll want to make it work.</p>
+            </div>
+
+            <h3 class="section-title">Build (50 min)</h3>
+
+            <div class="say-block">
+                <p>"App Lab time. Get your input on the screen, then write the if-else that reacts to it. Test as you go — don't wait until the end."</p>
+            </div>
+
+            <ul class="facilitation-list">
+                <li>Start with 2 outcomes (a plain <span class="code-inline">if-else</span>), then add more with <span class="code-inline">else if</span>.</li>
+                <li>Test each branch — pick every option and confirm the output changes correctly.</li>
+                <li>Use <span class="code-inline">==</span> for comparisons inside the condition.</li>
+                <li>Check element IDs — the id in <span class="code-inline">getText</span> must match the id in Design Mode exactly.</li>
+            </ul>
+
+            <h3 class="section-title">Extend Beyond the Classroom: Share &amp; Test (12 min)</h3>
+
+            <div class="say-block">
+                <p>"Share your App Lab link. Trade with a partner and have them try EVERY option to make sure each one works. Then take it home — share it with a friend or someone in your family and see if the advice actually fits them."</p>
+            </div>
+
+            <ul class="facilitation-list">
+                <li>Use App Lab's Share button to get a keepable link — this is a real app students can hold onto.</li>
+                <li>Partner testing catches branches that were never checked.</li>
+                <li>Encourage students to try it out at home with family or friends and bring back what they said.</li>
+            </ul>
+
+            <h3 class="section-title">Reflection (8 min)</h3>
+
+            <ul class="discussion-questions">
+                <li>What does your app decide, and why did you pick this idea?</li>
+                <li>Where's the input, the decision (processing), and the output in your app?</li>
+                <li>What's one more branch you'd add if you kept building it?</li>
+                <li>Where in your own life could an app that decides based on input actually be useful?</li>
+            </ul>
+
+            <h3 class="section-title">Week 3 Deliverable Rubric</h3>
+
+            <table class="rubric-table" aria-label="Week 3 deliverable rubric">
+                <thead>
+                    <tr>
+                        <th>Criteria</th>
+                        <th>Getting Started</th>
+                        <th>Meets</th>
+                        <th>Exceeds</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Reads user input (text or dropdown)</td>
+                        <td>Input element present but not read in code.</td>
+                        <td>Reads one input with <span class="code-inline">getText</span>.</td>
+                        <td>Reads more than one input cleanly.</td>
+                    </tr>
+                    <tr>
+                        <td>Uses if / if-else with a correct comparison</td>
+                        <td>Has an <span class="code-inline">if</span> but comparison is wrong or uses <span class="code-inline">=</span>.</td>
+                        <td>Working <span class="code-inline">if-else</span> with a correct <span class="code-inline">==</span>/<span class="code-inline">&gt;</span>/<span class="code-inline">&lt;</span>.</td>
+                        <td>Adds an <span class="code-inline">else if</span> or combined condition.</td>
+                    </tr>
+                    <tr>
+                        <td>Different input clearly produces different output</td>
+                        <td>Output looks the same for every input.</td>
+                        <td>Each branch shows different output.</td>
+                        <td>Every option tested and clearly distinct.</td>
+                    </tr>
+                    <tr>
+                        <td>Reflection names input/decision/output + personal choice</td>
+                        <td>Reflection missing or very thin.</td>
+                        <td>Names input, decision, output.</td>
+                        <td>Also explains the personal reason for the idea.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="checkpoint">
+                <p>Every student shared a working decision app and completed the reflection.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ─── ADDITIONAL NOTES ─── -->
+<section class="additional-notes">
+    <div class="notes-card">
+        <h2>Additional Notes</h2>
+
+        <h3>Differentiation</h3>
+        <ul>
+            <li>Support — hand out a starter with the input and one branch already wired, so the student just adds the <span class="code-inline">else</span>; or a fill-in-the-blank condition with the comparison left as a gap.</li>
+            <li>Advanced — add <span class="code-inline">else if</span> branches, combine two conditions in one <span class="code-inline">if</span>, or validate empty input before deciding.</li>
+        </ul>
+
+        <h3>For the Non-Technical Teacher</h3>
+        <ul>
+            <li>The one bug to know: <span class="code-inline">==</span> compares, <span class="code-inline">=</span> assigns. Inside an <span class="code-inline">if</span> condition you almost always want <span class="code-inline">==</span>.</li>
+            <li>If a decision always does the same thing, check that the condition uses <span class="code-inline">==</span> and that <span class="code-inline">getText</span> reads the right element id.</li>
+        </ul>
+
+        <h3>Connecting the Arc</h3>
+        <ul>
+            <li>Conditionals are the "smart" part of Processing in IOSP — the app choosing what to do based on input.</li>
+            <li>This is also what you'll describe to an AI builder ("when the user picks X, show Y") and what you'll debug when it chooses wrong.</li>
+        </ul>
+
+        <h3>Materials Needed</h3>
+        <ul>
+            <li>Computers with App Lab (Code.org accounts)</li>
+            <li>Week 3 worksheet</li>
+            <li>Projector for the together-build</li>
+        </ul>
+
+        <h3>Optional: Code.org Lessons</h3>
+        <ul>
+            <li>csp5-virtual Unit 1 Lessons 6–9 (If-Statements; User Input &amp; Strings / Mad Lib; Boolean Expressions &amp; Dropdowns; if-else-if &amp; compound logic). <a href="https://studio.code.org/courses/csp5-virtual/units/1">studio.code.org/courses/csp5-virtual/units/1</a></li>
+        </ul>
+
+        <h3>If you're running behind</h3>
+        <ul>
+            <li>Day 2's working if-else is the priority</li>
+            <li>The decision app can finish as homework; sharing and reflection can be brief</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+    Masterpiece Labs · Programming in App Lab · Week 3 · Middle School
+</footer>
+
+<script>
+    function switchTab(dayId) {
+        // Deactivate all tabs and panels
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+
+        // Activate selected tab and panel
+        document.getElementById('tab-' + dayId).classList.add('active');
+        document.getElementById('tab-' + dayId).setAttribute('aria-selected', 'true');
+        document.getElementById(dayId).classList.add('active');
+    }
+
+    // Keyboard navigation for tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('keydown', (e) => {
+            const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+            const index = tabs.indexOf(e.target);
+            let newIndex;
+
+            if (e.key === 'ArrowRight') {
+                newIndex = (index + 1) % tabs.length;
+            } else if (e.key === 'ArrowLeft') {
+                newIndex = (index - 1 + tabs.length) % tabs.length;
+            } else {
+                return;
+            }
+
+            e.preventDefault();
+            tabs[newIndex].focus();
+            tabs[newIndex].click();
+        });
+    });
+</script>
+
+</body>
+</html>

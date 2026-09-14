@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 4 Teacher Guide — Programming in App Lab (Middle School)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --purple: #2d1b69;
+            --purple-light: #3d2b7a;
+            --purple-lighter: #f4f0ff;
+            --teal: #2bb5a0;
+            --teal-light: #e6f9f6;
+            --coral: #e8553d;
+            --coral-light: #fef0ed;
+            --text: #1a1a2e;
+            --text-light: #555;
+            --border: #e0e0e0;
+            --bg: #fafafa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            padding-top: 64px;
+        }
+
+        /* ─── STICKY NAV ─── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--purple);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+        }
+
+        .nav-brand {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-badge {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.95);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            padding: 80px 32px 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ─── AT A GLANCE ─── */
+        .at-a-glance {
+            max-width: 900px;
+            margin: -30px auto 40px;
+            padding: 32px 40px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .at-a-glance h2 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 20px;
+        }
+
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .glance-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .glance-item:last-child,
+        .glance-item:nth-last-child(2) {
+            border-bottom: none;
+        }
+
+        .glance-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .glance-value {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        /* ─── TABS ─── */
+        .tabs-container {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 4px;
+            background: var(--white);
+            border-radius: 12px 12px 0 0;
+            padding: 8px 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: var(--purple-lighter);
+            color: var(--purple);
+        }
+
+        .tab-btn.active {
+            background: var(--purple);
+            color: white;
+            font-weight: 600;
+        }
+
+        .tab-btn .tab-duration {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 2px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tab-btn.active .tab-duration {
+            opacity: 0.85;
+        }
+
+        .tab-content {
+            background: var(--white);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ─── DAY HEADER ─── */
+        .day-header {
+            margin-bottom: 32px;
+        }
+
+        .day-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .day-header .day-subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ─── TIMING TABLE ─── */
+        .timing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0 36px;
+            font-size: 0.9rem;
+        }
+
+        .timing-table th {
+            background: var(--purple-lighter);
+            color: var(--purple);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--purple);
+        }
+
+        .timing-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .timing-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .timing-table .time-col {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--purple);
+            white-space: nowrap;
+            width: 100px;
+        }
+
+        /* ─── SECTION HEADERS ─── */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 36px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--purple-lighter);
+        }
+
+        /* ─── SAY BLOCKS ─── */
+        .say-block {
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .say-block::before {
+            content: 'SAY';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            background: rgba(45, 27, 105, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .say-block p {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        /* ─── TIP BLOCKS ─── */
+        .tip-block {
+            background: var(--teal-light);
+            border-left: 4px solid var(--teal);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .tip-block::before {
+            content: 'TIP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.12);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .tip-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── WARNING BLOCKS ─── */
+        .warning-block {
+            background: var(--coral-light);
+            border-left: 4px solid var(--coral);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .warning-block::before {
+            content: 'HEADS UP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--coral);
+            background: rgba(232, 85, 61, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .warning-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── CHECKPOINT ─── */
+        .checkpoint {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 36px 0;
+            color: white;
+        }
+
+        .checkpoint::before {
+            content: '✓ CHECKPOINT';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            opacity: 0.85;
+        }
+
+        .checkpoint p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        /* ─── CONTENT HELPERS ─── */
+        .facilitation-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .facilitation-list li {
+            padding: 8px 0 8px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .facilitation-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        .discussion-questions {
+            list-style: none;
+            counter-reset: question;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .discussion-questions li {
+            counter-increment: question;
+            padding: 10px 0 10px 36px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .discussion-questions li::before {
+            content: counter(question);
+            position: absolute;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--purple-lighter);
+            color: var(--purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            top: 10px;
+        }
+
+        .exit-ticket {
+            background: #f8f7ff;
+            border: 2px dashed var(--purple);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+
+        .exit-ticket::before {
+            content: 'EXIT TICKET';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .exit-ticket p {
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* ─── ADDITIONAL NOTES ─── */
+        .additional-notes {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .notes-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .notes-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 24px;
+        }
+
+        .notes-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .notes-card h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .notes-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notes-card ul li {
+            padding: 6px 0 6px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .notes-card ul li::before {
+            content: '•';
+            position: absolute;
+            left: 4px;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .dashboard-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.green { background: #4caf50; }
+        .legend-dot.yellow { background: #ff9800; }
+        .legend-dot.gray { background: #bdbdbd; }
+
+        /* ─── DPTR STEP LIST (reuses existing color vars) ─── */
+        .dptr-list, .iosp-list {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .dptr-list li, .iosp-list li {
+            padding: 14px 18px;
+            margin: 10px 0;
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .dptr-list li strong, .iosp-list li strong {
+            color: var(--purple);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── CONSTRAINT REFERENCE (two-column, reuses vars) ─── */
+        .constraint-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .constraint-card {
+            border-radius: 8px;
+            padding: 18px 20px;
+        }
+
+        .constraint-card.together {
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+        }
+
+        .constraint-card.apart {
+            background: var(--coral-light);
+            border: 1px solid rgba(232, 85, 61, 0.35);
+        }
+
+        .constraint-card h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .constraint-card.together h4 { color: var(--teal); }
+        .constraint-card.apart h4 { color: var(--coral); }
+
+        .constraint-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .constraint-card li {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            line-height: 1.5;
+        }
+
+        /* ─── TEACHER ANSWER KEY BLOCK (teal-tinted, reuses vars) ─── */
+        .answer-key {
+            background: var(--teal-light);
+            border: 2px solid var(--teal);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+
+        .answer-key::before {
+            content: 'TEACHER ANSWER KEY';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.15);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+
+        .answer-key .ak-table {
+            background: var(--white);
+            border: 1px solid rgba(43, 181, 160, 0.4);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+
+        .answer-key .ak-table h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .answer-key .ak-table p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .answer-key .ak-note {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        /* ─── RUBRIC TABLE (reuses existing color vars) ─── */
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 32px;
+            font-size: 0.82rem;
+        }
+
+        .rubric-table th {
+            background: var(--purple);
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .rubric-table th:first-child {
+            background: var(--purple-light);
+        }
+
+        .rubric-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.45;
+        }
+
+        .rubric-table td:first-child {
+            font-weight: 600;
+            color: var(--purple);
+            background: var(--purple-lighter);
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ─── RESOURCE LINK (optional enrichment, reuses vars) ─── */
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--teal);
+            text-decoration: none;
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin: 6px 0;
+        }
+
+        .resource-link::before {
+            content: '↗';
+            font-weight: 700;
+        }
+
+        .resource-link:hover {
+            background: rgba(43, 181, 160, 0.18);
+        }
+
+        /* ─── CODE BLOCKS (App Lab snippets, reuses existing color vars) ─── */
+        .code-block {
+            background: var(--purple);
+            color: #e9e4ff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            padding: 18px 22px;
+            border-radius: 10px;
+            border-left: 4px solid var(--teal);
+            margin: 16px 0;
+            overflow-x: auto;
+            white-space: pre;
+            tab-size: 2;
+        }
+
+        .code-block::before {
+            content: 'APP LAB CODE';
+            display: block;
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .code-inline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            background: var(--purple-lighter);
+            color: var(--purple);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(45, 27, 105, 0.15);
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            background: var(--purple);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 32px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .nav { padding: 0 16px; }
+            .hero h1 { font-size: 2rem; }
+            .at-a-glance { margin: -20px 16px 30px; padding: 24px; }
+            .glance-grid { grid-template-columns: 1fr; }
+            .tabs-container { padding: 0 12px; }
+            .tab-content { padding: 24px; }
+            .tabs-nav { flex-direction: column; gap: 2px; }
+            .tab-btn { border-radius: 8px; }
+            .constraint-grid { grid-template-columns: 1fr; }
+            .rubric-table { font-size: 0.72rem; }
+            .rubric-table th, .rubric-table td { padding: 8px; }
+            .code-block { font-size: 0.74rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <span class="nav-brand">masterpiece labs</span>
+    <span class="nav-badge">PROGRAMMING IN APP LAB · WEEK 04 · MIDDLE SCHOOL</span>
+</nav>
+
+<!-- ─── HERO ─── -->
+<header class="hero">
+    <div class="hero-eyebrow">Teacher Guide · Middle School</div>
+    <h1>Functions &amp; a Real App</h1>
+    <p class="hero-sub">Week 4 — Package code into functions, build a full app, and connect to AI builders</p>
+</header>
+
+<!-- ─── AT A GLANCE ─── -->
+<section class="at-a-glance" aria-label="Week at a glance">
+    <h2>At a Glance</h2>
+    <div class="glance-grid">
+        <div class="glance-item">
+            <div class="glance-label">Driving Question</div>
+            <div class="glance-value">How do you package code to reuse it — and put everything together into a real app?</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Big Idea</div>
+            <div class="glance-value">A function is a named recipe you define once and call anytime. Combined with events, variables, and conditionals, functions let you build a complete app. And because you can read code, you can now direct and debug AI app builders too.</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Schedule</div>
+            <div class="glance-value">Day 1 Learn (45 min) · Day 2 Explore (90 min) · Day 3 Create (90 min)</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Week Deliverable</div>
+            <div class="glance-value">A self-chosen app using events + a variable + a decision + at least one function — shared via link — plus a reflection connecting coding to directing an AI builder</div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── LEARNING OBJECTIVES ─── -->
+<section class="at-a-glance" aria-label="Learning objectives" style="margin-top:0;">
+    <h2>Learning Objectives</h2>
+    <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:12px;">Students will be able to:</p>
+    <ul class="facilitation-list">
+        <li>Define a function and call it by name to reuse code</li>
+        <li>Use randomness (<span class="code-inline">randomNumber</span>) to make an app dynamic</li>
+        <li>Combine events, variables, conditionals, and functions into a complete app</li>
+        <li>Explain how understanding code helps you direct and debug an AI app builder</li>
+    </ul>
+</section>
+
+<!-- ─── TABBED DAYS ─── -->
+<section class="tabs-container">
+    <div class="tabs-nav" role="tablist" aria-label="Daily lesson plans">
+        <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="day1" id="tab-day1" onclick="switchTab('day1')">
+            Day 1
+            <span class="tab-duration">45 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day2" id="tab-day2" onclick="switchTab('day2')">
+            Day 2
+            <span class="tab-duration">90 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day3" id="tab-day3" onclick="switchTab('day3')">
+            Day 3
+            <span class="tab-duration">90 min</span>
+        </button>
+    </div>
+
+    <div class="tab-content">
+
+        <!-- ═══════════ DAY 1 ═══════════ -->
+        <div class="tab-panel active" id="day1" role="tabpanel" aria-labelledby="tab-day1">
+            <div class="day-header">
+                <h2>Day 1 — Learn: Functions — Reusable Recipes</h2>
+                <p class="day-subtitle">Define once, call anytime</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 1 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–8 min</td>
+                        <td>Hook — recap the journey (events → variables → conditionals → functions)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">8–24 min</td>
+                        <td>Mini-lesson — what a function is; define vs. call; randomness</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">24–38 min</td>
+                        <td>Write &amp; call a function together in App Lab</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">38–42 min</td>
+                        <td>App Lab lesson pointer (Code.org Lessons 10–11)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">42–45 min</td>
+                        <td>Exit ticket</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Hook (8 min)</h3>
+
+            <div class="say-block">
+                <p>"Look how far you've come: Week 1 your apps reacted (events), Week 2 they remembered (variables), Week 3 they decided (conditionals). This week you learn FUNCTIONS — reusable recipes — and put it ALL together into a real app."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Put the four words on the board as a timeline: <strong>events → variables → conditionals → functions</strong>. Students should feel the momentum — they already know three of the four building blocks. Today's word is the last one, and then everything snaps together into a whole app.</p>
+            </div>
+
+            <h3 class="section-title">Mini-lesson: What a Function Is (16 min)</h3>
+
+            <div class="say-block">
+                <p>"A function is a set of steps you write once, give a name, and then run whenever you want just by saying its name. You DEFINE it once, and you CALL it as many times as you like. And a special block, randomNumber, gives you an unpredictable value — perfect for games."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>FUNCTION</strong> — a named block of code you define once and reuse anywhere in your app.</li>
+                <li><strong>DEFINE</strong> — write the recipe: <span class="code-inline" style="font-style:normal">function updateScore() { ... }</span></li>
+                <li><strong>CALL</strong> — run it by name: <span class="code-inline" style="font-style:normal">updateScore();</span></li>
+                <li><strong>RANDOMNESS</strong> — <span class="code-inline" style="font-style:normal">randomNumber(0,255)</span> gives an unpredictable value — great for games.</li>
+            </ul>
+
+            <div class="say-block">
+                <p>"Defining a function doesn't run it — it just teaches the app the recipe. The steps only happen when you CALL the function by name. So we write the recipe once at the top, then call it from an event down below."</p>
+            </div>
+
+            <div class="code-block">function updateScore() {
+  score = score + 1;
+  setText(&quot;scoreLabel&quot;, score);
+}
+onEvent(&quot;goBtn&quot;, &quot;click&quot;, function() {
+  updateScore();
+});</div>
+
+            <div class="tip-block">
+                <p>A function is like a recipe card — write the steps once, then just say "make it" whenever. It means less repeated code and one place to fix things. If you ever need to change how the score updates, you edit the recipe once and every call gets the fix automatically.</p>
+            </div>
+
+            <a class="resource-link" href="https://studio.code.org/courses/csp5-virtual/units/1">studio.code.org/courses/csp5-virtual/units/1 — Lesson 10 Color Sleuth, Lesson 11 Keep Going</a>
+
+            <h3 class="section-title">Write &amp; Call a Function — Together (14 min)</h3>
+
+            <div class="say-block">
+                <p>"Let's build one together. We'll define a tiny function that shows a friendly message, then call it from a button click. Watch how the recipe sits up top and the button just says its name."</p>
+            </div>
+
+            <div class="code-block">function greetUser() {
+  setText(&quot;messageLabel&quot;, &quot;You clicked the button!&quot;);
+}
+onEvent(&quot;helloBtn&quot;, &quot;click&quot;, function() {
+  greetUser();
+});</div>
+
+            <ul class="facilitation-list">
+                <li>Have every student add one button and one label to their screen, then type the function definition first.</li>
+                <li>Point out the empty <span class="code-inline">greetUser()</span> call inside the event — that's where the recipe gets used.</li>
+                <li>Ask them to add a second button that calls the SAME function — proof that one recipe can be reused.</li>
+                <li>Have a few students add <span class="code-inline">randomNumber(1,6)</span> inside the function to show a random "dice roll" in the label.</li>
+            </ul>
+
+            <div class="exit-ticket">
+                <p>What's the difference between DEFINING a function and CALLING it? Why are functions useful?</p>
+            </div>
+
+            <div class="checkpoint">
+                <p>Every student defined a function and called it from an event.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 2 ═══════════ -->
+        <div class="tab-panel" id="day2" role="tabpanel" aria-labelledby="tab-day2">
+            <div class="day-header">
+                <h2>Day 2 — Explore: Build Color Sleuth (Everything Together)</h2>
+                <p class="day-subtitle">Events + variables + conditionals + functions in one app</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 2 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Review — define vs. call</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–20 min</td>
+                        <td>How Color Sleuth works — demo + RGB / random color</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">20–70 min</td>
+                        <td>Build Color Sleuth (guided)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">70–85 min</td>
+                        <td>Test + debug</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">85–90 min</td>
+                        <td>Record vocab + checkpoint</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Review (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Quick recall: to DEFINE a function is to write the recipe; to CALL it is to run it by name. Today we use functions to build a real game — Color Sleuth — that pulls together everything from the whole unit."</p>
+            </div>
+
+            <h3 class="section-title">How Color Sleuth Works (15 min)</h3>
+
+            <div class="say-block">
+                <p>"The app shows several color buttons. One is slightly different from the rest. The app picks a random target color with a function. Click the right button and your score (a variable) goes up and it's the next player's turn. Click a wrong one and a conditional handles it — no points. It uses events, a variable, a conditional, AND a function, all at once."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>Colors in App Lab are written as <span class="code-inline">rgb(red, green, blue)</span>, where each number is 0–255. That's why <span class="code-inline">randomNumber(0,255)</span> is perfect here — it picks a random color channel so the target color is different every round. You don't need to memorize this; just show it once on the projector.</p>
+            </div>
+
+            <div class="code-block">function makeRandomColor() {
+  var r = randomNumber(0, 255);
+  var g = randomNumber(0, 255);
+  var b = randomNumber(0, 255);
+  return &quot;rgb(&quot; + r + &quot;,&quot; + g + &quot;,&quot; + b + &quot;)&quot;;
+}
+
+function pickTarget() {
+  var color = makeRandomColor();
+  setProperty(&quot;button1&quot;, &quot;background-color&quot;, color);
+}</div>
+
+            <h3 class="section-title">Build Color Sleuth — Guided (50 min)</h3>
+
+            <div class="say-block">
+                <p>"App Lab Lesson 10 gives you the structure to build on. As you go, keep pointing to the four building blocks: find the FUNCTION, find the VARIABLE (score), find the EVENTS (button clicks), and find the CONDITIONAL (right button vs. wrong button)."</p>
+            </div>
+
+            <ul class="facilitation-list">
+                <li>Keep scope to a working core: pick a target, click a button, move the score up or down.</li>
+                <li>Use <span class="code-inline">console.log</span> to see the target color and confirm which button was clicked.</li>
+                <li>Declare <span class="code-inline">score</span> outside the handlers so it survives between clicks (Week 2 callback).</li>
+                <li>Make sure functions are defined ABOVE the code that calls them.</li>
+                <li>Help students match element IDs exactly — <span class="code-inline">button1</span> in the design must match <span class="code-inline">button1</span> in the code.</li>
+            </ul>
+
+            <div class="code-block">var score = 0;
+
+onEvent(&quot;button1&quot;, &quot;click&quot;, function() {
+  if (isCorrect(&quot;button1&quot;)) {
+    score = score + 1;
+  } else {
+    score = score - 1;
+  }
+  setText(&quot;scoreLabel&quot;, &quot;Score: &quot; + score);
+});</div>
+
+            <div class="warning-block">
+                <p>The classic bug is calling a function that isn't defined yet, or a typo in the function name — the app just "does nothing." No error pops up, it simply doesn't run. Check that the name in the call matches the name in the definition EXACTLY, including capital letters.</p>
+            </div>
+
+            <h3 class="section-title">Record Vocab (5 min)</h3>
+
+            <ul class="facilitation-list">
+                <li><span class="code-inline">function</span> — a named, reusable recipe</li>
+                <li><span class="code-inline">define</span> — write the recipe once</li>
+                <li><span class="code-inline">call</span> — run the recipe by name</li>
+                <li><span class="code-inline">randomNumber</span> — get an unpredictable value</li>
+                <li><span class="code-inline">setProperty</span> — change a property like a button's color</li>
+            </ul>
+
+            <div class="checkpoint">
+                <p>Every student has a working Color-Sleuth-style app (or a scoped version) using a function + variable + event + conditional.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 3 ═══════════ -->
+        <div class="tab-panel" id="day3" role="tabpanel" aria-labelledby="tab-day3">
+            <div class="day-header">
+                <h2>Day 3 — Create: Your Capstone App + the AI Bridge</h2>
+                <p class="day-subtitle">Build something yours — then see how it connects to AI builders</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 3 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Launch — the capstone challenge</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–20 min</td>
+                        <td>Plan your app — make it yours</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">20–65 min</td>
+                        <td>Build in App Lab</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">65–78 min</td>
+                        <td>Showcase &amp; share</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">78–90 min</td>
+                        <td>The AI bridge + reflection</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Launch (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Your capstone: build a small app that's YOURS — a mini game, a helper, a quiz, a tracker — using an event, a variable, a decision, and at least one function. Pick something you'd actually use or share."</p>
+            </div>
+
+            <h3 class="section-title">Make It Yours: Plan Your App (15 min)</h3>
+
+            <div class="say-block">
+                <p>"Before you touch the code, plan on paper. What does your app do? What event or events will it react to? What variable will it remember? What decision (conditional) will it make? And what function will you write and call?"</p>
+            </div>
+
+            <ul class="facilitation-list">
+                <li>What does it do, and who is it for? (Pick something from YOUR world — a hobby, your team, a subject, a joke you like.)</li>
+                <li>What event(s) will it respond to? (a button click, a key press)</li>
+                <li>What variable will it track? (a score, a count, a name)</li>
+                <li>What decision will it make? (right vs. wrong, high vs. low, yes vs. no)</li>
+                <li>What function will you define and call? (name it something clear like <span class="code-inline">nextQuestion</span> or <span class="code-inline">rollDice</span>)</li>
+            </ul>
+
+            <div class="tip-block">
+                <p>Ideas to spark choices without assigning one: a two-question quiz about their favorite show, a "should I?" random decider, a click-counter for push-ups, a reaction-time game, a compliment generator for a friend. The point is that they choose — the requirements (event + variable + decision + function) stay the same.</p>
+            </div>
+
+            <h3 class="section-title">Build (45 min)</h3>
+
+            <ul class="facilitation-list">
+                <li>Small and working beats big and broken — get one thing working, then add.</li>
+                <li>Write one function and call it; that satisfies the requirement even if it's short.</li>
+                <li>Test after each step so a bug is easy to find.</li>
+                <li>Reuse everything from Weeks 1–3: events, variables, strings, and conditionals.</li>
+            </ul>
+
+            <h3 class="section-title">Extend Beyond the Classroom: Showcase &amp; Share (13 min)</h3>
+
+            <div class="say-block">
+                <p>"Share the App Lab link so your app lives on. Demo it to the class or a partner, and point to the event, the variable, the decision, and the function inside it. Then share the link with a friend or someone at home and let them try it."</p>
+            </div>
+
+            <ul class="facilitation-list">
+                <li>Use App Lab's Share button to get a keepable link.</li>
+                <li>Have each student point to all four building blocks in their own code as they demo.</li>
+                <li>Encourage sharing the link with a friend or family member to try at home.</li>
+            </ul>
+
+            <h3 class="section-title">The AI Bridge (part of 78–90 min)</h3>
+
+            <div class="say-block">
+                <p>"Soon you'll use AI tools that BUILD an app from a description (like Lovable, in your other unit). Because you now understand events, variables, conditionals, and functions, you can (1) TELL the AI exactly what app to build, and (2) READ what it makes, spot bugs, and fix them or tell it precisely what to change. Understanding code gives you control."</p>
+            </div>
+
+            <ol class="discussion-questions">
+                <li>How would you describe your capstone app to an AI builder so it builds the right thing?</li>
+                <li>If the AI's app had a button that did nothing, what would you check first?</li>
+                <li>What can you do now that you couldn't before this unit?</li>
+            </ol>
+
+            <h3 class="section-title">Reflection</h3>
+
+            <ul class="facilitation-list">
+                <li>What does your app do, and why did you build THIS one?</li>
+                <li>Point to the event, the variable, the decision, and the function in your code.</li>
+                <li>How does knowing this code help you work WITH an AI app builder?</li>
+            </ul>
+
+            <h3 class="section-title">Week 4 Capstone Rubric</h3>
+
+            <table class="rubric-table" aria-label="Week 4 capstone rubric">
+                <thead>
+                    <tr>
+                        <th>Criterion</th>
+                        <th>Getting There</th>
+                        <th>Solid</th>
+                        <th>Strong</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>App works &amp; is purposeful</td>
+                        <td>Runs partly; unclear goal</td>
+                        <td>Runs; does one clear thing</td>
+                        <td>Runs smoothly; genuinely useful or fun</td>
+                    </tr>
+                    <tr>
+                        <td>Uses event + variable + decision</td>
+                        <td>One or two present</td>
+                        <td>All three present &amp; working</td>
+                        <td>All three used cleanly and on purpose</td>
+                    </tr>
+                    <tr>
+                        <td>Defines &amp; calls a function</td>
+                        <td>Function written but not called</td>
+                        <td>One function defined and called</td>
+                        <td>Function reused or more than one</td>
+                    </tr>
+                    <tr>
+                        <td>Reflection + AI bridge + choice</td>
+                        <td>Brief or missing pieces</td>
+                        <td>Explains parts + AI connection</td>
+                        <td>Clear on choice, code, and directing/debugging AI</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="checkpoint">
+                <p>Every student shared a working capstone app and completed the reflection including the AI-bridge.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ─── ADDITIONAL NOTES ─── -->
+<section class="additional-notes">
+    <div class="notes-card">
+        <h2>Additional Notes</h2>
+
+        <h3>Differentiation</h3>
+        <ul>
+            <li><strong>Support</strong> — give a starter project with one function already stubbed in; let students personalize a scoped Color Sleuth instead of building a brand-new app; provide sentence frames for the reflection.</li>
+            <li><strong>Advanced</strong> — encourage multiple functions, functions that take parameters, a two-player mode, or a harder random challenge (tighter color differences, a timer, levels).</li>
+        </ul>
+
+        <h3>For the Non-Technical Teacher</h3>
+        <ul>
+            <li>The one bug to know: a function must be DEFINED (and spelled the same, capital letters included) before it's CALLED, or the app simply does nothing.</li>
+            <li>This is the last big concept of the unit — celebrate loudly. Students can now build a whole app from scratch.</li>
+        </ul>
+
+        <h3>Connecting the Arc — the Lovable bridge</h3>
+        <ul>
+            <li>This unit ends by handing off to the Problem Solving &amp; Computing capstone, where students build apps with <span class="code-inline">lovable.dev</span>.</li>
+            <li>The point: knowing how events, variables, conditionals, and functions work lets students DIRECT the AI precisely and DEBUG what it generates, instead of accepting it blindly.</li>
+        </ul>
+
+        <h3>Materials Needed</h3>
+        <ul>
+            <li>Computers with App Lab (student accounts)</li>
+            <li>Student worksheet</li>
+            <li>Projector for demos</li>
+        </ul>
+
+        <h3>Optional: Code.org Lessons</h3>
+        <ul>
+            <li>csp5-virtual Unit 1 Lesson 10 (Building an App: Color Sleuth) + Lesson 11 (Keep Going!). <a href="https://studio.code.org/courses/csp5-virtual/units/1">studio.code.org/courses/csp5-virtual/units/1</a></li>
+        </ul>
+
+        <h3>If you're running behind</h3>
+        <ul>
+            <li>A scoped Color Sleuth is a perfectly good capstone on its own</li>
+            <li>The self-chosen app can be lighter (fewer features)</li>
+            <li>Protect time for the showcase and the AI-bridge reflection — that's the payoff of the whole unit</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+    Masterpiece Labs · Programming in App Lab · Week 4 · Middle School
+</footer>
+
+<script>
+    function switchTab(dayId) {
+        // Deactivate all tabs and panels
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+
+        // Activate selected tab and panel
+        document.getElementById('tab-' + dayId).classList.add('active');
+        document.getElementById('tab-' + dayId).setAttribute('aria-selected', 'true');
+        document.getElementById(dayId).classList.add('active');
+    }
+
+    // Keyboard navigation for tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('keydown', (e) => {
+            const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+            const index = tabs.indexOf(e.target);
+            let newIndex;
+
+            if (e.key === 'ArrowRight') {
+                newIndex = (index + 1) % tabs.length;
+            } else if (e.key === 'ArrowLeft') {
+                newIndex = (index - 1 + tabs.length) % tabs.length;
+            } else {
+                return;
+            }
+
+            e.preventDefault();
+            tabs[newIndex].focus();
+            tabs[newIndex].click();
+        });
+    });
+</script>
+
+</body>
+</html>

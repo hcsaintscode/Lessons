@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 4 Teacher Guide — Programming in App Lab (High School)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --purple: #2d1b69;
+            --purple-light: #3d2b7a;
+            --purple-lighter: #f4f0ff;
+            --teal: #2bb5a0;
+            --teal-light: #e6f9f6;
+            --coral: #e8553d;
+            --coral-light: #fef0ed;
+            --text: #1a1a2e;
+            --text-light: #555;
+            --border: #e0e0e0;
+            --bg: #fafafa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            padding-top: 64px;
+        }
+
+        /* ─── STICKY NAV ─── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--purple);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+        }
+
+        .nav-brand {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-badge {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.95);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            padding: 80px 32px 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ─── AT A GLANCE ─── */
+        .at-a-glance {
+            max-width: 900px;
+            margin: -30px auto 40px;
+            padding: 32px 40px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .at-a-glance h2 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 20px;
+        }
+
+        .glance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .glance-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .glance-item:last-child,
+        .glance-item:nth-last-child(2) {
+            border-bottom: none;
+        }
+
+        .glance-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .glance-value {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        /* ─── TABS ─── */
+        .tabs-container {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 4px;
+            background: var(--white);
+            border-radius: 12px 12px 0 0;
+            padding: 8px 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: var(--purple-lighter);
+            color: var(--purple);
+        }
+
+        .tab-btn.active {
+            background: var(--purple);
+            color: white;
+            font-weight: 600;
+        }
+
+        .tab-btn .tab-duration {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 2px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tab-btn.active .tab-duration {
+            opacity: 0.85;
+        }
+
+        .tab-content {
+            background: var(--white);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ─── DAY HEADER ─── */
+        .day-header {
+            margin-bottom: 32px;
+        }
+
+        .day-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .day-header .day-subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ─── TIMING TABLE ─── */
+        .timing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0 36px;
+            font-size: 0.9rem;
+        }
+
+        .timing-table th {
+            background: var(--purple-lighter);
+            color: var(--purple);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 16px;
+            text-align: left;
+            border-bottom: 2px solid var(--purple);
+        }
+
+        .timing-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .timing-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .timing-table .time-col {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--purple);
+            white-space: nowrap;
+            width: 100px;
+        }
+
+        /* ─── SECTION HEADERS ─── */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 36px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--purple-lighter);
+        }
+
+        /* ─── SAY BLOCKS ─── */
+        .say-block {
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .say-block::before {
+            content: 'SAY';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            background: rgba(45, 27, 105, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .say-block p {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        /* ─── TIP BLOCKS ─── */
+        .tip-block {
+            background: var(--teal-light);
+            border-left: 4px solid var(--teal);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .tip-block::before {
+            content: 'TIP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.12);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .tip-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── WARNING BLOCKS ─── */
+        .warning-block {
+            background: var(--coral-light);
+            border-left: 4px solid var(--coral);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .warning-block::before {
+            content: 'HEADS UP';
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--coral);
+            background: rgba(232, 85, 61, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .warning-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ─── CHECKPOINT ─── */
+        .checkpoint {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 36px 0;
+            color: white;
+        }
+
+        .checkpoint::before {
+            content: '✓ CHECKPOINT';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            opacity: 0.85;
+        }
+
+        .checkpoint p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        /* ─── CONTENT HELPERS ─── */
+        .facilitation-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .facilitation-list li {
+            padding: 8px 0 8px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .facilitation-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        .discussion-questions {
+            list-style: none;
+            counter-reset: question;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .discussion-questions li {
+            counter-increment: question;
+            padding: 10px 0 10px 36px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .discussion-questions li::before {
+            content: counter(question);
+            position: absolute;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--purple-lighter);
+            color: var(--purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            top: 10px;
+        }
+
+        .exit-ticket {
+            background: #f8f7ff;
+            border: 2px dashed var(--purple);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+
+        .exit-ticket::before {
+            content: 'EXIT TICKET';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .exit-ticket p {
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* ─── ADDITIONAL NOTES ─── */
+        .additional-notes {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .notes-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .notes-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 24px;
+        }
+
+        .notes-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .notes-card h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .notes-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notes-card ul li {
+            padding: 6px 0 6px 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .notes-card ul li::before {
+            content: '•';
+            position: absolute;
+            left: 4px;
+            color: var(--teal);
+            font-weight: 700;
+        }
+
+        .dashboard-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.green { background: #4caf50; }
+        .legend-dot.yellow { background: #ff9800; }
+        .legend-dot.gray { background: #bdbdbd; }
+
+        /* ─── DPTR STEP LIST (reuses existing color vars) ─── */
+        .dptr-list, .iosp-list {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .dptr-list li, .iosp-list li {
+            padding: 14px 18px;
+            margin: 10px 0;
+            background: var(--purple-lighter);
+            border-left: 4px solid var(--purple);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .dptr-list li strong, .iosp-list li strong {
+            color: var(--purple);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── CONSTRAINT REFERENCE (two-column, reuses vars) ─── */
+        .constraint-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .constraint-card {
+            border-radius: 8px;
+            padding: 18px 20px;
+        }
+
+        .constraint-card.together {
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+        }
+
+        .constraint-card.apart {
+            background: var(--coral-light);
+            border: 1px solid rgba(232, 85, 61, 0.35);
+        }
+
+        .constraint-card h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .constraint-card.together h4 { color: var(--teal); }
+        .constraint-card.apart h4 { color: var(--coral); }
+
+        .constraint-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .constraint-card li {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            line-height: 1.5;
+        }
+
+        /* ─── TEACHER ANSWER KEY BLOCK (teal-tinted, reuses vars) ─── */
+        .answer-key {
+            background: var(--teal-light);
+            border: 2px solid var(--teal);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+
+        .answer-key::before {
+            content: 'TEACHER ANSWER KEY';
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            background: rgba(43, 181, 160, 0.15);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+
+        .answer-key .ak-table {
+            background: var(--white);
+            border: 1px solid rgba(43, 181, 160, 0.4);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+
+        .answer-key .ak-table h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+
+        .answer-key .ak-table p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .answer-key .ak-note {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        /* ─── RUBRIC TABLE (reuses existing color vars) ─── */
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 32px;
+            font-size: 0.82rem;
+        }
+
+        .rubric-table th {
+            background: var(--purple);
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .rubric-table th:first-child {
+            background: var(--purple-light);
+        }
+
+        .rubric-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.45;
+        }
+
+        .rubric-table td:first-child {
+            font-weight: 600;
+            color: var(--purple);
+            background: var(--purple-lighter);
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ─── RESOURCE LINK (optional enrichment, reuses vars) ─── */
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--teal);
+            text-decoration: none;
+            background: var(--teal-light);
+            border: 1px solid rgba(43, 181, 160, 0.35);
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin: 6px 0;
+        }
+
+        .resource-link::before {
+            content: '↗';
+            font-weight: 700;
+        }
+
+        .resource-link:hover {
+            background: rgba(43, 181, 160, 0.18);
+        }
+
+        /* ─── CODE BLOCKS (App Lab snippets, reuses existing color vars) ─── */
+        .code-block {
+            background: var(--purple);
+            color: #e9e4ff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            padding: 18px 22px;
+            border-radius: 10px;
+            border-left: 4px solid var(--teal);
+            margin: 16px 0;
+            overflow-x: auto;
+            white-space: pre;
+            tab-size: 2;
+        }
+
+        .code-block::before {
+            content: 'APP LAB CODE';
+            display: block;
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .code-inline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            background: var(--purple-lighter);
+            color: var(--purple);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(45, 27, 105, 0.15);
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            background: var(--purple);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 32px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .nav { padding: 0 16px; }
+            .hero h1 { font-size: 2rem; }
+            .at-a-glance { margin: -20px 16px 30px; padding: 24px; }
+            .glance-grid { grid-template-columns: 1fr; }
+            .tabs-container { padding: 0 12px; }
+            .tab-content { padding: 24px; }
+            .tabs-nav { flex-direction: column; gap: 2px; }
+            .tab-btn { border-radius: 8px; }
+            .constraint-grid { grid-template-columns: 1fr; }
+            .rubric-table { font-size: 0.72rem; }
+            .rubric-table th, .rubric-table td { padding: 8px; }
+            .code-block { font-size: 0.74rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <span class="nav-brand">masterpiece labs</span>
+    <span class="nav-badge">PROGRAMMING IN APP LAB · WEEK 04 · HIGH SCHOOL</span>
+</nav>
+
+<!-- ─── HERO ─── -->
+<header class="hero">
+    <div class="hero-eyebrow">Teacher Guide · High School</div>
+    <h1>Functions &amp; a Real App</h1>
+    <p class="hero-sub">Week 4 — Functions, decomposition, a full app, and the bridge to AI builders</p>
+</header>
+
+<!-- ─── AT A GLANCE ─── -->
+<section class="at-a-glance" aria-label="Week at a glance">
+    <h2>At a Glance</h2>
+    <div class="glance-grid">
+        <div class="glance-item">
+            <div class="glance-label">Driving Question</div>
+            <div class="glance-value">How do you decompose a real app into functions — and how does that make you effective with AI builders?</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Big Idea</div>
+            <div class="glance-value">Functions package reusable behavior; parameters make them flexible; decomposition breaks a big app into small named functions. Assemble events + variables + conditionals + functions into a complete app. And because you can decompose and read code, you can direct and debug an AI app builder.</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Schedule</div>
+            <div class="glance-value">Day 1 Learn (45) · Day 2 Explore (90) · Day 3 Create (90)</div>
+        </div>
+        <div class="glance-item">
+            <div class="glance-label">Week Deliverable</div>
+            <div class="glance-value">A self-chosen app decomposed into functions (using events + variables + conditionals) — shared via link — plus a reflection on directing/debugging AI-generated code</div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── LEARNING OBJECTIVES ─── -->
+<section class="at-a-glance" aria-label="Learning objectives" style="margin-top:0;">
+    <h2>Learning Objectives</h2>
+    <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:12px;">Students will be able to:</p>
+    <ul class="facilitation-list">
+        <li>Define and call functions, including functions with <strong>parameters</strong></li>
+        <li>Use decomposition to break an app into small, single-purpose functions</li>
+        <li>Assemble events, variables, conditionals, and functions into a complete working app</li>
+        <li>Explain how decomposition and code literacy let you direct and debug an AI app builder</li>
+    </ul>
+</section>
+
+<!-- ─── TABBED DAYS ─── -->
+<section class="tabs-container">
+    <div class="tabs-nav" role="tablist" aria-label="Daily lesson plans">
+        <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="day1" id="tab-day1" onclick="switchTab('day1')">
+            Day 1
+            <span class="tab-duration">45 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day2" id="tab-day2" onclick="switchTab('day2')">
+            Day 2
+            <span class="tab-duration">90 min</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="day3" id="tab-day3" onclick="switchTab('day3')">
+            Day 3
+            <span class="tab-duration">90 min</span>
+        </button>
+    </div>
+
+    <div class="tab-content">
+
+        <!-- ═══════════ DAY 1 ═══════════ -->
+        <div class="tab-panel active" id="day1" role="tabpanel" aria-labelledby="tab-day1">
+            <div class="day-header">
+                <h2>Day 1 — Learn: Functions, Parameters &amp; Decomposition</h2>
+                <p class="day-subtitle">Package behavior; break big problems into small ones</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 1 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–7 min</td>
+                        <td>Hook — recap the toolkit</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">7–24 min</td>
+                        <td>Mini-lesson — function definition/call; parameters; decomposition</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">24–38 min</td>
+                        <td>Write a parameterized function + decompose a task into functions</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">38–42 min</td>
+                        <td>App Lab lesson pointer (Code.org Lessons 10–11)</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">42–45 min</td>
+                        <td>Exit ticket</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Hook (7 min)</h3>
+
+            <div class="say-block">
+                <p>"You have the whole toolkit now — events, variables, conditionals. This week you learn FUNCTIONS with parameters and DECOMPOSITION: breaking a real app into small named pieces. Then you build a complete app and see how this makes you powerful with AI builders too."</p>
+            </div>
+
+            <div class="tip-block">
+                <p>On the board, write one long messy list of steps for a game — pick a color, color the buttons, check the click, add points, show the score, switch turns — then draw boxes around groups of related steps and give each box a name. That's decomposition: turning one wall of code into a few named functions you can read at a glance.</p>
+            </div>
+
+            <h3 class="section-title">Mini-lesson: Functions, Parameters &amp; Decomposition (17 min)</h3>
+
+            <div class="say-block">
+                <p>"A function is a named block of code you can run whenever you call it. A parameter is an input you hand the function so it can do its job on different values. Decomposition is the habit of splitting a whole app into small functions that each do exactly one thing."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>FUNCTION</strong> — a named, reusable block of code. Define it once with <span class="code-inline" style="font-style:normal">function doThing() { ... }</span>, then run it any time by calling <span class="code-inline" style="font-style:normal">doThing()</span>.</li>
+                <li><strong>PARAMETER</strong> — an input a function takes so it can vary its behavior. <span class="code-inline" style="font-style:normal">updateScore(10)</span> passes <span class="code-inline" style="font-style:normal">10</span>; the same function also handles <span class="code-inline" style="font-style:normal">updateScore(50)</span>.</li>
+                <li><strong>RETURN VALUE</strong> — a function can hand back a result with <span class="code-inline" style="font-style:normal">return</span>, so a caller can use what it produced (mention briefly; you'll use it more on Day 2).</li>
+                <li><strong>DECOMPOSITION</strong> — breaking a program into small, single-purpose functions so it stays readable, testable, and easy to change.</li>
+            </ul>
+
+            <div class="code-block">function updateScore(points) {
+  score = score + points;
+  setText(&quot;scoreLabel&quot;, score);
+}
+updateScore(10);</div>
+
+            <div class="say-block">
+                <p>"Now think about a whole game as a set of functions, each with one job: <span style="font-style:normal">pickTarget()</span> chooses what the player is hunting, <span style="font-style:normal">checkAnswer()</span> decides right or wrong, <span style="font-style:normal">updateScore()</span> changes the points. You don't write one giant blob — you write small named pieces and call them."</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>pickTarget()</strong> — one job: choose the thing the player is looking for.</li>
+                <li><strong>checkAnswer()</strong> — one job: compare the player's choice to the target and decide the outcome.</li>
+                <li><strong>updateScore()</strong> — one job: adjust the score and show it.</li>
+            </ul>
+
+            <div class="tip-block">
+                <p>Tie it back to IOSP and prior weeks: functions organize the Processing step — the logic between Input and Output. Parameters let one function serve many cases instead of copying code. Decomposition is how real programs stay readable: small named functions you (and a teammate, or an AI) can reason about one at a time.</p>
+            </div>
+
+            <h3 class="section-title">Write &amp; Decompose (14 min)</h3>
+
+            <p style="font-size:0.9rem; margin-bottom:8px;">Students do two quick tasks in App Lab (code mode) or on paper:</p>
+            <ul class="facilitation-list">
+                <li>Write one function that takes a parameter (e.g. <span class="code-inline">greet(name)</span> that sets a text label using the name passed in), then call it twice with different values.</li>
+                <li>Pick a small task — a tip calculator, a name-the-emoji quiz, a step tracker — and name the 3–4 functions you'd decompose it into, one job each. Note which function needs a parameter.</li>
+            </ul>
+
+            <a class="resource-link" href="https://studio.code.org/courses/csp5-virtual/units/1" target="_blank" rel="noopener">studio.code.org/courses/csp5-virtual/units/1</a>
+            <p style="font-size:0.85rem; color:var(--text-light);">Lesson 10 (Color Sleuth) and Lesson 11 (Keep Going) back this week.</p>
+
+            <div class="exit-ticket">
+                <p>What is a parameter, and why does it make a function more useful? What does decomposition mean?</p>
+            </div>
+
+            <div class="checkpoint">
+                <p>Every student wrote a function with a parameter and named a decomposition of a small task into single-purpose functions.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 2 ═══════════ -->
+        <div class="tab-panel" id="day2" role="tabpanel" aria-labelledby="tab-day2">
+            <div class="day-header">
+                <h2>Day 2 — Explore: Build Color Sleuth (Full App)</h2>
+                <p class="day-subtitle">Decompose and assemble everything</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 2 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Review — parameters + decomposition</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–20 min</td>
+                        <td>Color Sleuth architecture — functions, state, conditionals</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">20–70 min</td>
+                        <td>Build — the app, decomposed into functions</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">70–85 min</td>
+                        <td>Test &amp; debug each function</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">85–90 min</td>
+                        <td>Record vocab + checkpoint</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Review (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Yesterday: a parameter is the input you hand a function, and decomposition is splitting an app into small named functions with one job each. Today we build a whole app that way — Color Sleuth — and you write and organize the functions yourself."</p>
+            </div>
+
+            <h3 class="section-title">Color Sleuth Architecture (15 min)</h3>
+
+            <div class="say-block">
+                <p>"Before we touch code, we plan the app as functions. In Color Sleuth two squares show colors — one is slightly different. Click the different one to score. Ask: what functions do we need, what STATE do we track, and where are the DECISIONS?"</p>
+            </div>
+
+            <ul class="iosp-list">
+                <li><strong>makeRandomColor()</strong> — produces/returns a color string from random RGB values (one job: make a color).</li>
+                <li><strong>setUpRound()</strong> — pick the target, color the buttons for a new round (one job: start a round).</li>
+                <li><strong>checkGuess(buttonId)</strong> — takes a parameter; a conditional decides right vs wrong, updates the score, switches the turn (one job: judge a guess).</li>
+                <li><strong>STATE</strong> — the score (and whose turn) live in variables declared OUTSIDE the functions so every function can see them.</li>
+            </ul>
+
+            <div class="code-block">function makeRandomColor() {
+  var r = randomNumber(0, 255);
+  var g = randomNumber(0, 255);
+  var b = randomNumber(0, 255);
+  return &quot;rgb(&quot; + r + &quot;,&quot; + g + &quot;,&quot; + b + &quot;)&quot;;
+}
+
+function setUpRound() {
+  var base = makeRandomColor();
+  setProperty(&quot;square1&quot;, &quot;background-color&quot;, base);
+  setProperty(&quot;square2&quot;, &quot;background-color&quot;, base);
+  // then tweak ONE square so it differs slightly
+}</div>
+
+            <div class="tip-block">
+                <p><span class="code-inline">setProperty(id, &quot;background-color&quot;, color)</span> sets a square's color at runtime; <span class="code-inline">randomNumber(0, 255)</span> gives a random channel value. Building the color string with <span class="code-inline">&quot;rgb(&quot; + r + &quot;,&quot; + g + &quot;,&quot; + b + &quot;)&quot;</span> is string concatenation — the same skill from Week 3.</p>
+            </div>
+
+            <h3 class="section-title">Build (50 min)</h3>
+
+            <div class="say-block">
+                <p>"App Lab's Lesson 10 gives you the structure. Your job is to write and ORGANIZE the functions — each one doing a single job — and wire them to the buttons so a click calls the right function."</p>
+            </div>
+
+            <p style="font-size:0.9rem; margin-bottom:8px;">Facilitation targets — hold every student to these:</p>
+            <ul class="facilitation-list">
+                <li>The app is decomposed into at least two named functions, and at least one takes a parameter.</li>
+                <li>Functions are CALLED from event handlers — e.g. <span class="code-inline">onEvent(&quot;square1&quot;, &quot;click&quot;, function() { checkGuess(&quot;square1&quot;); });</span></li>
+                <li>The score is declared OUTSIDE the functions (top of the program) so it persists across clicks.</li>
+                <li>Each function is tested on its own before wiring the next one.</li>
+                <li>Use <span class="code-inline">console.log</span> to see values (the target, the guess, the score) while testing.</li>
+            </ul>
+
+            <div class="warning-block">
+                <p>A function must be DEFINED before it is called, and its name must be spelled the SAME everywhere. Two classic bugs: a parameter that's declared but never passed in (so it's undefined inside), and a value passed in but never used (so the function ignores it). When behavior looks wrong, <span class="code-inline">console.log</span> the parameter at the top of the function to see what actually arrived.</p>
+            </div>
+
+            <h3 class="section-title">Record Vocab (5 min)</h3>
+            <ul class="facilitation-list">
+                <li><span class="code-inline">function</span> · <span class="code-inline">parameter</span> · return value · decomposition · <span class="code-inline">setProperty</span> · <span class="code-inline">Math.random</span> (or <span class="code-inline">randomNumber</span>)</li>
+            </ul>
+
+            <div class="checkpoint">
+                <p>Every student has a working Color-Sleuth-style app decomposed into 2+ functions (one parameterized), assembling events + a variable + a conditional.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════ DAY 3 ═══════════ -->
+        <div class="tab-panel" id="day3" role="tabpanel" aria-labelledby="tab-day3">
+            <div class="day-header">
+                <h2>Day 3 — Create: Capstone App + the AI Bridge</h2>
+                <p class="day-subtitle">Ship your own app; then connect to directing/debugging AI</p>
+            </div>
+
+            <table class="timing-table" aria-label="Day 3 timing breakdown">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-col">0–5 min</td>
+                        <td>Launch the capstone</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">5–20 min</td>
+                        <td>Spec + decompose your app</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">20–62 min</td>
+                        <td>Build — one function at a time</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">62–75 min</td>
+                        <td>Peer test + showcase</td>
+                    </tr>
+                    <tr>
+                        <td class="time-col">75–90 min</td>
+                        <td>The AI bridge + reflection</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">Launch (5 min)</h3>
+
+            <div class="say-block">
+                <p>"Your capstone: build a real app of YOUR choice — a scored game, a tool, a tracker, a recommender — DECOMPOSED into functions, using events + variables + conditionals. Ship it."</p>
+            </div>
+
+            <h3 class="section-title">Make It Yours: Spec &amp; Decompose (15 min)</h3>
+
+            <div class="say-block">
+                <p>"Pick something you actually care about — a scorekeeper for a game you play, a tool for your team or club, a tracker for a habit, a recommender for friends. First DESCRIBE it in a sentence, then DECOMPOSE it: list the functions you'll write."</p>
+            </div>
+
+            <ul class="facilitation-list">
+                <li>Describe the app in one sentence: what does it do, and for whom?</li>
+                <li>List the FUNCTIONS you'll write — one job each — and note which ones need a parameter.</li>
+                <li>Identify the STATE (what variables must persist) and the DECISIONS (where a conditional chooses a path).</li>
+            </ul>
+
+            <div class="tip-block">
+                <p>Encourage students to choose an app that fits their own world — a hobby, their school, family, or community — and to build something they'd actually keep or use. A durable App Lab link they can share is worth more than a generic worksheet task.</p>
+            </div>
+
+            <h3 class="section-title">Build (42 min)</h3>
+
+            <p style="font-size:0.9rem; margin-bottom:8px;">Code-mode build. Facilitation targets:</p>
+            <ul class="facilitation-list">
+                <li>Write ONE function, test it, then move to the next — don't write the whole app before running anything.</li>
+                <li>Keep each function single-purpose; if a function does two things, split it.</li>
+                <li>Use parameters where they remove duplication (one function instead of near-identical copies).</li>
+                <li>Use <span class="code-inline">console.log</span> to watch values while testing each function.</li>
+                <li>Working over fancy — a small app that runs beats a big one that doesn't.</li>
+            </ul>
+
+            <h3 class="section-title">Peer Test + Showcase (13 min)</h3>
+            <ul class="facilitation-list">
+                <li>Swap App Lab links with a partner.</li>
+                <li>Find one bug in a partner's logic or a function (a wrong branch, an unpassed parameter, a name typo).</li>
+                <li>Demo your app and walk through your functions — name each one and what its single job is.</li>
+            </ul>
+
+            <h3 class="section-title">The AI Bridge (15 min)</h3>
+
+            <div class="say-block">
+                <p>"Next you'll build apps with an AI tool (Lovable) that generates real code from a description. Two ways this unit makes you powerful: (1) you can DECOMPOSE and SPECIFY exactly what you want — 'it needs a function that does X, state that tracks Y, and this decision rule' — so the AI builds the right thing; (2) you can READ, TEST, and DEBUG what it generates — spotting a wrong branch or a broken function and fixing it or directing a precise change. You audit the AI."</p>
+            </div>
+
+            <ul class="discussion-questions">
+                <li>How would you specify your capstone app to an AI builder using the vocabulary of functions, state, and conditionals?</li>
+                <li>An AI builds an app but one feature silently fails — how do you find and fix it now?</li>
+                <li>What's the difference between accepting AI output and directing it?</li>
+            </ul>
+
+            <h3 class="section-title">Reflection</h3>
+            <div class="exit-ticket">
+                <p>Describe your app's functions, state, and decisions. Where are the Input, Processing, and Output? What bug did you find via decomposition or <span class="code-inline">console.log</span>? Then the AI bridge: How does understanding functions and decomposition change how you'll DIRECT and DEBUG an AI app builder like Lovable? Where could an app like yours be useful in your own life — at home, in your community, or with friends?</p>
+            </div>
+
+            <h3 class="section-title">Week 4 Capstone Rubric</h3>
+            <table class="rubric-table" aria-label="Week 4 capstone rubric">
+                <thead>
+                    <tr>
+                        <th>Criterion</th>
+                        <th>Emerging</th>
+                        <th>Proficient</th>
+                        <th>Exemplary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>App works and is purposeful</td>
+                        <td>Runs partly; purpose unclear.</td>
+                        <td>Runs; has a clear purpose.</td>
+                        <td>Runs cleanly; genuinely useful or fun.</td>
+                    </tr>
+                    <tr>
+                        <td>Decomposed into 2+ functions (one parameterized)</td>
+                        <td>One function or none; no parameter.</td>
+                        <td>2+ functions; one takes a parameter.</td>
+                        <td>Clean single-purpose functions; parameters remove duplication.</td>
+                    </tr>
+                    <tr>
+                        <td>Integrates events + a variable + a conditional</td>
+                        <td>One piece present.</td>
+                        <td>All three present and correct.</td>
+                        <td>All three combined smoothly into the app's flow.</td>
+                    </tr>
+                    <tr>
+                        <td>Reflection connects code literacy to directing/debugging AI + personal choice</td>
+                        <td>Vague or missing.</td>
+                        <td>Connects decomposition to directing/debugging AI; notes a personal use.</td>
+                        <td>Specific on specifying + auditing AI; clear personal relevance.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="answer-key">
+                <p style="font-size:0.7rem; font-family:'JetBrains Mono', monospace; font-weight:600; letter-spacing:1.5px; color:var(--teal); margin-bottom:12px;">TEACHER REFERENCE</p>
+
+                <div class="code-block">var score = 0;
+var target = &quot;&quot;;
+
+function makeTarget() {
+  var choices = [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;];
+  target = choices[randomNumber(0, 2)];
+  setProperty(&quot;square1&quot;, &quot;background-color&quot;, target);
+}
+
+function updateScore(points) {
+  score = score + points;
+  setText(&quot;scoreLabel&quot;, score);
+}
+
+function checkGuess(id) {
+  if (getText(id) == target) {
+    updateScore(10);
+  } else {
+    updateScore(-5);
+  }
+  makeTarget();
+}
+
+onEvent(&quot;guessBtn&quot;, &quot;click&quot;, function() {
+  checkGuess(&quot;guessBtn&quot;);
+});
+
+makeTarget();</div>
+
+                <div class="ak-table">
+                    <h4>Classic bug: call-before-define / name typo</h4>
+                    <p>Calling <span class="code-inline">makeTarget()</span> before it's defined, or writing <span class="code-inline">checkGuess</span> in one place and <span class="code-inline">checkguess</span> in another. Fix: define functions first; spell names identically everywhere.</p>
+                </div>
+                <div class="ak-table">
+                    <h4>Classic bug: parameter passed but unused (or used but not passed)</h4>
+                    <p><span class="code-inline">updateScore()</span> called with no argument means <span class="code-inline">points</span> is undefined; or a function reads <span class="code-inline">id</span> but the handler never passes one. Fix: pass the value in and use the same parameter name inside — <span class="code-inline">console.log</span> it to confirm.</p>
+                </div>
+                <div class="ak-table">
+                    <h4>Classic bug: score scope</h4>
+                    <p>Declaring <span class="code-inline">var score = 0;</span> INSIDE a function resets it every call. Fix: declare state OUTSIDE the functions so it persists.</p>
+                </div>
+                <p class="ak-note">Apps vary widely — grade on real decomposition, at least one parameterized function, and correct integration of events + a variable + a conditional, not on the specific topic.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ─── ADDITIONAL NOTES ─── -->
+<section class="additional-notes">
+    <div class="notes-card">
+        <h2>Additional Notes</h2>
+
+        <h3>Differentiation</h3>
+        <ul>
+            <li><strong>Support:</strong> provide a function skeleton — the function names with empty bodies — for students to fill in. Let them decompose a scoped-down Color Sleuth (fewer rounds, one square to click) rather than an open-ended app.</li>
+            <li><strong>Advanced:</strong> write functions that return values, parameterize multiple functions, add a two-player mode with turn-switching, or refactor duplicated code into one shared function. Encourage advanced students to push their own chosen app further.</li>
+        </ul>
+
+        <h3>For the Non-Technical Teacher</h3>
+        <ul>
+            <li>The bugs to know: define-before-call and consistent names, and parameters must actually be PASSED (not just declared). When a function misbehaves, have the student <span class="code-inline">console.log</span> its parameter to see what arrived.</li>
+            <li>Celebrate the milestone: students can now BUILD and REASON ABOUT a whole app — events, state, decisions, and named functions working together.</li>
+        </ul>
+
+        <h3>Connecting the Arc — the Lovable bridge</h3>
+        <ul>
+            <li>This unit hands off to the Problem Solving &amp; Computing capstone, where students build with <span class="code-inline">lovable.dev</span>.</li>
+            <li>Decomposition + code literacy = the ability to SPECIFY precisely ("a function that does X, state that tracks Y, this decision rule") and to DEBUG AI-generated apps — not just accept whatever the AI produces.</li>
+        </ul>
+
+        <h3>Materials Needed</h3>
+        <ul>
+            <li>Computers with App Lab access (student accounts).</li>
+            <li>Week 4 student worksheet.</li>
+            <li>Projector for live-coding the demos.</li>
+        </ul>
+
+        <h3>Optional: Code.org lessons</h3>
+        <ul>
+            <li>csp5-virtual Unit 1, Lesson 10 (Color Sleuth — RGB colors, <span class="code-inline">setProperty</span>, random, functions, activating buttons, switching turns, updating score, project) and Lesson 11 (Keep Going).</li>
+        </ul>
+        <a class="resource-link" href="https://studio.code.org/courses/csp5-virtual/units/1" target="_blank" rel="noopener">studio.code.org/courses/csp5-virtual/units/1</a>
+
+        <h3>If You're Running Behind</h3>
+        <ul>
+            <li>A decomposed, scoped-down Color Sleuth is a valid capstone — students don't need an original app to demonstrate the skill. Protect time for the showcase and the AI-bridge reflection; those are the payoff of the week.</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+    Masterpiece Labs · Programming in App Lab · Week 4 · High School
+</footer>
+
+<script>
+    function switchTab(dayId) {
+        // Deactivate all tabs and panels
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+
+        // Activate selected tab and panel
+        document.getElementById('tab-' + dayId).classList.add('active');
+        document.getElementById('tab-' + dayId).setAttribute('aria-selected', 'true');
+        document.getElementById(dayId).classList.add('active');
+    }
+
+    // Keyboard navigation for tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('keydown', (e) => {
+            const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+            const index = tabs.indexOf(e.target);
+            let newIndex;
+
+            if (e.key === 'ArrowRight') {
+                newIndex = (index + 1) % tabs.length;
+            } else if (e.key === 'ArrowLeft') {
+                newIndex = (index - 1 + tabs.length) % tabs.length;
+            } else {
+                return;
+            }
+
+            e.preventDefault();
+            tabs[newIndex].focus();
+            tabs[newIndex].click();
+        });
+    });
+</script>
+
+</body>
+</html>

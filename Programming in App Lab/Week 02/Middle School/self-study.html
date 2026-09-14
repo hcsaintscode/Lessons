@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 2 Self-Study — Variables &amp; State: Apps That Remember (Middle School)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #2d1b69;
+    --purple-light: #3d2b7a;
+    --purple-lighter: #f4f0ff;
+    --teal: #2bb5a0;
+    --teal-light: #e6f9f6;
+    --coral: #e8553d;
+    --coral-light: #fef0ed;
+    --sand: #f5f0e8;
+    --olive: #7a8450;
+    --olive-light: #f0f2e6;
+    --text: #1a1a2e;
+    --text-light: #555;
+    --border: #e0e0e0;
+    --bg: #fafafa;
+    --white: #ffffff;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+
+  /* ─── STICKY NAV ─── */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: var(--purple);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1000;
+    box-shadow: 0 2px 12px rgba(45, 27, 105, 0.3);
+  }
+  .nav-brand {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.5px;
+  }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.95);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .nav-progress-track {
+    width: 120px; height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px; overflow: hidden;
+  }
+  .nav-progress-fill {
+    height: 100%; width: 0%;
+    background: var(--teal);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+  }
+  .nav-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.85);
+    white-space: nowrap;
+  }
+
+  /* ─── SPLIT LAYOUT ─── */
+  .split {
+    display: flex;
+    height: 100vh;
+    padding-top: 60px;
+  }
+  .left-panel {
+    width: 46%;
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+    background: var(--bg);
+  }
+  .right-panel {
+    width: 54%;
+    height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    background: #16132b;
+    position: sticky;
+    top: 60px;
+  }
+  .right-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: #201a3d;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .right-header .rh-label {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  .right-header .rh-sub { font-size: 0.62rem; color: rgba(255,255,255,0.4); font-weight: 400; }
+  .right-body { flex: 1; position: relative; }
+  #editorFrame { width: 100%; height: 100%; border: 0; }
+  .editor-fallback {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.85rem;
+    padding: 24px;
+    text-align: center;
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+  }
+  .editor-fallback a { color: var(--teal); }
+
+  /* ─── LESSON CONTENT ─── */
+  .hero {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    padding: 40px 36px 34px;
+    color: white;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 2.1rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+  .hero-sub { font-size: 0.98rem; opacity: 0.85; }
+
+  .content { padding: 0 36px 60px; }
+
+  section.block {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section.block:last-of-type { border-bottom: none; }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+  section.block h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: var(--purple);
+    margin-bottom: 10px;
+  }
+  section.block p { font-size: 0.95rem; margin: 10px 0; }
+  section.block p.muted { color: var(--text-light); font-size: 0.9rem; }
+
+  .examples { list-style: none; padding: 0; margin: 12px 0; }
+  .examples li { padding: 6px 0 6px 22px; position: relative; font-size: 0.92rem; }
+  .examples li::before { content: '→'; position: absolute; left: 0; color: var(--teal); font-weight: 700; }
+
+  /* IOSP step blocks */
+  .step { border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 12px 0; }
+  .step h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 5px;
+  }
+  .step .tag {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 1rem;
+  }
+  .step p { font-size: 0.9rem; margin: 4px 0 0; }
+  .step.input   { background: var(--teal-light);   border-left: 4px solid var(--teal); }
+  .step.input h3 { color: var(--teal); }
+  .step.process { background: var(--purple-lighter); border-left: 4px solid var(--purple); }
+  .step.process h3 { color: var(--purple); }
+  .step.output  { background: var(--coral-light);  border-left: 4px solid var(--coral); }
+  .step.output h3 { color: var(--coral); }
+  .step.storage { background: var(--olive-light);  border-left: 4px solid var(--olive); }
+  .step.storage h3 { color: var(--olive); }
+
+  .callout {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    color: white; border-radius: 10px; padding: 18px 22px; margin: 18px 0;
+  }
+  .callout::before {
+    content: 'THE PATTERN';
+    display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; font-weight: 600; letter-spacing: 1.5px;
+    opacity: 0.85; margin-bottom: 6px;
+  }
+  .callout p { color: white; font-size: 0.92rem; margin: 0; }
+
+  /* code */
+  code.ci {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem; background: var(--purple-lighter);
+    border: 1px solid #ddd4f5; border-radius: 5px;
+    padding: 1px 6px; color: var(--purple);
+  }
+  pre.cb {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; line-height: 1.6;
+    background: #1f1a3a; color: #d7c9ff;
+    border-left: 3px solid var(--teal);
+    border-radius: 8px; padding: 14px 16px;
+    overflow-x: auto; white-space: pre; margin: 8px 0 6px;
+    tab-size: 2;
+  }
+  .code-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--teal); font-weight: 500; margin: 14px 0 3px;
+  }
+
+  /* video buttons */
+  .video-btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: var(--coral); color: white; text-decoration: none;
+    font-weight: 600; font-size: 0.92rem; padding: 12px 20px;
+    border-radius: 9px; margin: 6px 8px 6px 0;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 4px 12px rgba(232, 85, 61, 0.28);
+  }
+  .video-btn:hover { transform: translateY(-2px); }
+
+  /* fields */
+  .field { margin: 14px 0; }
+  .field label {
+    display: block; font-size: 0.88rem; font-weight: 600;
+    color: var(--purple); margin-bottom: 6px;
+  }
+  .field label .hint {
+    display: block; font-weight: 400; font-size: 0.82rem;
+    color: var(--text-light); font-style: italic; margin-top: 2px;
+  }
+  textarea, input.text-line {
+    width: 100%; font-family: 'Inter', sans-serif; font-size: 0.92rem;
+    color: var(--text); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 10px 12px; background: #fcfcfd;
+    resize: vertical; transition: border-color 0.2s ease;
+  }
+  textarea { min-height: 74px; line-height: 1.55; }
+  textarea:focus, input.text-line:focus { outline: none; border-color: var(--teal); background: var(--white); }
+
+  .tag-chip {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px;
+    margin-right: 8px; vertical-align: middle;
+  }
+  .tag-chip.input { background: var(--teal-light); color: var(--teal); }
+  .tag-chip.process { background: var(--purple-lighter); color: var(--purple); }
+  .tag-chip.output { background: var(--coral-light); color: var(--coral); }
+  .tag-chip.storage { background: var(--olive-light); color: var(--olive); }
+
+  /* checkbox step */
+  .step-check {
+    display: flex; align-items: flex-start; gap: 11px;
+    background: var(--sand); border-radius: 10px; padding: 14px 18px;
+    margin: 18px 0 6px; cursor: pointer; border: 1.5px solid transparent;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .step-check:hover { border-color: var(--teal); }
+  .step-check input { width: 21px; height: 21px; margin-top: 1px; accent-color: var(--teal); cursor: pointer; flex-shrink: 0; }
+  .step-check span { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+  .step-check.done { background: var(--teal-light); border-color: var(--teal); }
+
+  /* details */
+  details.check {
+    background: var(--olive-light); border: 2px solid var(--olive);
+    border-radius: 10px; padding: 2px; margin: 18px 0;
+  }
+  details.check summary {
+    cursor: pointer; list-style: none; padding: 14px 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.76rem;
+    font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--olive); display: flex; align-items: center; gap: 9px;
+  }
+  details.check summary::-webkit-details-marker { display: none; }
+  details.check summary::before { content: '▸'; transition: transform 0.2s ease; }
+  details.check[open] summary::before { transform: rotate(90deg); }
+  details.check .reveal { padding: 0 18px 18px; }
+  details.check .reveal p { font-size: 0.9rem; line-height: 1.6; }
+
+  /* completion */
+  .completion {
+    display: none;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--purple) 100%);
+    color: white; border-radius: 12px; padding: 26px 30px; margin: 24px 0; text-align: center;
+  }
+  .completion.show { display: block; animation: pop 0.5s ease; }
+  @keyframes pop { 0% { transform: scale(0.96); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .completion h2 { font-family: 'Playfair Display', serif; font-style: italic; color: white; font-size: 1.5rem; margin-bottom: 6px; }
+  .completion p { color: rgba(255,255,255,0.9); margin: 0; font-size: 0.92rem; }
+
+  /* saved + reset */
+  .saved-indicator {
+    position: fixed; bottom: 20px; left: 20px;
+    background: var(--teal); color: white;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; font-weight: 500;
+    padding: 9px 16px; border-radius: 22px;
+    box-shadow: 0 4px 14px rgba(43, 181, 160, 0.4);
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; z-index: 1001;
+  }
+  .saved-indicator.show { opacity: 1; transform: translateY(0); }
+  .reset-row { text-align: center; margin: 24px 0 12px; }
+  .reset-btn {
+    font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500;
+    color: var(--coral); background: transparent; border: 1.5px solid var(--coral);
+    border-radius: 8px; padding: 9px 18px; cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .reset-btn:hover { background: var(--coral); color: white; }
+
+  /* mobile toggle button (hidden on desktop) */
+  .mobile-toggle {
+    display: none;
+    position: fixed; bottom: 18px; right: 18px; z-index: 1002;
+    background: var(--purple); color: white; border: none;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem;
+    padding: 12px 20px; border-radius: 24px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(45, 27, 105, 0.4);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 860px) {
+    .split { flex-direction: column; height: auto; }
+    .left-panel, .right-panel { width: 100%; }
+    .left-panel { height: auto; overflow: visible; }
+    .right-panel {
+      position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+      height: auto; width: 100%; z-index: 900;
+      transform: translateX(100%); transition: transform 0.3s ease;
+    }
+    .right-panel.mobile-show { transform: translateX(0); }
+    .left-panel.mobile-hide { display: none; }
+    .mobile-toggle { display: block; }
+    .nav-progress-track { width: 70px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <span class="nav-brand">masterpiece labs</span>
+  <div class="nav-right">
+    <span class="nav-badge">SELF-STUDY · WEEK 02</span>
+    <div class="nav-progress-track"><div class="nav-progress-fill" id="progressFill"></div></div>
+    <span class="nav-progress-label" id="progressLabel">0 / 6</span>
+  </div>
+</nav>
+
+<div class="split">
+
+  <!-- ═══════════ LEFT: LESSON ═══════════ -->
+  <div class="left-panel" id="lessonPanel">
+
+    <header class="hero">
+      <div class="hero-eyebrow">Self-Study · Programming in App Lab</div>
+      <h1>Variables &amp; State: Apps That Remember</h1>
+      <p class="hero-sub">Learn how an app remembers a value — then build a counter in real code.</p>
+    </header>
+
+    <div class="content">
+
+      <!-- 1. HOW THIS WORKS -->
+      <section class="block">
+        <div class="kicker">Start Here</div>
+        <h2>How This Works</h2>
+        <p>This week you learn how an app <strong>remembers a value</strong> — like a count that keeps going up — and then you <strong>build it in code</strong> using the live editor to your right. No installs, no logins: the code is already running.</p>
+        <ul class="examples">
+          <li><strong>Read</strong> the lesson on the left; <strong>run and edit code</strong> on the right.</li>
+          <li>The editor updates live — change something, refresh the preview, and see what happens.</li>
+          <li>Your written answers save automatically. Check off each milestone to fill the progress bar.</li>
+        </ul>
+        <p class="muted">In class you'll build this in <strong>App Lab</strong>. Here you use a simple code editor to learn the exact same idea, so you're never stuck waiting on a login.</p>
+        <p class="muted">On a tablet or phone? Use the <strong>Switch to Editor</strong> button (bottom-right) to flip between the lesson and the code.</p>
+        <label class="step-check" data-check="ready">
+          <input type="checkbox" id="chk-ready">
+          <span>I'm ready to start</span>
+        </label>
+      </section>
+
+      <!-- 2. A VARIABLE IS A LABELED BOX -->
+      <section class="block">
+        <div class="kicker">Lesson 1</div>
+        <h2>A Variable Is a Labeled Box</h2>
+        <p>A <strong>variable</strong> is a labeled box that holds a value. It has two parts: a <strong>name</strong> (the label on the box) and a <strong>value</strong> (what's inside). You <em>declare</em> it once, <em>put</em> a value in, <em>read</em> the value when you need it, and <em>replace</em> the value whenever you want.</p>
+        <div class="step input">
+          <h3>Declare <span class="tag">— name the box</span></h3>
+          <p><code class="ci">var score;</code> creates a box labeled <code class="ci">score</code>. You do this <strong>once</strong>.</p>
+        </div>
+        <div class="step process">
+          <h3>Assign <span class="tag">— put a value in</span></h3>
+          <p><code class="ci">score = 0;</code> puts the value <code class="ci">0</code> into the box. The old value (if any) gets replaced.</p>
+        </div>
+        <div class="step output">
+          <h3>Update <span class="tag">— change what's inside</span></h3>
+          <p><code class="ci">score = score + 1;</code> takes the value out, adds 1, and puts the new value back.</p>
+        </div>
+        <p>That last line looks strange at first — it looks like math that can't be true. But it isn't math, it's an <strong>instruction</strong>, and you read it <strong>right to left</strong>: first take the value that's in <code class="ci">score</code> right now, then add <code class="ci">1</code> to it, then put that new value back into <code class="ci">score</code>. If the box held <code class="ci">4</code>, it now holds <code class="ci">5</code>.</p>
+        <label class="step-check" data-check="variable">
+          <input type="checkbox" id="chk-variable">
+          <span>I understand variables</span>
+        </label>
+      </section>
+
+      <!-- 3. VARIABLES + EVENTS = STATE -->
+      <section class="block">
+        <div class="kicker">Lesson 2</div>
+        <h2>Variables + Events = State</h2>
+        <p>Last week you learned about <strong>events</strong> — things the user does, like a click. This week you combine a <strong>variable</strong> with a <strong>click event</strong>. Every click runs a handler that updates the variable, and because the variable lives <em>outside</em> the handler, the app <strong>remembers</strong> its value between clicks.</p>
+        <p>A value your app remembers and can change over time is called <strong>state</strong>. A score, a count, a streak — those are all state. State is what makes an app feel like it's keeping track of you.</p>
+        <div class="callout">
+          <p>The demo on the right counts your clicks — the count is a variable that survives between clicks.</p>
+        </div>
+        <p>Here's the <strong>#1 bug</strong> to watch for: if you declare the variable <em>inside</em> the handler, it gets created fresh and reset to <code class="ci">0</code> on every single click — so it never counts up. The variable must be declared <strong>once, outside</strong> the handler.</p>
+        <div class="code-caption">Bug — resets every click</div>
+        <pre class="cb">addBtn.addEventListener("click", function () {
+  var count = 0;      // declared INSIDE — resets every time!
+  count = count + 1;  // always ends at 1
+});</pre>
+        <div class="code-caption">Correct — remembers between clicks</div>
+        <pre class="cb">var count = 0;        // declared ONCE, outside
+addBtn.addEventListener("click", function () {
+  count = count + 1;  // keeps going up: 1, 2, 3...
+});</pre>
+        <label class="step-check" data-check="state">
+          <input type="checkbox" id="chk-state">
+          <span>I understand state</span>
+        </label>
+      </section>
+
+      <!-- 4. RUN IT -->
+      <section class="block">
+        <div class="kicker">Run It</div>
+        <h2>Run the Click Counter</h2>
+        <p>The editor on the right is running a <strong>Click Counter</strong> app. There's a big number, a <strong>+1</strong> button, and a <strong>Reset</strong> button. Each time you click <strong>+1</strong>, the code adds 1 to a variable and shows the new value. The <strong>Reset</strong> button sets the count back to <code class="ci">0</code>.</p>
+        <p>Click <strong>Run</strong> (or refresh the preview), then <strong>click +1</strong> a bunch of times and watch the number climb. Then click <strong>Reset</strong> and see it drop back to zero.</p>
+        <div class="field">
+          <label for="ta-trace">Trace the variable:
+            <span class="hint">Where is the variable declared, and why does it keep counting up instead of resetting each click?</span>
+          </label>
+          <textarea id="ta-trace" placeholder="Type your answer — it saves automatically."></textarea>
+        </div>
+        <label class="step-check" data-check="ran">
+          <input type="checkbox" id="chk-ran">
+          <span>I ran the counter</span>
+        </label>
+      </section>
+
+      <!-- 5. MODIFY IT -->
+      <section class="block">
+        <div class="kicker">Make It Yours</div>
+        <h2>Make It Yours</h2>
+        <p>Now change the code on the right so the counter counts <em>your</em> way. You decide what it tracks and how it behaves:</p>
+        <ul class="examples">
+          <li><strong>Change what it counts:</strong> edit the <code class="ci">&lt;h1&gt;</code> label so it counts something real — like <code class="ci">Glasses of water</code> or <code class="ci">Push-ups</code>.</li>
+          <li><strong>Count faster:</strong> change <code class="ci">count = count + 1;</code> to <code class="ci">count = count + 2;</code> so the button adds 2 each click.</li>
+          <li><strong>Stretch:</strong> add a <strong>Subtract</strong> button that does <code class="ci">count = count - 1;</code> so you can count down too.</li>
+        </ul>
+        <details class="check">
+          <summary>Stuck? Example edit</summary>
+          <div class="reveal">
+            <p>Make the +1 button add 2 instead by editing that line in <code class="ci">index.js</code>:</p>
+            <pre class="cb">count = count + 2;</pre>
+            <p>Add a <strong>Subtract</strong> button. First add it to <code class="ci">index.html</code>:</p>
+            <pre class="cb">&lt;button id="subBtn"&gt;-1&lt;/button&gt;</pre>
+            <p>Then give it its own handler in <code class="ci">index.js</code>:</p>
+            <pre class="cb">document.getElementById("subBtn").addEventListener("click", function () {
+  count = count - 1;
+  display.textContent = count;
+});</pre>
+            <p>Same variable, one more event — now you can count up <em>and</em> down.</p>
+          </div>
+        </details>
+        <label class="step-check" data-check="modified">
+          <input type="checkbox" id="chk-modified">
+          <span>I changed the counter</span>
+        </label>
+      </section>
+
+      <!-- 6. REFLECT -->
+      <section class="block">
+        <div class="kicker">Reflect</div>
+        <h2>Track Something Real</h2>
+        <p>Counters and trackers are everywhere in your life — steps walked, days in a streak, likes on a post, glasses of water, books finished. Each one is really just a variable holding state, going up (or down) when something happens.</p>
+        <div class="field">
+          <label for="ta-reflect">Connect it to your own life:
+            <span class="hint">What's one thing in your own life you'd want an app to count or track? What would the button(s) do?</span>
+          </label>
+          <textarea id="ta-reflect" placeholder="Type your reflection — it saves automatically."></textarea>
+        </div>
+        <label class="step-check" data-check="reflect">
+          <input type="checkbox" id="chk-reflect">
+          <span>I connected it to my life</span>
+        </label>
+      </section>
+
+      <!-- COMPLETION -->
+      <div class="completion" id="completion" role="status">
+        <h2>You built an app that remembers! 🎉</h2>
+        <p>You learned that a variable is a labeled box that holds a value, and that a value the app can change on events is called <strong>state</strong>. You ran a real click counter, made it yours, and connected it to something you'd want to track in your own life. Next week (Week 3) you'll add <strong>input &amp; decisions</strong> — apps that respond to what <em>you</em> type and choose.</p>
+      </div>
+
+      <!-- WRAP-UP -->
+      <section class="block">
+        <div class="kicker">Wrap-Up</div>
+        <h2>The Big Idea</h2>
+        <p><strong>Variables give an app memory.</strong> A value you can change on events is called <strong>state</strong> — it's how a score, a count, or a streak works. Declare the variable once, update it when something happens, and show the new value. That's the pattern behind every counter in every app you use.</p>
+        <p class="muted"><strong>Next week,</strong> you'll add <strong>input and decisions</strong> — apps that respond to what you type and choose, not just what you click.</p>
+      </section>
+
+      <div class="reset-row">
+        <button class="reset-btn" id="resetBtn" type="button">Reset this lesson</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════ RIGHT: EDITOR ═══════════ -->
+  <div class="right-panel" id="editorPanel">
+    <div class="right-header">
+      <span class="rh-label">Live Code Editor</span>
+      <span class="rh-sub">powered by StackBlitz</span>
+    </div>
+    <div class="right-body">
+      <div id="editorFrame">
+        <div class="editor-fallback">
+          Loading the code editor…<br><br>
+          If it doesn't appear, make sure you're online, or
+          <a href="https://stackblitz.com/fork/js" target="_blank" rel="noopener">open a blank JavaScript project on StackBlitz</a>
+          and paste the Click Counter code from your worksheet.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- mobile flip button -->
+<button class="mobile-toggle" id="mobileToggle" type="button">Switch to Editor</button>
+
+<!-- saved indicator -->
+<div class="saved-indicator" id="savedIndicator">Saved ✓</div>
+
+<script src="https://unpkg.com/@stackblitz/sdk/bundles/sdk.umd.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_PREFIX = 'prog-week2-selfstudy-mid:';
+
+  var TEXT_IDS = [
+    'ta-trace', 'ta-reflect'
+  ];
+  var CHECK_IDS = [
+    'chk-ready', 'chk-variable', 'chk-state', 'chk-ran', 'chk-modified', 'chk-reflect'
+  ];
+  var TOTAL = CHECK_IDS.length;
+
+  var savedIndicator = document.getElementById('savedIndicator');
+  var savedTimer = null;
+
+  function save(k, v) { try { localStorage.setItem(STORAGE_PREFIX + k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(STORAGE_PREFIX + k); } catch (e) { return null; } }
+  function remove(k) { try { localStorage.removeItem(STORAGE_PREFIX + k); } catch (e) {} }
+
+  function flashSaved() {
+    if (!savedIndicator) return;
+    savedIndicator.classList.add('show');
+    if (savedTimer) clearTimeout(savedTimer);
+    savedTimer = setTimeout(function () { savedIndicator.classList.remove('show'); }, 1200);
+  }
+
+  function updateProgress() {
+    var done = 0;
+    CHECK_IDS.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.checked) done++;
+    });
+    var pct = TOTAL > 0 ? Math.round((done / TOTAL) * 100) : 0;
+    var fill = document.getElementById('progressFill');
+    var label = document.getElementById('progressLabel');
+    if (fill) fill.style.width = pct + '%';
+    if (label) label.textContent = done + ' / ' + TOTAL;
+    var completion = document.getElementById('completion');
+    if (completion) {
+      if (done === TOTAL && TOTAL > 0) completion.classList.add('show');
+      else completion.classList.remove('show');
+    }
+  }
+
+  // text fields
+  TEXT_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var stored = load(id);
+    if (stored !== null) el.value = stored;
+    el.addEventListener('input', function () { save(id, el.value); flashSaved(); });
+  });
+
+  // checkboxes
+  CHECK_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var stored = load(id);
+    if (stored === 'true') el.checked = true;
+    var labelWrap = el.closest('.step-check');
+    function sync() { if (labelWrap) labelWrap.classList.toggle('done', el.checked); }
+    sync();
+    el.addEventListener('change', function () {
+      save(id, el.checked ? 'true' : 'false');
+      sync();
+      updateProgress();
+      flashSaved();
+    });
+  });
+
+  // reset
+  var resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function () {
+      if (!window.confirm('Reset this lesson? This clears your saved answers and checkmarks on this page. This cannot be undone.')) return;
+      TEXT_IDS.forEach(function (id) { remove(id); var el = document.getElementById(id); if (el) el.value = ''; });
+      CHECK_IDS.forEach(function (id) {
+        remove(id);
+        var el = document.getElementById(id);
+        if (el) { el.checked = false; var w = el.closest('.step-check'); if (w) w.classList.remove('done'); }
+      });
+      updateProgress();
+      flashSaved();
+    });
+  }
+
+  // mobile toggle
+  var showingEditor = false;
+  var mobileToggle = document.getElementById('mobileToggle');
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', function () {
+      showingEditor = !showingEditor;
+      document.getElementById('lessonPanel').classList.toggle('mobile-hide', showingEditor);
+      document.getElementById('editorPanel').classList.toggle('mobile-show', showingEditor);
+      mobileToggle.textContent = showingEditor ? 'Switch to Lesson' : 'Switch to Editor';
+    });
+  }
+
+  updateProgress();
+
+  // ─── StackBlitz embed: Click Counter (a variable that remembers state) ───
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof StackBlitzSDK === 'undefined') return;
+    StackBlitzSDK.embedProject('editorFrame', {
+      title: 'Click Counter',
+      description: 'Week 2 — a variable that remembers between clicks',
+      template: 'javascript',
+      files: {
+        'index.html': '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>Click Counter</title>\n  <style>\n    body { font-family: system-ui, sans-serif; max-width: 520px;\n           margin: 60px auto; padding: 0 16px; text-align: center;\n           color: #1a1a2e; }\n    h1 { color: #2d1b69; font-size: 1.8rem; }\n    #count { font-size: 4rem; font-weight: 700; color: #2bb5a0; margin: 12px 0; }\n    button { font-size: 1.1rem; font-weight: 600; color: #fff;\n             background: #2bb5a0; border: none; border-radius: 10px;\n             padding: 14px 28px; cursor: pointer; margin: 6px; }\n    button:hover { background: #229b89; }\n    #resetBtn { background: #e8553d; }\n    #resetBtn:hover { background: #c9412c; }\n  </style>\n</head>\n<body>\n  <h1>Click Counter</h1>\n  <p id="count">0</p>\n  <button id="addBtn">+1</button>\n  <button id="resetBtn">Reset</button>\n  <script src="index.js"><\/script>\n</body>\n</html>',
+        'index.js': '// Click Counter\n// A variable is a labeled box that holds a value the app remembers.\n\n// The variable is declared ONCE, out here \u2014 so it remembers between clicks.\nvar count = 0;\nvar display = document.getElementById("count");\n\n// INPUT: click the +1 button\ndocument.getElementById("addBtn").addEventListener("click", function () {\n  // PROCESSING: take the value, add 1, put it back\n  count = count + 1;\n  // OUTPUT: show the new value\n  display.textContent = count;\n});\n\n// Reset button sets the count back to 0\ndocument.getElementById("resetBtn").addEventListener("click", function () {\n  count = 0;\n  display.textContent = count;\n});\n'
+      }
+    }, {
+      openFile: 'index.js',
+      view: 'default',
+      hideDevTools: true,
+      height: '100%'
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Week 2 — Variables &amp; State: Apps That Remember · Masterpiece Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --purple: #2d1b69;
+    --purple-light: #3d2b7a;
+    --teal: #2bb5a0;
+    --coral: #e8553d;
+    --olive: #b0b028;
+    --sand: #f5f0e8;
+    --white: #ffffff;
+    --text: #1a1a2e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--text);
+    background: var(--purple);
+  }
+
+  /* ---------- Slide framework ---------- */
+  .slide {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 6vh 8vw;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .slide.active {
+    display: flex;
+    opacity: 1;
+  }
+
+  /* Background variants */
+  .bg-title {
+    background: linear-gradient(135deg, #2d1b69 0%, #3d2b7a 55%, #1f1248 100%);
+    color: var(--white);
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .bg-section {
+    background: linear-gradient(135deg, #2d1b69 0%, #3d2b7a 100%);
+    color: var(--white);
+    align-items: flex-start;
+  }
+  .bg-purple {
+    background: linear-gradient(135deg, #2d1b69 0%, #3d2b7a 100%);
+    color: var(--white);
+  }
+  .bg-white { background: var(--white); }
+  .bg-sand { background: var(--sand); }
+
+  /* ---------- Typography ---------- */
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: clamp(0.8rem, 1.4vw, 1.15rem);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    margin-bottom: 2.5vh;
+    opacity: 0.85;
+  }
+  .bg-white .eyebrow, .bg-sand .eyebrow { color: var(--teal); opacity: 1; }
+
+  .accent-bar {
+    width: 84px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--teal);
+    margin-bottom: 3vh;
+  }
+  .accent-bar.coral { background: var(--coral); }
+  .accent-bar.purple { background: var(--purple); }
+  .accent-bar.olive { background: var(--olive); }
+
+  h1.display {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+
+  h2 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    color: var(--purple);
+  }
+  .bg-purple h2, .bg-section h2 { color: var(--white); }
+
+  h2.mega {
+    font-size: clamp(3rem, 8vw, 6.5rem);
+  }
+
+  .subtitle {
+    font-size: clamp(1.2rem, 2.6vw, 2rem);
+    font-weight: 300;
+    margin-top: 3vh;
+    opacity: 0.92;
+  }
+
+  .sub-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: clamp(1rem, 2.2vw, 1.7rem);
+    letter-spacing: 0.14em;
+    margin-top: 2.5vh;
+    color: var(--teal);
+  }
+  .bg-purple .sub-mono, .bg-section .sub-mono, .bg-title .sub-mono { color: var(--teal); }
+
+  .lead {
+    font-size: clamp(1.3rem, 3vw, 2.4rem);
+    font-weight: 300;
+    line-height: 1.4;
+    max-width: 22ch;
+    margin-top: 2vh;
+  }
+
+  .body-text {
+    font-size: clamp(1.2rem, 2.6vw, 2rem);
+    font-weight: 300;
+    line-height: 1.5;
+    max-width: 26ch;
+    margin-top: 3vh;
+  }
+
+  ul.big {
+    list-style: none;
+    margin-top: 3vh;
+    display: flex;
+    flex-direction: column;
+    gap: 2.4vh;
+  }
+  ul.big li {
+    font-size: clamp(1.25rem, 2.8vw, 2.1rem);
+    font-weight: 400;
+    line-height: 1.35;
+    padding-left: 1.4em;
+    position: relative;
+    max-width: 30ch;
+  }
+  ul.big li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 0.7em;
+    height: 0.7em;
+    border-radius: 50%;
+    background: var(--teal);
+  }
+  .accent-teal li::before { background: var(--teal); }
+  .accent-coral li::before { background: var(--coral); }
+  .accent-purple li::before { background: var(--purple); }
+  .accent-olive li::before { background: var(--olive); }
+
+  ol.numbered {
+    list-style: none;
+    counter-reset: q;
+    margin-top: 3vh;
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+  }
+  ol.numbered li {
+    counter-increment: q;
+    font-size: clamp(1.25rem, 2.8vw, 2.1rem);
+    font-weight: 400;
+    line-height: 1.35;
+    padding-left: 2.2em;
+    position: relative;
+    max-width: 34ch;
+  }
+  ol.numbered li::before {
+    content: counter(q);
+    position: absolute;
+    left: 0;
+    top: -0.05em;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    background: var(--coral);
+    color: var(--white);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 0.75em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(0.85rem, 1.6vw, 1.2rem);
+    letter-spacing: 0.08em;
+    margin-top: 4vh;
+    opacity: 0.75;
+  }
+
+  /* ---------- Four steps overview ---------- */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.8vw;
+    width: 100%;
+    margin-top: 4vh;
+  }
+  .step-card {
+    border-radius: 20px;
+    padding: 3vh 1.6vw;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    gap: 1.4vh;
+    min-height: 34vh;
+  }
+  .step-card .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(0.8rem, 1.4vw, 1.1rem);
+    letter-spacing: 0.2em;
+    opacity: 0.85;
+  }
+  .step-card .name {
+    font-weight: 700;
+    font-size: clamp(1.4rem, 2.6vw, 2.3rem);
+  }
+  .step-card .desc {
+    font-weight: 300;
+    font-size: clamp(0.95rem, 1.7vw, 1.3rem);
+    line-height: 1.35;
+  }
+  .c-teal { background: var(--teal); }
+  .c-purple { background: var(--purple-light); }
+  .c-coral { background: var(--coral); }
+  .c-olive { background: var(--olive); color: #1a1a10; }
+
+  /* ---------- Cycle slide ---------- */
+  .cycle {
+    display: flex;
+    align-items: center;
+    gap: 1.2vw;
+    flex-wrap: wrap;
+    margin-top: 4vh;
+  }
+  .cycle .pill {
+    border-radius: 999px;
+    padding: 2.2vh 2.4vw;
+    color: var(--white);
+    font-weight: 600;
+    font-size: clamp(1.2rem, 2.6vw, 2.2rem);
+  }
+  .cycle .arrow {
+    font-size: clamp(1.6rem, 3.4vw, 2.8rem);
+    color: var(--purple);
+    font-weight: 700;
+  }
+  .bg-purple .cycle .arrow, .bg-section .cycle .arrow { color: var(--white); }
+  .cycle-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    color: var(--coral);
+    margin-top: 4vh;
+    letter-spacing: 0.06em;
+  }
+
+  /* ---------- Word list ---------- */
+  .word-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.4vh 2vw;
+    margin-top: 4vh;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: clamp(1.2rem, 2.6vw, 2rem);
+  }
+  .word-list span {
+    background: var(--white);
+    border: 2px solid var(--teal);
+    color: var(--purple);
+    border-radius: 10px;
+    padding: 0.8vh 1.4vw;
+    letter-spacing: 0.12em;
+  }
+
+  /* ---------- Play button ---------- */
+  .play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    margin-top: 4vh;
+    background: var(--teal);
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+    padding: 1.6vh 2.6vw;
+    border-radius: 999px;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .play-btn:hover { background: var(--coral); transform: translateY(-2px); }
+  .video-url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(0.75rem, 1.4vw, 1rem);
+    margin-top: 2.5vh;
+    opacity: 0.7;
+    word-break: break-all;
+  }
+
+  /* ---------- Code block ---------- */
+  .code {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: clamp(1.05rem, 2.2vw, 1.9rem);
+    line-height: 1.55;
+    color: #e8e6ff;
+    background: #1f1248;
+    border: 1px solid rgba(120, 90, 220, 0.55);
+    border-left: 8px solid var(--teal);
+    border-radius: 16px;
+    padding: 3vh 2.6vw;
+    margin-top: 4vh;
+    max-width: 40ch;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .bg-purple .code { background: #1a0f3d; }
+
+  /* ---------- Wordmark ---------- */
+  .wordmark {
+    position: fixed;
+    top: 3vh;
+    left: 8vw;
+    z-index: 50;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.22em;
+    text-transform: lowercase;
+    color: var(--teal);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  /* ---------- Counter ---------- */
+  .counter {
+    position: fixed;
+    bottom: 3vh;
+    right: 4vw;
+    z-index: 50;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    color: var(--teal);
+    opacity: 0.85;
+  }
+
+  /* ---------- Nav ---------- */
+  .nav {
+    position: fixed;
+    bottom: 2.6vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    display: flex;
+    gap: 1rem;
+  }
+  .nav button {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--white);
+    background: var(--purple);
+    border: none;
+    border-radius: 999px;
+    padding: 0.7rem 1.6rem;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .nav button:hover { background: var(--purple-light); transform: translateY(-2px); }
+  .nav button:disabled { opacity: 0.35; cursor: default; transform: none; }
+
+  /* ---------- IOSP flow diagram ---------- */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 1.4vw;
+    flex-wrap: wrap;
+    margin-top: 5vh;
+  }
+  .flow .node {
+    border-radius: 18px;
+    padding: 2.6vh 2.2vw;
+    color: var(--white);
+    font-weight: 700;
+    font-size: clamp(1.2rem, 2.6vw, 2.1rem);
+    text-align: center;
+  }
+  .flow .arrow {
+    font-size: clamp(1.6rem, 3.4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--white);
+  }
+  .flow-storage {
+    margin-top: 3vh;
+    margin-left: 2vw;
+  }
+  .flow-storage .node {
+    display: inline-block;
+    border-radius: 18px;
+    padding: 2vh 2.2vw;
+    color: #1a1a10;
+    font-weight: 700;
+    font-size: clamp(1.1rem, 2.2vw, 1.8rem);
+  }
+  .flow-storage .caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(0.85rem, 1.6vw, 1.15rem);
+    color: var(--white);
+    opacity: 0.8;
+    margin-top: 1.4vh;
+    letter-spacing: 0.06em;
+  }
+
+  /* Make wordmark readable on light slides */
+  .slide.bg-white ~ .wordmark { }
+</style>
+</head>
+<body>
+
+<!-- ============ SLIDES ============ -->
+
+<!-- 1. TITLE -->
+<section class="slide bg-title active">
+  <div class="eyebrow">Masterpiece Labs · Programming · Week 2</div>
+  <h1 class="display">Variables &amp; State:<br />Apps That Remember</h1>
+  <div class="subtitle">Programming in App Lab</div>
+</section>
+
+<!-- 2. SECTION -->
+<section class="slide bg-section">
+  <div class="accent-bar"></div>
+  <h2 class="mega">How Does an<br />App Remember?</h2>
+  <div class="sub-mono">Variables · State</div>
+</section>
+
+<!-- 3. HOOK -->
+<section class="slide bg-sand">
+  <div class="accent-bar coral"></div>
+  <h2>Think About It</h2>
+  <ul class="big accent-coral">
+    <li>A game shows your score going UP as you play.</li>
+    <li>Somewhere the app is remembering that number and changing it. How?</li>
+  </ul>
+  <div class="note">With a variable — a labeled box.</div>
+</section>
+
+<!-- 4. LABELED BOX -->
+<section class="slide bg-white">
+  <div class="accent-bar"></div>
+  <h2>A Variable Is a Labeled Box</h2>
+  <div class="body-text">It has a NAME and holds a VALUE. You can put a value in, read it, or replace it.</div>
+  <div class="note">var score = 0; → a box named score holding 0.</div>
+</section>
+
+<!-- 5. THREE MOVES -->
+<section class="slide bg-white">
+  <div class="accent-bar"></div>
+  <h2>Three Things You Do With Variables</h2>
+  <div class="steps-grid">
+    <div class="step-card c-teal">
+      <div class="num">01</div>
+      <div class="name">Declare</div>
+      <div class="desc">make the box: var score;</div>
+    </div>
+    <div class="step-card c-purple">
+      <div class="num">02</div>
+      <div class="name">Assign</div>
+      <div class="desc">put a value in: score = 0;</div>
+    </div>
+    <div class="step-card c-coral">
+      <div class="num">03</div>
+      <div class="name">Update</div>
+      <div class="desc">change it: score = score + 1;</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. THE TRICKY LINE -->
+<section class="slide bg-purple">
+  <div class="accent-bar"></div>
+  <h2>score = score + 1</h2>
+  <div class="code">score = score + 1;</div>
+  <div class="body-text">Read it right-to-left: take what's in the box, add 1, put it back.</div>
+  <div class="note">This is how a score goes up.</div>
+</section>
+
+<!-- 7. SHOW IT -->
+<section class="slide bg-white">
+  <div class="accent-bar"></div>
+  <h2>Show the Value on Screen</h2>
+  <div class="code">setText(&quot;scoreLabel&quot;, score);</div>
+  <div class="note">The label displays whatever's in the box right now.</div>
+</section>
+
+<!-- 8. STATE -->
+<section class="slide bg-sand">
+  <div class="accent-bar coral"></div>
+  <h2>Variables + Events = State</h2>
+  <div class="flow">
+    <span class="node c-teal">CLICK</span>
+    <span class="arrow" style="color: var(--purple);">→</span>
+    <span class="node c-coral">UPDATE VARIABLE</span>
+    <span class="arrow" style="color: var(--purple);">→</span>
+    <span class="node c-purple">SHOW NEW VALUE</span>
+  </div>
+  <div class="body-text">The app REMEMBERS between clicks. That's state.</div>
+</section>
+
+<!-- 9. CLICKER -->
+<section class="slide bg-purple">
+  <div class="accent-bar"></div>
+  <h2>The Clicker Game</h2>
+  <div class="code">var score = 0;
+onEvent(&quot;clickBtn&quot;, &quot;click&quot;, function() {
+&nbsp;&nbsp;score = score + 1;
+&nbsp;&nbsp;setText(&quot;scoreLabel&quot;, score);
+});</div>
+  <div class="note">Click → score goes up → screen updates.</div>
+</section>
+
+<!-- 10. THE BUG -->
+<section class="slide bg-sand">
+  <div class="accent-bar purple"></div>
+  <h2>The #1 Variable Bug</h2>
+  <div class="body-text">If you declare var score = 0 INSIDE the handler, it resets to 0 every click.</div>
+  <div class="note">Declare it ONCE, OUTSIDE the handler.</div>
+</section>
+
+<!-- 11. DEBUG -->
+<section class="slide bg-white">
+  <div class="accent-bar olive"></div>
+  <h2>console.log Is Your Friend</h2>
+  <div class="code">console.log(&quot;score is&quot;, score);</div>
+  <div class="body-text">Print the value to SEE what the app is really holding.</div>
+</section>
+
+<!-- 12. MAKE IT YOURS -->
+<section class="slide bg-purple">
+  <div class="accent-bar coral"></div>
+  <h2>Build Your Own Tracker</h2>
+  <div class="lead">Count something in YOUR life: water, push-ups, pages read, chores, hype level. A button adds; maybe one resets.</div>
+  <div class="note">Plan it first.</div>
+</section>
+
+<!-- 13. SHARE -->
+<section class="slide bg-sand">
+  <div class="accent-bar"></div>
+  <h2>Use It For Real</h2>
+  <div class="body-text">Share your App Lab link. Try your tracker yourself at home for a day — is it helpful?</div>
+  <div class="note">An app that tracks something you actually do.</div>
+</section>
+
+<!-- 14. EXIT -->
+<section class="slide bg-title">
+  <div class="accent-bar"></div>
+  <h1 class="display">Apps that<br />remember.</h1>
+  <div class="sub-mono">Variables · State · Clicker</div>
+  <div class="note">Masterpiece Labs · Programming in App Lab · Week 2</div>
+</section>
+
+<!-- ============ FIXED UI ============ -->
+<div class="wordmark">masterpiece labs</div>
+<div class="counter" id="counter">1 / 14</div>
+<div class="nav">
+  <button id="prevBtn">Prev</button>
+  <button id="nextBtn">Next</button>
+</div>
+
+<script>
+  (function () {
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    var total = slides.length;
+    var current = 0;
+    var counter = document.getElementById('counter');
+    var prevBtn = document.getElementById('prevBtn');
+    var nextBtn = document.getElementById('nextBtn');
+
+    function render() {
+      slides.forEach(function (s, i) {
+        s.classList.toggle('active', i === current);
+      });
+      counter.textContent = (current + 1) + ' / ' + total;
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === total - 1;
+    }
+
+    function next() {
+      if (current < total - 1) { current++; render(); }
+    }
+    function prev() {
+      if (current > 0) { current--; render(); }
+    }
+
+    nextBtn.addEventListener('click', next);
+    prevBtn.addEventListener('click', prev);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        next();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prev();
+      }
+    });
+
+    render();
+  })();
+</script>
+
+</body>
+</html>
