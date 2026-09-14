@@ -5,8 +5,9 @@ The course home is **`index.html`** — open it in a browser (or visit the publi
 ## Units
 - **Problem Solving & Computing** — the problem-solving process, the IOSP model, and a capstone app build with lovable.dev.
 - **The Fabric of the Internet** — how the Internet moves data, finds websites, and who gets access.
+- **Programming in App Lab** — event-driven programming (events, variables, conditionals, functions) built in Code.org App Lab, culminating in a student-chosen app. Framed as the bridge to *directing and debugging* what an AI like Lovable generates: once you understand events and variables, you can steer and fix AI-built code.
 
-Each week has a **Middle School** and **High School** track, each with a teacher guide, slides, worksheet, and self-study module. Some High School self-study modules embed a live StackBlitz code editor.
+Each week has a **Middle School** and **High School** track, each with a teacher guide, slides, worksheet, and self-study module. Some self-study modules embed a live StackBlitz code editor (all four Programming self-study modules do, plus some High School modules in other units).
 
 ---
 
@@ -52,8 +53,14 @@ Then open `http://localhost:8000/` in your browser. (A plain double-click of `in
 │   └── Unit Project - Build an App with Lovable/
 │       ├── README.md
 │       └── { Middle School, High School } × {teacher-guide, slides, student-project-guide}
-└── Fabric of the Internet/
+├── Fabric of the Internet/
+│   ├── 00_Pacing_Calendar.md
+│   ├── Week 01/ { Middle School, High School } × {teacher-guide, slides, student-worksheet, self-study}
+│   └── Week 02/ { Middle School, High School } × {teacher-guide, slides, student-worksheet, self-study}
+└── Programming in App Lab/
     ├── 00_Pacing_Calendar.md
-    ├── Week 01/ { Middle School, High School } × {teacher-guide, slides, student-worksheet, self-study}
-    └── Week 02/ { Middle School, High School } × {teacher-guide, slides, student-worksheet, self-study}
+    ├── Week 01/ { Middle School, High School } × {teacher-guide, slides, student-worksheet, self-study}  ← Intro to App Lab + Buttons & Events
+    ├── Week 02/ { Middle School, High School } × {teacher-guide, slides, student-worksheet, self-study}  ← Multi-screen apps + Variables + Clicker Game
+    ├── Week 03/ { Middle School, High School } × {teacher-guide, slides, student-worksheet, self-study}  ← User Input & Strings + Conditionals
+    └── Week 04/ { Middle School, High School } × {teacher-guide, slides, student-worksheet, self-study}  ← Functions + Color Sleuth + student-chosen project + Lovable bridge (Capstone)
 ```
